@@ -3,7 +3,9 @@ import firebase from "firebase/app" // a.d. 2
 import FirebaseUIAuth from "react-firebaseui-localized" // a.d. 2
 import { auth } from '../../../shared/fire' //a.d. 3
 import './firebaseui-overrides.global.css' // import style
-import image from './car.png' // a.d. 5 import obrazka
+
+//components
+import { ReactComponent as Login } from '../../../assets/login.svg'
 
 /*
 https://github.com/firebase/firebaseui-web - tu jest całość firebase UI
@@ -51,9 +53,9 @@ class Login_Register_Firebase_UI extends React.Component {
                         <h1 className='login_regiter_UI_log__text'>Zaloguj się lub zarejestruj.</h1>
                         <FirebaseUIAuth lang='pl' config={uiConfig} auth={auth} firebase={firebase} />
                     </div>
-                    <figure className='login_regiter_UI_imgContainer'>
-                        <img className='login_regiter_UI_img' src={image} alt='login' />
-                    </figure>
+                    <div className="login_regiter_UI_imgContainer">
+                        <Login />
+                    </div>
                 </div>
             </section>
         )

@@ -19,9 +19,9 @@ const PrivacyPolicy = () => {
                     <h2><strong className={style.font}>1. Informacje ogólne</strong></h2>
                     <ol>
                         <li>Niniejsza polityka dotyczy Serwisu www, funkcjonującego pod adresem url: <b>jatestuje.pl</b></li>
-                        <li>Operatorem serwisu oraz Administratorem danych osobowych jest: studio-www.com</li>
+                        <li>Operatorem serwisu oraz Administratorem danych osobowych jest: jaTestuje.pl</li>
 
-                        <li>Adres kontaktowy poczty elektronicznej operatora: info@studio-www.com</li>
+                        <li>Adres kontaktowy poczty elektronicznej operatora: info@jatestuje.pl</li>
 
                         <li>Operator jest Administratorem Twoich danych osobowych w odniesieniu do danych podanych dobrowolnie w Serwisie.</li>
                         <li>Serwis wykorzystuje dane osobowe w następujących celach:</li>

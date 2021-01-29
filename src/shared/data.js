@@ -1,13 +1,22 @@
+export const fuel = ["Wszystkie", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
 
+const year = [2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992, 1991, 1990, 1989, 1988, 1987, 1986, 1985, 1984, 1983, 1982, 1981, 1980]
+export const yearFrom = ["od", ...year]
+export const yearTo = ["do", ...year]
+
+export const gearbox = ["Wszystkie", "Manualna", "Automatyczna"]
 
 
 
 
 // ----------------------- START REGIONS ARRAY --------------------------//
 
-export const wojewodztwa = [
+// jest 16 wojwództw
+
+export const regions = [
+    "Wszystkie",
     "dolnośląskie",
-    "kujawsko-pomorskie",
+    "kujawsko - pomorskie",
     "lubelskie",
     "lubuskie",
     "łódzkie",
@@ -19,9 +28,249 @@ export const wojewodztwa = [
     "pomorskie",
     "śląskie",
     "świętokrzyskie",
-    "warmińsko-mazurskie",
+    "warmińsko - mazurskie",
     "wielkopolskie",
     "zachodniopomorskie",]
+
+//wyodrębniono 218 miast w całej polsce powyżej 20tyś mieszkańców z podziałem na 16 województw (muszą być identyczne jak w const regions), wzięte z https://www.polskawliczbach.pl/Miasta (plik zapisany na dysku bez zbędnych kolumn)
+export const cities = [
+    { city: "Wszystkie", region: "Wszystkie" },
+    { city: "Wszystkie", region: "dolnośląskie" },
+    { city: "Wszystkie", region: "kujawsko - pomorskie" },
+    { city: "Wszystkie", region: "lubelskie" },
+    { city: "Wszystkie", region: "lubuskie" },
+    { city: "Wszystkie", region: "łódzkie" },
+    { city: "Wszystkie", region: "małopolskie" },
+    { city: "Wszystkie", region: "mazowieckie" },
+    { city: "Wszystkie", region: "opolskie" },
+    { city: "Wszystkie", region: "podkarpackie" },
+    { city: "Wszystkie", region: "podlaskie" },
+    { city: "Wszystkie", region: "pomorskie" },
+    { city: "Wszystkie", region: "śląskie" },
+    { city: "Wszystkie", region: "świętokrzyskie" },
+    { city: "Wszystkie", region: "warmińsko - mazurskie" },
+    { city: "Wszystkie", region: "wielkopolskie" },
+    { city: "Wszystkie", region: "zachodniopomorskie" },
+    { city: "Warszawa", region: "mazowieckie" },
+    { city: "Kraków", region: "małopolskie" },
+    { city: "Łódź", region: "łódzkie" },
+    { city: "Wrocław", region: "dolnośląskie" },
+    { city: "Poznań", region: "wielkopolskie" },
+    { city: "Gdańsk", region: "pomorskie" },
+    { city: "Szczecin", region: "zachodniopomorskie" },
+    { city: "Bydgoszcz", region: "kujawsko - pomorskie" },
+    { city: "Lublin", region: "lubelskie" },
+    { city: "Białystok", region: "podlaskie" },
+    { city: "Katowice", region: "śląskie" },
+    { city: "Gdynia", region: "pomorskie" },
+    { city: "Częstochowa", region: "śląskie" },
+    { city: "Radom", region: "mazowieckie" },
+    { city: "Toruń", region: "kujawsko - pomorskie" },
+    { city: "Sosnowiec", region: "śląskie" },
+    { city: "Rzeszów", region: "podkarpackie" },
+    { city: "Kielce", region: "świętokrzyskie" },
+    { city: "Gliwice", region: "śląskie" },
+    { city: "Zabrze", region: "śląskie" },
+    { city: "Olsztyn", region: "warmińsko - mazurskie" },
+    { city: "Bielsko - Biała", region: "śląskie" },
+    { city: "Bytom", region: "śląskie" },
+    { city: "Zielona Góra", region: "lubuskie" },
+    { city: "Rybnik", region: "śląskie" },
+    { city: "Ruda Śląska", region: "śląskie" },
+    { city: "Opole", region: "opolskie" },
+    { city: "Tychy", region: "śląskie" },
+    { city: "Gorzów Wielkopolski", region: "lubuskie" },
+    { city: "Płock", region: "mazowieckie" },
+    { city: "Dąbrowa Górnicza", region: "śląskie" },
+    { city: "Elbląg", region: "warmińsko - mazurskie" },
+    { city: "Wałbrzych", region: "dolnośląskie" },
+    { city: "Włocławek", region: "kujawsko - pomorskie" },
+    { city: "Tarnów", region: "małopolskie" },
+    { city: "Chorzów", region: "śląskie" },
+    { city: "Koszalin", region: "zachodniopomorskie" },
+    { city: "Kalisz", region: "wielkopolskie" },
+    { city: "Legnica", region: "dolnośląskie" },
+    { city: "Grudziądz", region: "kujawsko - pomorskie" },
+    { city: "Jaworzno", region: "śląskie" },
+    { city: "Słupsk", region: "pomorskie" },
+    { city: "Jastrzębie - Zdrój", region: "śląskie" },
+    { city: "Nowy Sącz", region: "małopolskie" },
+    { city: "Jelenia Góra", region: "dolnośląskie" },
+    { city: "Siedlce", region: "mazowieckie" },
+    { city: "Mysłowice", region: "śląskie" },
+    { city: "Konin", region: "wielkopolskie" },
+    { city: "Piła", region: "wielkopolskie" },
+    { city: "Piotrków Trybunalski", region: "łódzkie" },
+    { city: "Inowrocław", region: "kujawsko - pomorskie" },
+    { city: "Lubin", region: "dolnośląskie" },
+    { city: "Ostrów Wielkopolski", region: "wielkopolskie" },
+    { city: "Suwałki", region: "podlaskie" },
+    { city: "Ostrowiec Świętokrzyski", region: "świętokrzyskie" },
+    { city: "Gniezno", region: "wielkopolskie" },
+    { city: "Stargard", region: "zachodniopomorskie" },
+    { city: "Głogów", region: "dolnośląskie" },
+    { city: "Siemianowice Śląskie", region: "śląskie" },
+    { city: "Pabianice", region: "łódzkie" },
+    { city: "Leszno", region: "wielkopolskie" },
+    { city: "Zamość", region: "lubelskie" },
+    { city: "Łomża", region: "podlaskie" },
+    { city: "Żory", region: "śląskie" },
+    { city: "Pruszków", region: "mazowieckie" },
+    { city: "Ełk", region: "warmińsko - mazurskie" },
+    { city: "Tomaszów Mazowiecki", region: "łódzkie" },
+    { city: "Chełm", region: "lubelskie" },
+    { city: "Tarnowskie Góry", region: "śląskie" },
+    { city: "Przemyśl", region: "podkarpackie" },
+    { city: "Kędzierzyn - Koźle", region: "opolskie" },
+    { city: "Stalowa Wola", region: "podkarpackie" },
+    { city: "Mielec", region: "podkarpackie" },
+    { city: "Tczew", region: "pomorskie" },
+    { city: "Biała Podlaska", region: "lubelskie" },
+    { city: "Bełchatów", region: "łódzkie" },
+    { city: "Świdnica", region: "dolnośląskie" },
+    { city: "Będzin", region: "śląskie" },
+    { city: "Zgierz", region: "łódzkie" },
+    { city: "Piekary Śląskie ", region: "śląskie" },
+    { city: "Racibórz", region: "śląskie" },
+    { city: "Legionowo", region: "mazowieckie" },
+    { city: "Ostrołęka", region: "mazowieckie" },
+    { city: "Świętochłowice", region: "śląskie" },
+    { city: "Wejherowo", region: "pomorskie" },
+    { city: "Rumia", region: "pomorskie" },
+    { city: "Zawiercie", region: "śląskie" },
+    { city: "Piaseczno", region: "mazowieckie" },
+    { city: "Starachowice", region: "świętokrzyskie" },
+    { city: "Skierniewice", region: "łódzkie" },
+    { city: "Wodzisław Śląski", region: "śląskie" },
+    { city: "Starogard Gdański", region: "pomorskie" },
+    { city: "Puławy", region: "lubelskie" },
+    { city: "Tarnobrzeg", region: "podkarpackie" },
+    { city: "Krosno", region: "podkarpackie" },
+    { city: "Kołobrzeg", region: "zachodniopomorskie" },
+    { city: "Radomsko", region: "łódzkie" },
+    { city: "Dębica", region: "podkarpackie" },
+    { city: "Skarżysko - Kamienna", region: "świętokrzyskie" },
+    { city: "Otwock", region: "mazowieckie" },
+    { city: "Ciechanów", region: "mazowieckie" },
+    { city: "Kutno", region: "łódzkie" },
+    { city: "Nysa", region: "opolskie" },
+    { city: "Sieradz", region: "łódzkie" },
+    { city: "Zduńska Wola", region: "łódzkie" },
+    { city: "Mikołów", region: "śląskie" },
+    { city: "Mińsk Mazowiecki", region: "mazowieckie" },
+    { city: "Świnoujście", region: "zachodniopomorskie" },
+    { city: "Szczecinek", region: "zachodniopomorskie" },
+    { city: "Żyrardów", region: "mazowieckie" },
+    { city: "Chojnice", region: "pomorskie" },
+    { city: "Świdnik", region: "lubelskie" },
+    { city: "Bolesławiec", region: "dolnośląskie" },
+    { city: "Nowa Sól", region: "lubuskie" },
+    { city: "Kwidzyn", region: "pomorskie" },
+    { city: "Malbork", region: "pomorskie" },
+    { city: "Knurów", region: "śląskie" },
+    { city: "Oświęcim", region: "małopolskie" },
+    { city: "Ząbki", region: "mazowieckie" },
+    { city: "Jarosław", region: "podkarpackie" },
+    { city: "Sanok", region: "podkarpackie" },
+    { city: "Żary", region: "lubuskie" },
+    { city: "Oleśnica", region: "dolnośląskie" },
+    { city: "Wołomin", region: "mazowieckie" },
+    { city: "Chrzanów", region: "małopolskie" },
+    { city: "Sochaczew", region: "mazowieckie" },
+    { city: "Czechowice - Dziedzice", region: "śląskie" },
+    { city: "Sopot", region: "pomorskie" },
+    { city: "Brzeg", region: "opolskie" },
+    { city: "Marki", region: "mazowieckie" },
+    { city: "Lębork", region: "pomorskie" },
+    { city: "Olkusz", region: "małopolskie" },
+    { city: "Jasło", region: "podkarpackie" },
+    { city: "Cieszyn", region: "śląskie" },
+    { city: "Kraśnik", region: "lubelskie" },
+    { city: "Iława", region: "warmińsko - mazurskie" },
+    { city: "Nowy Targ", region: "małopolskie" },
+    { city: "Dzierżoniów", region: "dolnośląskie" },
+    { city: "Oława", region: "dolnośląskie" },
+    { city: "Ostróda", region: "warmińsko - mazurskie" },
+    { city: "Police", region: "zachodniopomorskie" },
+    { city: "Grodzisk Mazowiecki", region: "mazowieckie" },
+    { city: "Luboń", region: "wielkopolskie" },
+    { city: "Myszków", region: "śląskie" },
+    { city: "Czeladź", region: "śląskie" },
+    { city: "Pruszcz Gdański", region: "pomorskie" },
+    { city: "Mława", region: "mazowieckie" },
+    { city: "Żywiec", region: "śląskie" },
+    { city: "Września", region: "wielkopolskie" },
+    { city: "Zgorzelec", region: "dolnośląskie" },
+    { city: "Swarzędz", region: "wielkopolskie" },
+    { city: "Augustów", region: "podlaskie" },
+    { city: "Bielawa", region: "dolnośląskie" },
+    { city: "Łuków", region: "lubelskie" },
+    { city: "Bochnia", region: "małopolskie" },
+    { city: "Śrem", region: "wielkopolskie" },
+    { city: "Giżycko", region: "warmińsko - mazurskie" },
+    { city: "Brodnica", region: "kujawsko - pomorskie" },
+    { city: "Krotoszyn", region: "wielkopolskie" },
+    { city: "Nowy Dwór Mazowiecki", region: "mazowieckie" },
+    { city: "Łowicz", region: "łódzkie" },
+    { city: "Czerwionka - Leszczyny", region: "śląskie" },
+    { city: "Gorlice", region: "małopolskie" },
+    { city: "Kętrzyn", region: "warmińsko - mazurskie" },
+    { city: "Zakopane", region: "małopolskie" },
+    { city: "Wyszków", region: "mazowieckie" },
+    { city: "Turek", region: "wielkopolskie" },
+    { city: "Kłodzko", region: "dolnośląskie" },
+    { city: "Biłgoraj", region: "lubelskie" },
+    { city: "Reda", region: "pomorskie" },
+    { city: "Jarocin", region: "wielkopolskie" },
+    { city: "Pszczyna", region: "śląskie" },
+    { city: "Wągrowiec", region: "wielkopolskie" },
+    { city: "Żagań", region: "lubuskie" },
+    { city: "Świecie", region: "kujawsko - pomorskie" },
+    { city: "Bielsk Podlaski", region: "podlaskie" },
+    { city: "Wałcz", region: "zachodniopomorskie" },
+    { city: "Kobyłka", region: "mazowieckie" },
+    { city: "Skawina", region: "małopolskie" },
+    { city: "Białogard", region: "zachodniopomorskie" },
+    { city: "Kościan", region: "wielkopolskie" },
+    { city: "Wieliczka", region: "małopolskie" },
+    { city: "Lubliniec", region: "śląskie" },
+    { city: "Kościerzyna", region: "pomorskie" },
+    { city: "Środa Wielkopolska", region: "wielkopolskie" },
+    { city: "Kluczbork", region: "opolskie" },
+    { city: "Sandomierz", region: "świętokrzyskie" },
+    { city: "Bartoszyce", region: "warmińsko - mazurskie" },
+    { city: "Szczytno", region: "warmińsko - mazurskie" },
+    { city: "Jawor", region: "dolnośląskie" },
+    { city: "Świebodzice", region: "dolnośląskie" },
+    { city: "Piastów", region: "mazowieckie" },
+    { city: "Polkowice", region: "dolnośląskie" },
+    { city: "Ostrów Mazowiecka", region: "mazowieckie" },
+    { city: "Wieluń", region: "łódzkie" },
+    { city: "Goleniów", region: "zachodniopomorskie" },
+    { city: "Łaziska Górne", region: "śląskie" },
+    { city: "Płońsk", region: "mazowieckie" },
+    { city: "Zambrów", region: "podlaskie" },
+    { city: "Nowa Ruda", region: "dolnośląskie" },
+    { city: "Grajewo", region: "podlaskie" },
+    { city: "Lubartów", region: "lubelskie" },
+    { city: "Aleksandrów Łódzki", region: "łódzkie" },
+    { city: "Koło", region: "wielkopolskie" },
+    { city: "Świebodzin", region: "lubuskie" },
+    { city: "Mrągowo", region: "warmińsko - mazurskie" },
+    { city: "Rydułtowy", region: "śląskie" },
+    { city: "Działdowo", region: "warmińsko - mazurskie" },
+    { city: "Orzesze", region: "śląskie" },
+    { city: "Gryfino", region: "zachodniopomorskie" },
+    { city: "Opoczno", region: "łódzkie" },
+    { city: "Prudnik", region: "opolskie" },
+    { city: "Lubań", region: "dolnośląskie" },
+    { city: "Józefów", region: "mazowieckie" },
+    { city: "Hajnówka", region: "podlaskie" },
+    { city: "Gostyń", region: "wielkopolskie" },
+    { city: "Rawicz", region: "wielkopolskie" },
+    { city: "Andrychów", region: "małopolskie" },
+]
+
 
 // ----------------------- STOP REGIONS ARRAY --------------------------//
 
@@ -31,10 +280,11 @@ export const wojewodztwa = [
 
 // ----------------------- START CARS ARRAY --------------------------//
 
-// lista samochodów z olx + dodano jeszcze busy + zaktualizowano w oparciu o autocentrum ze stycznia 2021, jest 42 marki samochodów i około 1000 modeli
+// lista samochodów z olx + dodano jeszcze busy + zaktualizowano w oparciu o autocentrum ze stycznia 2021, jest 42 marki samochodów i około 822 modeli
 
 const alfaromeo = {
     id: "alfaromeo", name: "Alfa Romeo", models: [
+        "Wszystkie",
         "33",
         "75",
         "145",
@@ -60,6 +310,7 @@ const alfaromeo = {
 
 const audi = {
     id: "audi", name: "Audi", models: [
+        "Wszystkie",
         "A1",
         "A2",
         "A3",
@@ -91,6 +342,7 @@ const audi = {
 
 const bmw = {
     id: "bmw", name: "BMW", models: [
+        "Wszystkie",
         "i3",
         "i8",
         "M1",
@@ -120,6 +372,7 @@ const bmw = {
 
 const cadillac = {
     id: "cadillac", name: "Cadillac", models: [
+        "Wszystkie",
         "Cts",
         "Deville",
         "Dts",
@@ -132,6 +385,7 @@ const cadillac = {
 
 const chevrolet = {
     id: "chevrolet", name: "Chevrolet", models: [
+        "Wszystkie",
         "Alero",
         "Astro",
         "Avalanche",
@@ -165,6 +419,7 @@ const chevrolet = {
 
 const chrysler = {
     id: "chrysler", name: "Chrysler", models: [
+        "Wszystkie",
         "300C",
         "300M",
         "Aspen",
@@ -186,6 +441,7 @@ const chrysler = {
 
 const citroen = {
     id: "citroen", name: "Citroen", models: [
+        "Wszystkie",
         "AX",
         "Berlingo",
         "BX",
@@ -220,6 +476,7 @@ const citroen = {
 
 const dacia = {
     id: "dacia", name: "Dacia", models: [
+        "Wszystkie",
         "Doker",
         "Duster",
         "Lodgy",
@@ -232,6 +489,7 @@ const dacia = {
 
 const daewoo = {
     id: "daewoo", name: "Daewoo", models: [
+        "Wszystkie",
         "Espero",
         "Kalos",
         "Korando",
@@ -248,6 +506,7 @@ const daewoo = {
 
 const daihatsu = {
     id: "daihatsu", name: "Daihatsu", models: [
+        "Wszystkie",
         "Cuore",
         "Materia",
         "Move",
@@ -259,6 +518,7 @@ const daihatsu = {
 
 const dodge = {
     id: "dodge", name: "Dodge", models: [
+        "Wszystkie",
         "Avenger",
         "Caliber",
         "Caravan",
@@ -276,6 +536,7 @@ const dodge = {
 
 const fiat = {
     id: "fiat", name: "Fiat", models: [
+        "Wszystkie",
         "125p",
         "126",
         "500",
@@ -316,6 +577,7 @@ const fiat = {
 
 const ford = {
     id: "ford", name: "Ford", models: [
+        "Wszystkie",
         "Aerostar",
         "C-MAX",
         "Capri",
@@ -363,6 +625,7 @@ const ford = {
 
 const honda = {
     id: "honda", name: "Honda", models: [
+        "Wszystkie",
         "Accord",
         "City",
         "Civic",
@@ -387,6 +650,7 @@ const honda = {
 
 const hyundai = {
     id: "hyundai", name: "Hyundai", models: [
+        "Wszystkie",
         "Accent",
         "Atos",
         "Coupe",
@@ -414,6 +678,7 @@ const hyundai = {
 
 const infiniti = {
     id: "infiniti ", name: "Infiniti ", models: [
+        "Wszystkie",
         "EX",
         "FX",
         "G",
@@ -432,6 +697,7 @@ const infiniti = {
 
 const jaguar = {
     id: "jaguar  ", name: "Jaguar  ", models: [
+        "Wszystkie",
         "E-Pace",
         "E-Type",
         "F-Pace",
@@ -449,6 +715,7 @@ const jaguar = {
 
 const jeep = {
     id: "jeep", name: "Jeep", models: [
+        "Wszystkie",
         "Cherokee",
         "Commander",
         "Compass",
@@ -462,6 +729,7 @@ const jeep = {
 
 const kia = {
     id: "kia", name: "Kia", models: [
+        "Wszystkie",
         "Carens",
         "Cee'd",
         "Cerato",
@@ -482,6 +750,7 @@ const kia = {
 
 const lancia = {
     id: "lancia", name: "Lancia", models: [
+        "Wszystkie",
         "Dedra",
         "Delta",
         "Kappa",
@@ -495,6 +764,7 @@ const lancia = {
 
 const landrover = {
     id: "landrover", name: "Land Rover", models: [
+        "Wszystkie",
         "Defender",
         "Discovery",
         "Freelander",
@@ -505,6 +775,7 @@ const landrover = {
 
 const lexus = {
     id: "lexus", name: "Lexus", models: [
+        "Wszystkie",
         "CT",
         "ES",
         "GS",
@@ -523,6 +794,7 @@ const lexus = {
 
 const mazda = {
     id: "mazda", name: "Mazda", models: [
+        "Wszystkie",
         "2",
         "3",
         "5",
@@ -544,6 +816,7 @@ const mazda = {
 
 const mercedesbenz = {
     id: "mercedesbenz", name: "Mercedes-Benz", models: [
+        "Wszystkie",
         "Klasa A",
         "Klasa B",
         "Klasa C",
@@ -587,6 +860,7 @@ const mercedesbenz = {
 
 const mini = {
     id: "mini", name: "Mini", models: [
+        "Wszystkie",
         "Cabrio",
         "Clubman",
         "Clubvan",
@@ -603,6 +877,7 @@ const mini = {
 
 const mitsubishi = {
     id: "mitsubishi", name: "Mitsubishi", models: [
+        "Wszystkie",
         "3000 GT",
         "ASX",
         "Carisma",
@@ -631,6 +906,7 @@ const mitsubishi = {
 
 const nissan = {
     id: "nissan", name: "Nissan", models: [
+        "Wszystkie",
         "100 NX",
         "200 SX",
         "300 ZX",
@@ -672,6 +948,7 @@ const nissan = {
 
 const opel = {
     id: "opel", name: "Opel", models: [
+        "Wszystkie",
         "Agila",
         "Antara",
         "Ascona",
@@ -705,6 +982,7 @@ const opel = {
 
 const peugeot = {
     id: "peugeot", name: "Peugeot", models: [
+        "Wszystkie",
         "106",
         "107",
         "205",
@@ -745,6 +1023,7 @@ const peugeot = {
 
 const porsche = {
     id: "porsche", name: "Porsche", models: [
+        "Wszystkie",
         "911",
         "924",
         "928",
@@ -763,6 +1042,7 @@ const porsche = {
 
 const renault = {
     id: "renault", name: "Renault", models: [
+        "Wszystkie",
         "4",
         "5",
         "11",
@@ -799,6 +1079,7 @@ const renault = {
 
 const rover = {
     id: "rover", name: "Rover", models: [
+        "Wszystkie",
         "25",
         "45",
         "75",
@@ -826,6 +1107,7 @@ const rover = {
 
 const saab = {
     id: "saab", name: "Saab", models: [
+        "Wszystkie",
         "9-3",
         "9-5",
         "9-7X",
@@ -836,6 +1118,7 @@ const saab = {
 
 const seat = {
     id: "seat", name: "Seat", models: [
+        "Wszystkie",
         "Alhambra",
         "Altea",
         "Altea XL",
@@ -855,6 +1138,7 @@ const seat = {
 
 const skoda = {
     id: "skoda", name: "Skoda", models: [
+        "Wszystkie",
         "Citigo",
         "Enyaq iV",
         "Fabia",
@@ -872,6 +1156,7 @@ const skoda = {
 
 const smart = {
     id: "smart", name: "Smart", models: [
+        "Wszystkie",
         "Fortwo",
         "Forfour",
         "Roadster",
@@ -880,6 +1165,7 @@ const smart = {
 
 const ssangyong = {
     id: "ssangyong", name: "SsangYong", models: [
+        "Wszystkie",
         "Korando",
         "Musso",
         "Kyron",
@@ -891,6 +1177,7 @@ const ssangyong = {
 
 const subaru = {
     id: "subaru", name: "Subaru", models: [
+        "Wszystkie",
         "Forester",
         "Impreza",
         "Justy",
@@ -904,6 +1191,7 @@ const subaru = {
 
 const suzuki = {
     id: "suzuki", name: "Suzuki", models: [
+        "Wszystkie",
         "Across",
         "Alto",
         "Baleno",
@@ -925,6 +1213,7 @@ const suzuki = {
 
 const toyota = {
     id: "toyota", name: "Toyota", models: [
+        "Wszystkie",
         "4Runner",
         "Auris",
         "Avalon",
@@ -964,6 +1253,7 @@ const toyota = {
 
 const volkswagen = {
     id: "volkswagen", name: "Volkswagen", models: [
+        "Wszystkie",
         "Amarok",
         "Arteon",
         "Beetle",
@@ -1004,6 +1294,7 @@ const volkswagen = {
 
 const volvo = {
     id: "volvo", name: "Volvo", models: [
+        "Wszystkie",
         "C30",
         "C70",
         "S40",
@@ -1023,6 +1314,10 @@ const volvo = {
         "Pozostałe",]
 }
 
+
+const wszystkie = {
+    id: "Wszystkie", name: "Wszystkie", models: ["Wszystkie"]
+}
 //     "Alfa Romeo",
 //     "Audi",
 //     "BMW",
@@ -1068,7 +1363,7 @@ const volvo = {
 //     "Pozostałe",
 
 
-export const cars = [alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo]
+export const cars = [wszystkie, alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo,]
 
 
 // ----------------------- STOP CARS ARRAY --------------------------//
