@@ -1,11 +1,11 @@
-export const fuel = ["Wszystkie", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
+export const fuel = ["", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
 
 const year = [2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992, 1991, 1990, 1989, 1988, 1987, 1986, 1985, 1984, 1983, 1982, 1981, 1980]
 export const years = ["", ...year]
 export const yearFrom = ["od", ...year]
 export const yearTo = ["do", ...year]
 
-export const gearbox = ["Wszystkie", "Manualna", "Automatyczna"]
+export const gearbox = ["", "Manualna", "Automatyczna"]
 
 export const knowledge = ["", "Słaba", "Dobra", "Bardzo dobra"]
 
@@ -19,7 +19,7 @@ export const choice = ["", "Tak", "Nie", "To zależy"]
 // jest 16 wojwództw
 
 export const regions = [
-    "Wszystkie",
+    "",
     "dolnośląskie",
     "kujawsko - pomorskie",
     "lubelskie",
@@ -39,23 +39,22 @@ export const regions = [
 
 //wyodrębniono 218 miast w całej polsce powyżej 20tyś mieszkańców z podziałem na 16 województw (muszą być identyczne jak w const regions), wzięte z https://www.polskawliczbach.pl/Miasta (plik zapisany na dysku bez zbędnych kolumn)
 export const cities = [
-    { city: "Wszystkie", region: "Wszystkie" },
-    { city: "Wszystkie", region: "dolnośląskie" },
-    { city: "Wszystkie", region: "kujawsko - pomorskie" },
-    { city: "Wszystkie", region: "lubelskie" },
-    { city: "Wszystkie", region: "lubuskie" },
-    { city: "Wszystkie", region: "łódzkie" },
-    { city: "Wszystkie", region: "małopolskie" },
-    { city: "Wszystkie", region: "mazowieckie" },
-    { city: "Wszystkie", region: "opolskie" },
-    { city: "Wszystkie", region: "podkarpackie" },
-    { city: "Wszystkie", region: "podlaskie" },
-    { city: "Wszystkie", region: "pomorskie" },
-    { city: "Wszystkie", region: "śląskie" },
-    { city: "Wszystkie", region: "świętokrzyskie" },
-    { city: "Wszystkie", region: "warmińsko - mazurskie" },
-    { city: "Wszystkie", region: "wielkopolskie" },
-    { city: "Wszystkie", region: "zachodniopomorskie" },
+    { city: "", region: "dolnośląskie" },
+    { city: "", region: "kujawsko - pomorskie" },
+    { city: "", region: "lubelskie" },
+    { city: "", region: "lubuskie" },
+    { city: "", region: "łódzkie" },
+    { city: "", region: "małopolskie" },
+    { city: "", region: "mazowieckie" },
+    { city: "", region: "opolskie" },
+    { city: "", region: "podkarpackie" },
+    { city: "", region: "podlaskie" },
+    { city: "", region: "pomorskie" },
+    { city: "", region: "śląskie" },
+    { city: "", region: "świętokrzyskie" },
+    { city: "", region: "warmińsko - mazurskie" },
+    { city: "", region: "wielkopolskie" },
+    { city: "", region: "zachodniopomorskie" },
     { city: "Warszawa", region: "mazowieckie" },
     { city: "Kraków", region: "małopolskie" },
     { city: "Łódź", region: "łódzkie" },
@@ -289,7 +288,7 @@ export const cities = [
 
 const alfaromeo = {
     id: "alfaromeo", name: "Alfa Romeo", models: [
-        "Wszystkie",
+        "",
         "33",
         "75",
         "145",
@@ -315,7 +314,7 @@ const alfaromeo = {
 
 const audi = {
     id: "audi", name: "Audi", models: [
-        "Wszystkie",
+        "",
         "A1",
         "A2",
         "A3",
@@ -347,7 +346,7 @@ const audi = {
 
 const bmw = {
     id: "bmw", name: "BMW", models: [
-        "Wszystkie",
+        "",
         "i3",
         "i8",
         "M1",
@@ -377,7 +376,7 @@ const bmw = {
 
 const cadillac = {
     id: "cadillac", name: "Cadillac", models: [
-        "Wszystkie",
+        "",
         "Cts",
         "Deville",
         "Dts",
@@ -390,7 +389,7 @@ const cadillac = {
 
 const chevrolet = {
     id: "chevrolet", name: "Chevrolet", models: [
-        "Wszystkie",
+        "",
         "Alero",
         "Astro",
         "Avalanche",
@@ -424,7 +423,7 @@ const chevrolet = {
 
 const chrysler = {
     id: "chrysler", name: "Chrysler", models: [
-        "Wszystkie",
+        "",
         "300C",
         "300M",
         "Aspen",
@@ -446,7 +445,7 @@ const chrysler = {
 
 const citroen = {
     id: "citroen", name: "Citroen", models: [
-        "Wszystkie",
+        "",
         "AX",
         "Berlingo",
         "BX",
@@ -481,7 +480,7 @@ const citroen = {
 
 const dacia = {
     id: "dacia", name: "Dacia", models: [
-        "Wszystkie",
+        "",
         "Doker",
         "Duster",
         "Lodgy",
@@ -494,7 +493,7 @@ const dacia = {
 
 const daewoo = {
     id: "daewoo", name: "Daewoo", models: [
-        "Wszystkie",
+        "",
         "Espero",
         "Kalos",
         "Korando",
@@ -511,7 +510,7 @@ const daewoo = {
 
 const daihatsu = {
     id: "daihatsu", name: "Daihatsu", models: [
-        "Wszystkie",
+        "",
         "Cuore",
         "Materia",
         "Move",
@@ -523,7 +522,7 @@ const daihatsu = {
 
 const dodge = {
     id: "dodge", name: "Dodge", models: [
-        "Wszystkie",
+        "",
         "Avenger",
         "Caliber",
         "Caravan",
@@ -541,7 +540,7 @@ const dodge = {
 
 const fiat = {
     id: "fiat", name: "Fiat", models: [
-        "Wszystkie",
+        "",
         "125p",
         "126",
         "500",
@@ -582,7 +581,7 @@ const fiat = {
 
 const ford = {
     id: "ford", name: "Ford", models: [
-        "Wszystkie",
+        "",
         "Aerostar",
         "C-MAX",
         "Capri",
@@ -630,7 +629,7 @@ const ford = {
 
 const honda = {
     id: "honda", name: "Honda", models: [
-        "Wszystkie",
+        "",
         "Accord",
         "City",
         "Civic",
@@ -655,7 +654,7 @@ const honda = {
 
 const hyundai = {
     id: "hyundai", name: "Hyundai", models: [
-        "Wszystkie",
+        "",
         "Accent",
         "Atos",
         "Coupe",
@@ -683,7 +682,7 @@ const hyundai = {
 
 const infiniti = {
     id: "infiniti ", name: "Infiniti ", models: [
-        "Wszystkie",
+        "",
         "EX",
         "FX",
         "G",
@@ -702,7 +701,7 @@ const infiniti = {
 
 const jaguar = {
     id: "jaguar  ", name: "Jaguar  ", models: [
-        "Wszystkie",
+        "",
         "E-Pace",
         "E-Type",
         "F-Pace",
@@ -720,7 +719,7 @@ const jaguar = {
 
 const jeep = {
     id: "jeep", name: "Jeep", models: [
-        "Wszystkie",
+        "",
         "Cherokee",
         "Commander",
         "Compass",
@@ -734,7 +733,7 @@ const jeep = {
 
 const kia = {
     id: "kia", name: "Kia", models: [
-        "Wszystkie",
+        "",
         "Carens",
         "Cee'd",
         "Cerato",
@@ -755,7 +754,7 @@ const kia = {
 
 const lancia = {
     id: "lancia", name: "Lancia", models: [
-        "Wszystkie",
+        "",
         "Dedra",
         "Delta",
         "Kappa",
@@ -769,7 +768,7 @@ const lancia = {
 
 const landrover = {
     id: "landrover", name: "Land Rover", models: [
-        "Wszystkie",
+        "",
         "Defender",
         "Discovery",
         "Freelander",
@@ -780,7 +779,7 @@ const landrover = {
 
 const lexus = {
     id: "lexus", name: "Lexus", models: [
-        "Wszystkie",
+        "",
         "CT",
         "ES",
         "GS",
@@ -799,7 +798,7 @@ const lexus = {
 
 const mazda = {
     id: "mazda", name: "Mazda", models: [
-        "Wszystkie",
+        "",
         "2",
         "3",
         "5",
@@ -821,7 +820,7 @@ const mazda = {
 
 const mercedesbenz = {
     id: "mercedesbenz", name: "Mercedes-Benz", models: [
-        "Wszystkie",
+        "",
         "Klasa A",
         "Klasa B",
         "Klasa C",
@@ -865,7 +864,7 @@ const mercedesbenz = {
 
 const mini = {
     id: "mini", name: "Mini", models: [
-        "Wszystkie",
+        "",
         "Cabrio",
         "Clubman",
         "Clubvan",
@@ -882,7 +881,7 @@ const mini = {
 
 const mitsubishi = {
     id: "mitsubishi", name: "Mitsubishi", models: [
-        "Wszystkie",
+        "",
         "3000 GT",
         "ASX",
         "Carisma",
@@ -911,7 +910,7 @@ const mitsubishi = {
 
 const nissan = {
     id: "nissan", name: "Nissan", models: [
-        "Wszystkie",
+        "",
         "100 NX",
         "200 SX",
         "300 ZX",
@@ -953,7 +952,7 @@ const nissan = {
 
 const opel = {
     id: "opel", name: "Opel", models: [
-        "Wszystkie",
+        "",
         "Agila",
         "Antara",
         "Ascona",
@@ -987,7 +986,7 @@ const opel = {
 
 const peugeot = {
     id: "peugeot", name: "Peugeot", models: [
-        "Wszystkie",
+        "",
         "106",
         "107",
         "205",
@@ -1028,7 +1027,7 @@ const peugeot = {
 
 const porsche = {
     id: "porsche", name: "Porsche", models: [
-        "Wszystkie",
+        "",
         "911",
         "924",
         "928",
@@ -1047,7 +1046,7 @@ const porsche = {
 
 const renault = {
     id: "renault", name: "Renault", models: [
-        "Wszystkie",
+        "",
         "4",
         "5",
         "11",
@@ -1084,7 +1083,7 @@ const renault = {
 
 const rover = {
     id: "rover", name: "Rover", models: [
-        "Wszystkie",
+        "",
         "25",
         "45",
         "75",
@@ -1112,7 +1111,7 @@ const rover = {
 
 const saab = {
     id: "saab", name: "Saab", models: [
-        "Wszystkie",
+        "",
         "9-3",
         "9-5",
         "9-7X",
@@ -1123,7 +1122,7 @@ const saab = {
 
 const seat = {
     id: "seat", name: "Seat", models: [
-        "Wszystkie",
+        "",
         "Alhambra",
         "Altea",
         "Altea XL",
@@ -1143,7 +1142,7 @@ const seat = {
 
 const skoda = {
     id: "skoda", name: "Skoda", models: [
-        "Wszystkie",
+        "",
         "Citigo",
         "Enyaq iV",
         "Fabia",
@@ -1161,7 +1160,7 @@ const skoda = {
 
 const smart = {
     id: "smart", name: "Smart", models: [
-        "Wszystkie",
+        "",
         "Fortwo",
         "Forfour",
         "Roadster",
@@ -1170,7 +1169,7 @@ const smart = {
 
 const ssangyong = {
     id: "ssangyong", name: "SsangYong", models: [
-        "Wszystkie",
+        "",
         "Korando",
         "Musso",
         "Kyron",
@@ -1182,7 +1181,7 @@ const ssangyong = {
 
 const subaru = {
     id: "subaru", name: "Subaru", models: [
-        "Wszystkie",
+        "",
         "Forester",
         "Impreza",
         "Justy",
@@ -1196,7 +1195,7 @@ const subaru = {
 
 const suzuki = {
     id: "suzuki", name: "Suzuki", models: [
-        "Wszystkie",
+        "",
         "Across",
         "Alto",
         "Baleno",
@@ -1218,7 +1217,7 @@ const suzuki = {
 
 const toyota = {
     id: "toyota", name: "Toyota", models: [
-        "Wszystkie",
+        "",
         "4Runner",
         "Auris",
         "Avalon",
@@ -1258,7 +1257,7 @@ const toyota = {
 
 const volkswagen = {
     id: "volkswagen", name: "Volkswagen", models: [
-        "Wszystkie",
+        "",
         "Amarok",
         "Arteon",
         "Beetle",
@@ -1299,7 +1298,7 @@ const volkswagen = {
 
 const volvo = {
     id: "volvo", name: "Volvo", models: [
-        "Wszystkie",
+        "",
         "C30",
         "C70",
         "S40",
@@ -1320,8 +1319,8 @@ const volvo = {
 }
 
 
-const wszystkie = {
-    id: "Wszystkie", name: "Wszystkie", models: ["Wszystkie"]
+const empty = {
+    id: "", name: "", models: [""]
 }
 //     "Alfa Romeo",
 //     "Audi",
@@ -1368,7 +1367,7 @@ const wszystkie = {
 //     "Pozostałe",
 
 
-export const cars = [wszystkie, alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo,]
+export const cars = [empty, alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo,]
 
 
 // ----------------------- STOP CARS ARRAY --------------------------//

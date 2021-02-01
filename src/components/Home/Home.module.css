@@ -72,6 +72,7 @@
 
 
 .filter__itemContainer {
+    min-width: 12rem;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -121,15 +122,69 @@
 
 
 
-/* ITEMS */
+/* ALL ADDS */
 
-.items {
+.adds {
     padding: 2rem 0;
 }
 
-.items__title {}
+.adds__title {}
 
-.items__container {
+
+.adds__itemsContainer {
+    padding: 1rem;
+}
+
+.adds__item {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.adds__itemContainer {
+    display: flex;
+}
+
+.adds__itemFigure {
+    width: 10rem;
+    height: 10rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adds__itemImg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.adds__itemDescContainer {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+}
+
+.adds__itemDescTop {
+    display: flex;
+    font-size: 1.5rem;
+}
+
+.adds__itemDescBottom {
+    display: flex;
+    font-size: 1rem;
+}
+
+.adds__itemDescRight {
+    display: flex;
+    font-size: 1rem;
+    font-weight: bold;
+    align-self: flex-start;
+}
+
+.adds__itemText {
+    font-size: inherit;
+    padding: 0.5rem;
 }

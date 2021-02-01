@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
-import { WSZYSTKIE } from "../../shared/constans";
 
 //components
 import { ReactComponent as Question } from '../../assets/question.svg'
 
 // data
 import { cars, fuel, yearFrom, yearTo, gearbox, regions, cities } from '../../shared/data'
+
+// constans
+import { ADDS } from '../../shared/constans'
 
 
 
@@ -26,48 +28,80 @@ const Home = () => {
     // ----------------------- START FILTERS --------------------------//
 
     // STATE - set region
-    const [regionChosen, setRegionChosen] = useState(WSZYSTKIE)
+    const [regionChosen, setRegionChosen] = useState("")
 
     // STATE - set city
-    const [cityChosen, setCityChosen] = useState(WSZYSTKIE)
+    const [cityChosen, setCityChosen] = useState("")
 
     // STATE - set car id (name)
-    const [carIdChosen, setCarIdChosen] = useState(WSZYSTKIE)
+    const [carIdChosen, setCarIdChosen] = useState("")
 
     // STATE - set car model
-    const [carModelChosen, setCarModelChosen] = useState(WSZYSTKIE)
+    const [carModelChosen, setCarModelChosen] = useState("")
 
     // STATE - set fuel
-    const [fualChosen, setFuelChosen] = useState(WSZYSTKIE)
+    const [fualChosen, setFuelChosen] = useState("")
 
     // STATE - set year from
-    const [yearFromChosen, setYearFromChosen] = useState(WSZYSTKIE)
+    const [yearFromChosen, setYearFromChosen] = useState("")
 
     // STATE - set year to
-    const [yearToChosen, setYearToChosen] = useState(WSZYSTKIE)
+    const [yearToChosen, setYearToChosen] = useState("")
 
     // STATE - set gearbox
-    const [gearboxChosen, setGearboxChosen] = useState(WSZYSTKIE)
+    const [gearboxChosen, setGearboxChosen] = useState("")
 
     // set Regions on Change
     const setRegionChosenChandler = e => {
         setRegionChosen(e.target.value)
-        setCityChosen(WSZYSTKIE) // reset city when region change
+        setCityChosen("") // reset city when region change
     }
 
     // set Car ID on Change
     const setCarIdChosenChandler = e => {
         setCarIdChosen(e.target.value)
-        setCarModelChosen(WSZYSTKIE) // reset model when Car ID change
+        setCarModelChosen("") // reset model when Car ID change
     }
 
-    // filter items
-    const filterItems = () => {
+    // filter adds
+    const filterAdds = () => {
 
         console.log("filtrowanie");
     }
 
     // ----------------------- STOP FILTERS --------------------------//
+
+
+
+
+    // ----------------------- START ADDS  --------------------------//
+
+
+
+    // STATE - set ALL ADDS
+    const [allAdds, setAllAdds] = useState([])
+
+    useEffect(() => {
+
+        //clear adds before load
+        setAllAdds([])
+
+        // listener for all adds
+        const listener = firestore.collection(ADDS).onSnapshot( //have two arguments which are functions
+            resp => resp.forEach(doc => {
+
+                // get add with itemID from DB and save in State
+                // console.log("doc: ", doc.data())
+                setAllAdds(prevState => [...prevState, doc.data()])
+            }),
+            err => console.log(err.message))
+
+        return () => {
+            listener() // clean up listener
+        }
+    }, [])
+
+    // ----------------------- STOP ADDS  --------------------------//
 
 
 
@@ -155,20 +189,50 @@ const Home = () => {
                             </select>
                         </div>
                     </div>
-                    <button className={style.btn} onClick={filterItems}>Filtruj</button>
+                    <button className={style.btn} onClick={filterAdds}>Filtruj</button>
                 </div>
 
 
-                {/* ITEMS */}
-                <div className={style.items}>
-                    <p className={`${style.items__title} ${style.title}`}>Ogłoszenia</p>
-                    <div className={style.items__container}>
-                        <p>Ogłoszenie 1</p>
-                        <p>Ogłoszenie 2</p>
+                {/* ALL ADDS */}
+                <div className={style.adds}>
+                    <p className={style.title}>Ogłoszenia</p>
+
+                    <div className={style.adds__itemsContainer}>
+                        {allAdds.map(item => {
+                            return (
+                                <div key={item.id} className={style.adds__item}>
+
+                                    <div className={style.adds__itemContainer}>
+                                        <figure className={style.adds__itemFigure}>
+                                            <img className={style.adds__itemImg} src={item.imageURL[0]} />
+                                        </figure>
+
+                                        <div className={style.adds__itemDescContainer}>
+                                            <div className={style.adds__itemDescTop}>
+                                                <p className={style.adds__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                <p className={style.adds__itemText}>{item.carModelChosen}</p>
+
+                                            </div>
+
+                                            <div className={style.adds__itemDescBottom}>
+                                                <p className={style.adds__itemText}>{item.regionChosen}</p>
+                                                <p className={style.adds__itemText}>{item.cityChosen}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={style.adds__itemDescRight} >
+                                        <p className={style.adds__itemText}>{item.priceOfMeeting} zł/h</p>
+                                    </div>
+
+                                </div>
+                            )
+                        })
+                        }
+
                     </div>
+
                 </div>
-
-
             </div>
         </section>
     )

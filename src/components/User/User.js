@@ -10,13 +10,13 @@ import { cars, fuel, years, gearbox, regions, cities, knowledge, choice } from '
 import Photo from '../../assets/photo.png'
 
 //firebase
-import { auth, storage } from '../../shared/fire'
+import { auth, firestore, storage } from '../../shared/fire'
 
 // constans
-import { IS_AUTH, USER_NAME, USER_EMAIL, WSZYSTKIE } from '../../shared/constans'
+import { IS_AUTH, USER_NAME, USER_EMAIL, ADDS, USERS } from '../../shared/constans'
 
 
-const helpArray = ['ogłoszenie 1', 'ogłoszenie 2', 'ogłoszenie 3',]
+
 
 const User = props => {
 
@@ -28,27 +28,29 @@ const User = props => {
 
     }, [])
 
+
+
+
     // ----------------------- START ADD ITEM --------------------------//
 
     // STATE - is Adding Item
     const [isAddingItem, setIsAddingItem] = useState(false)
 
 
-
     // STATE - set car id (name)
-    const [carIdChosen, setCarIdChosen] = useState(WSZYSTKIE)
+    const [carIdChosen, setCarIdChosen] = useState("")
 
     // STATE - set car model
-    const [carModelChosen, setCarModelChosen] = useState(WSZYSTKIE)
-
-    // STATE - set fuel
-    const [fualChosen, setFuelChosen] = useState(WSZYSTKIE)
+    const [carModelChosen, setCarModelChosen] = useState("")
 
     // STATE - set year from
     const [yearChosen, setYearChosen] = useState("")
 
+    // STATE - set fuel
+    const [fuelChosen, setFuelChosen] = useState("")
+
     // STATE - set gearbox
-    const [gearboxChosen, setGearboxChosen] = useState(WSZYSTKIE)
+    const [gearboxChosen, setGearboxChosen] = useState("")
 
 
 
@@ -77,12 +79,11 @@ const User = props => {
 
 
 
-
     // STATE - set region
-    const [regionChosen, setRegionChosen] = useState(WSZYSTKIE)
+    const [regionChosen, setRegionChosen] = useState("")
 
     // STATE - set city
-    const [cityChosen, setCityChosen] = useState(WSZYSTKIE)
+    const [cityChosen, setCityChosen] = useState("")
 
     // STATE - input Name
     const [inputName, setInputName] = useState('') // input value
@@ -128,19 +129,16 @@ const User = props => {
         setIsAddingItem(false) // close item form
     }
 
-
     // set Regions on Change
     const setRegionChosenChandler = e => {
         setRegionChosen(e.target.value)
-        setCityChosen(WSZYSTKIE) // reset city when region change
+        setCityChosen("") // reset city when region change
     }
-
-
 
     // set Car ID on Change
     const setCarIdChosenChandler = e => {
         setCarIdChosen(e.target.value)
-        setCarModelChosen(WSZYSTKIE) // reset model when Car ID change
+        setCarModelChosen("") // reset model when Car ID change
     }
 
     // get photo from file/camera
@@ -241,12 +239,77 @@ const User = props => {
     // add item to DB
     const addItemToDB = () => {
 
-        console.log("addItemToDB");
+        // object to save in DB
+        const corObject = { id: isAddingItem, user: localStorage.getItem(USER_EMAIL), carIdChosen: carIdChosen, carModelChosen: carModelChosen, yearChosen: yearChosen, fuelChosen: fuelChosen, gearboxChosen: gearboxChosen, imageURL: imageURL, inputDescription: inputDescription, techKnowledge: techKnowledge, choiceDriver: choiceDriver, priceOfMeeting: priceOfMeeting, timeOfDay: timeOfDay, regionChosen: regionChosen, cityChosen: cityChosen, inputName: inputName, inputEmail: inputEmail, inputPhone: inputPhone, inputAgreenent: inputAgreenent }
+        console.log(corObject);
+
+        // save obj in DB
+        firestore.collection(ADDS).doc(isAddingItem).set(corObject) // save obj in firestore
+            .then(() => console.log("corObject saved in firestore"))
+            .then(() => firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).doc(isAddingItem).set({ itemID: isAddingItem })) // save add ID to current user folder in DB
+            .then(() => console.log("addId saved in firestore"))
+            .catch(err => console.log("error saving in firestore: ", err))
+
+        // close and clear add edition
+        setIsAddingItem(false)
+        setCarIdChosen("")
+        setCarModelChosen("")
+        setYearChosen("")
+        setFuelChosen("")
+        setGearboxChosen("")
+        setImage(image.map(() => null)) // clear image holder
+        setImageURL(imageURL.map(() => null)) // clear image URL holder
+        setInputDescription("")
+        setTechKnowledge("")
+        setChoiceDriver("")
+        setPriceOfMeeting("")
+        setTimeOfDay("")
+        setRegionChosen("")
+        setCityChosen("")
+        setInputName("")
+        setInputEmail("")
+        setInputPhone("")
+        setAgreenent("")
     }
 
     // ----------------------- STOP ADD ITEM --------------------------//
 
 
+
+
+    // ----------------------- START USER VIEW  --------------------------//
+
+
+
+    // STATE - set user ADDS
+    const [userAdds, setUserAdds] = useState([])
+
+    useEffect(() => {
+
+
+        // if user is not sign in then not start listener
+        if (!localStorage.getItem(USER_EMAIL)) {
+            return
+        }
+
+        // listener for collection
+        const listener = firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).onSnapshot( //have two arguments which are functions
+            resp => resp.forEach(doc => {
+
+                // get add with itemID from DB and save in State
+                firestore.collection(ADDS).doc(doc.data().itemID).get()
+                    .then(resp => {
+                        // console.log(resp.data())
+                        setUserAdds(prevState => [...prevState, resp.data()])
+                    })
+                    .catch(err => console.log('err', err))
+            }),
+            err => console.log(err.message))
+
+        return () => {
+            listener() // clean up listener
+        }
+    }, [])
 
     // log out button
     const handlerLogOut = () => {
@@ -254,6 +317,8 @@ const User = props => {
         props.history.replace('/home') // go to /home
     }
 
+
+    // ----------------------- STOP USER VIEW  --------------------------//
 
 
     return (
@@ -432,20 +497,49 @@ const User = props => {
 
 
 
-                        // all items
-                        : <div>
+                        // USER LIST ITEMS
+                        : <div className={style.user}>
                             <p className={style.user__title}>Witaj {localStorage.getItem(USER_NAME)}</p>
                             <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
 
 
 
                             <div className={style.user__itemsContainer}>
-                                {helpArray.map(item => {
-                                    return (
-                                        <p key={item} className={style.user__item}>{item}</p>
-                                    )
-                                })
 
+                                {userAdds.length == 0
+
+                                    ? <p className={style.user__itemText}>Brak</p>
+
+                                    : userAdds.map(item => {
+                                        return (
+                                            <div key={item.id} className={style.user__item}>
+
+                                                <div className={style.user__itemContainer}>
+                                                    <figure className={style.user__itemFigure}>
+                                                        <img className={style.user__itemImg} src={item.imageURL[0]} />
+                                                    </figure>
+
+                                                    <div className={style.user__itemDescContainer}>
+                                                        <div className={style.user__itemDescTop}>
+                                                            <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                            <p className={style.user__itemText}>{item.carModelChosen}</p>
+                                                        </div>
+
+                                                        <div className={style.user__itemDescBottom}>
+                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>zobacz</button>
+                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>edytuj</button>
+                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>usuń</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className={style.user__itemDescRight} >
+                                                    <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
+                                                </div>
+
+                                            </div>
+                                        )
+                                    })
                                 }
                                 <button className={style.btn} onClick={showAddItemForm}>Dodaj</button>
                             </div>
