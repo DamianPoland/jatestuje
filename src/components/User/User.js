@@ -4,7 +4,7 @@ import style from './User.module.css'
 
 //components
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
-import { cars, fuel, yearFrom, yearTo, gearbox, regions, cities } from '../../shared/data'
+import { cars, fuel, years, gearbox, regions, cities, knowledge, choice } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
@@ -45,24 +45,35 @@ const User = props => {
     const [fualChosen, setFuelChosen] = useState(WSZYSTKIE)
 
     // STATE - set year from
-    const [yearFromChosen, setYearFromChosen] = useState(WSZYSTKIE)
-
-    // STATE - set year to
-    const [yearToChosen, setYearToChosen] = useState(WSZYSTKIE)
+    const [yearChosen, setYearChosen] = useState("")
 
     // STATE - set gearbox
     const [gearboxChosen, setGearboxChosen] = useState(WSZYSTKIE)
 
 
 
+    // STATE - input Image
+    const [image, setImage] = useState([null, null, null, null]) // input image value
+    const [imageURL, setImageURL] = useState([null, null, null, null]) // write URL from DB
+    const [progress, setProgress] = useState(0) // progress bar
+    const [showProgress, setShowProgress] = useState([false, false, false, false]) // set progress visibility
+
     // STATE - input Description
     const [inputDescription, setInputDescription] = useState('') // input value
 
-    // STATE - input Image
-    const [image, setImage] = useState(null) // input image value
-    const [imageURL, setImageURL] = useState('') // write URL from DB
-    const [progress, setProgress] = useState(0) // progress bar
-    const [showProgress, setShowProgress] = useState(false) // set progress visibility
+
+
+    // STATE - set technical knowlage
+    const [techKnowledge, setTechKnowledge] = useState("")
+
+    // STATE - set is posible to client drive a car
+    const [choiceDriver, setChoiceDriver] = useState("")
+
+    // STATE - set price of meeting
+    const [priceOfMeeting, setPriceOfMeeting] = useState("")
+
+    // STATE - set region
+    const [timeOfDay, setTimeOfDay] = useState("")
 
 
 
@@ -79,12 +90,43 @@ const User = props => {
     // STATE - input Email
     const [inputEmail, setInputEmail] = useState('') // input value
 
-    // STATE - input Email
+    // STATE - input Phone
     const [inputPhone, setInputPhone] = useState('') // input value
 
     // STATE - input Agreenent
     const [inputAgreenent, setAgreenent] = useState(false) // input value
 
+
+    // show add item form
+    const showAddItemForm = () => {
+
+        //unique name of id in DB storage and firestore - data and random string
+        const itemMainNameInDB = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
+        setIsAddingItem(itemMainNameInDB)
+    }
+
+    // hide add item form and clear all
+    const hideAddItemForm = () => {
+        setImage(image.map(() => null)) // clear image holder
+        setImageURL(imageURL.map(() => null)) // clear image URL holder
+
+        // delete images and folder from DB
+        const ref = storage.ref(`images/${isAddingItem}`)
+        ref.listAll()
+            .then(resp => {
+                resp.items.forEach(fileRef => {
+                    storage.ref(fileRef.fullPath).getDownloadURL()
+                        .then(url => {
+                            storage.refFromURL(url).delete()
+                                .then(() => console.log("deleted succesfully from storage"))
+                                .catch(error => console.log("error deletion, error: ", error))
+                        })
+                })
+            })
+            .catch(error => console.log(error))
+
+        setIsAddingItem(false) // close item form
+    }
 
 
     // set Regions on Change
@@ -102,13 +144,38 @@ const User = props => {
     }
 
     // get photo from file/camera
-    const getPhoto = e => {
-        setImage(e.target.files[0]) // add photo to state
+    const getPhoto = (e, index) => {
+        setImage(prevState => {
+            let helpArray = [...prevState]
+            helpArray[index] = e.target.files[0]
+            return helpArray
+        })
     }
 
-    // add image to DB and show to user
-    useEffect(() => {
 
+    // add image 0 to DB and show to user
+    useEffect(() => {
+        addImgToDB(image[0], 0)
+    }, [image[0]])
+
+    // add image 1 to DB and show to user
+    useEffect(() => {
+        addImgToDB(image[1], 1)
+    }, [image[1]])
+
+    // add image 2 to DB and show to user
+    useEffect(() => {
+        addImgToDB(image[2], 2)
+    }, [image[2]])
+
+    // add image 3 to DB and show to user
+    useEffect(() => {
+        addImgToDB(image[3], 3)
+    }, [image[3]])
+
+
+    // add image to DB and show to user
+    const addImgToDB = (image, index) => {
         // if image is empty then return
         if (!image) {
             return
@@ -122,40 +189,54 @@ const User = props => {
         }
 
         // set progress bar visibile
-        setShowProgress(true)
+        setShowProgress(prevState => {
+            let helpArray = [...prevState]
+            helpArray[index] = true
+            return helpArray
+        })
 
-        // TODO image NAME in DB must be unike
+
 
 
         // send photo to DB
-        const uploadTask = storage.ref(`images/${image.name}`).put(image)
+        const uploadTask = storage.ref(`images/${isAddingItem}/${image.name}`).put(image)
         uploadTask.on('state_changed',
             snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
             err => { //show if error
                 console.log('upload error: ', err)
-                setShowProgress(false) // set progress bar invisibile
+                setShowProgress(prevState => {
+                    let helpArray = [...prevState]
+                    helpArray[index] = false
+                    return helpArray
+                }) // set progress bar invisibile
             },
             () => {
                 storage // get url
-                    .ref('images')
+                    .ref(`images/${isAddingItem}`)
                     .child(image.name)
                     .getDownloadURL() // get url
                     .then(url => {
-                        setImageURL(url)
-                        setShowProgress(false) // set progress bar invisibile
+                        setImageURL(prevState => {
+                            let helpArray = [...prevState]
+                            helpArray[index] = url
+                            return helpArray
+                        })
+                        setShowProgress(prevState => {
+                            let helpArray = [...prevState]
+                            helpArray[index] = false
+                            return helpArray
+                        }) // set progress bar invisibile
                     }) // write url in state
                     .catch(errStorage => {
                         console.log('storage errStorage', errStorage);
-                        setShowProgress(false) // set progress bar invisibile
+                        setShowProgress(prevState => {
+                            let helpArray = [...prevState]
+                            helpArray[index] = false
+                            return helpArray
+                        }) // set progress bar invisibile
                     })
             })
-
-    }, [image])
-
-
-
-
-
+    }
 
     // add item to DB
     const addItemToDB = () => {
@@ -164,7 +245,6 @@ const User = props => {
     }
 
     // ----------------------- STOP ADD ITEM --------------------------//
-
 
 
 
@@ -187,9 +267,10 @@ const User = props => {
                         ?
 
                         // ADD ITEM
-                        <div>
+                        <div className={style.add}>
 
-                            <div className={style.add}>
+                            {/* car section */}
+                            <div className={style.add__section}>
                                 <p className={style.add__title}>Dane pojazdu:</p>
                                 <div className={style.add__container}>
 
@@ -207,23 +288,19 @@ const User = props => {
                                         </select>
                                     </div>
 
+
+                                    <div className={style.add__itemContainer}>
+                                        <p className={style.add__itemDesc}>Rok produkcji:</p>
+                                        <select className={style.add__itemList} onChange={e => setYearChosen(e.target.value)}>
+                                            {years.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
+
                                     <div className={style.add__itemContainer}>
                                         <p className={style.add__itemDesc}>Paliwo:</p>
                                         <select className={style.add__itemList} onChange={e => setFuelChosen(e.target.value)}>
                                             {fuel.map(item => <option key={item} value={item}>{item}</option>)}
                                         </select>
-                                    </div>
-
-                                    <div className={style.add__itemContainer}>
-                                        <p className={style.add__itemDesc}>Rok produkcji:</p>
-                                        <div className={style.add__itemContainerItems}>
-                                            <select className={style.add__itemList} onChange={e => setYearFromChosen(e.target.value)}>
-                                                {yearFrom.map(item => <option key={item} value={item}>{item}</option>)}
-                                            </select>
-                                            <select className={style.add__itemList} onChange={e => setYearToChosen(e.target.value)}>
-                                                {yearTo.map(item => <option key={item} value={item}>{item}</option>)}
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <div className={style.add__itemContainer}>
@@ -238,42 +315,74 @@ const User = props => {
 
 
 
-                            <div className={style.add}>
+                            {/* photo and description section */}
+                            <div className={style.add__section}>
                                 <p className={style.add__title}>Zdjęcia i opis:</p>
                                 <div className={style.add__container}>
 
-                                    <div className={style.add__itemContainer}>
-                                        <input
-                                            id='file'
-                                            // className=""
-                                            style={{ display: "none" }}
-                                            type='file'
-                                            onChange={getPhoto}
-                                            accept='image/*' //image/* = .jpg, .jpeg, .bmp, .svg, .png
-                                        />
-                                        <label htmlFor='file' className={` ${style.btn}`}><img className={style.add__itemImage} src={imageURL || Photo} alt='podgląd zdjęcia.' /> </label>
-                                        {showProgress &&
-                                            <div className={style.add__progressContainer}>
-                                                <progress className={style.add__progressBar} value={progress} max='100' />
-                                            </div>}
-                                    </div>
-
-
-
-
+                                    {[...Array(4)].map((item, index) => {
+                                        return (
+                                            <div key={index} className={style.add__itemContainer}>
+                                                <input
+                                                    id={`file${index}`}
+                                                    // className=""
+                                                    style={{ display: "none" }}
+                                                    type='file'
+                                                    onChange={(e) => getPhoto(e, index)}
+                                                    accept='image/*' //image/* = .jpg, .jpeg, .bmp, .svg, .png
+                                                />
+                                                <label htmlFor={`file${index}`} className={` ${style.btn} ${style.add__itemLabel}`}><img className={style.add__itemImage} src={imageURL[index] || Photo} alt='podgląd zdjęcia.' /> </label>
+                                                {showProgress[index] &&
+                                                    <div className={style.add__progressContainer}>
+                                                        <progress className={style.add__progressBar} value={progress} max='100' />
+                                                    </div>}
+                                            </div>
+                                        )
+                                    })}
 
                                     <div className={`${style.add__itemContainer} ${style.add__itemTextArea}`}>
                                         <label className={style.add__itemDesc}>Opis:</label>
-                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.add__itemList} type='textarea' rows='15' placeholder="Opisz między innymi jak długo masz pojazd, ile zrobiłeś nim kilometrów, czy znasz się na sprawach technicznych itp. " />
+                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.add__itemList} type='textarea' rows='8' placeholder="Krótko opisz jak długo masz pojazd, ile przejchałes nim kilometrów, itp." />
                                     </div>
                                 </div>
                             </div>
 
 
+                            {/* meeting data section */}
+                            <div className={style.add__section}>
+                                <p className={style.add__title}>Informacje o spotkaniu:</p>
+                                <div className={style.add__container}>
+
+                                    <div className={style.add__itemContainer}>
+                                        <p className={style.add__itemDesc}>Jak oceniasz swoją więdzę techniczną <br />na temat samochodu?</p>
+                                        <select className={style.add__itemList} onChange={e => setTechKnowledge(e.target.value)}>
+                                            {knowledge.map(item => <option key={item} value={item}> {item} </option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className={style.add__itemContainer}>
+                                        <p className={style.add__itemDesc}>Czy instnieje możliwość aby <br />oglądający sam poprowadził samochód?</p>
+                                        <select className={style.add__itemList} onChange={e => setChoiceDriver(e.target.value)}>
+                                            {choice.map(item => <option key={item} value={item}> {item} </option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className={style.add__itemContainer}>
+                                        <label className={style.add__itemDesc}>Jak jest cena za godzinne spotkanie wliczając około 10 km <br />przejażdżkę w złotówkach? (sugerowanie 100 - 200)</label>
+                                        <input onChange={event => setPriceOfMeeting(event.target.value)} value={priceOfMeeting} className={style.add__itemList} type='number' placeholder="np. 150" />
+                                    </div>
+
+                                    <div className={style.add__itemContainer}>
+                                        <label className={style.add__itemDesc}>Opisz preferowaną pore spotkania:</label>
+                                        <input onChange={event => setTimeOfDay(event.target.value)} value={timeOfDay} className={style.add__itemList} type='text' placeholder="np. każda sobota i niedziela" />
+                                    </div>
+
+                                </div>
+                            </div>
 
 
-
-                            <div className={style.add}>
+                            {/* contact data section */}
+                            <div className={style.add__section}>
                                 <p className={style.add__title}>Twoje dane kontaktowe:</p>
                                 <div className={style.add__container}>
 
@@ -293,17 +402,17 @@ const User = props => {
 
                                     <div className={style.add__itemContainer}>
                                         <label className={style.add__itemDesc}>Imię:</label>
-                                        <input onChange={event => setInputName(event.target.value)} value={inputName} className={style.add__itemList} type='text' />
+                                        <input onChange={event => setInputName(event.target.value)} value={inputName} className={style.add__itemList} type='text' placeholder="np. Jan" />
                                     </div>
 
                                     <div className={style.add__itemContainer}>
                                         <label className={style.add__itemDesc}>Adres e-mail:</label>
-                                        <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} className={style.add__itemList} type='text' />
+                                        <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} className={style.add__itemList} type='text' placeholder="np. jan@gmail.com" />
                                     </div>
 
                                     <div className={style.add__itemContainer}>
                                         <label className={style.add__itemDesc}>Numer telefonu:</label>
-                                        <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.add__itemList} type='text' />
+                                        <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.add__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
                                     </div>
 
                                     <div className={style.add_checkBoxContainer}>
@@ -315,9 +424,8 @@ const User = props => {
                             </div>
 
 
-
                             <div className={style.btnContainer}>
-                                <button className={`${style.btn} ${style.btnMmargin}`} onClick={() => setIsAddingItem(false)}>Anuluj</button>
+                                <button className={`${style.btn} ${style.btnMmargin}`} onClick={hideAddItemForm}>Anuluj</button>
                                 <button className={style.btn} onClick={addItemToDB}>Dodaj</button>
                             </div>
                         </div>
@@ -339,7 +447,7 @@ const User = props => {
                                 })
 
                                 }
-                                <button className={style.btn} onClick={() => setIsAddingItem(true)}>Dodaj</button>
+                                <button className={style.btn} onClick={showAddItemForm}>Dodaj</button>
                             </div>
 
 
