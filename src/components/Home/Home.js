@@ -14,15 +14,15 @@ import { ADDS } from '../../shared/constans'
 
 
 
-const Home = () => {
+const Home = props => {
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // scroll to top when component render
-        window.scrollTo(0, 0)
+    //     // scroll to top when component render
+    //     window.scrollTo(0, 0)
 
-    }, [])
+    // }, [])
 
 
     // ----------------------- START FILTERS --------------------------//
@@ -200,7 +200,7 @@ const Home = () => {
                     <div className={style.adds__itemsContainer}>
                         {allAdds.map(item => {
                             return (
-                                <div key={item.id} className={style.adds__item}>
+                                <a href={`/home/${item.id}`} key={item.id} className={style.adds__item} >
 
                                     <div className={style.adds__itemContainer}>
                                         <figure className={style.adds__itemFigure}>
@@ -224,8 +224,7 @@ const Home = () => {
                                     <div className={style.adds__itemDescRight} >
                                         <p className={style.adds__itemText}>{item.priceOfMeeting} zł/h</p>
                                     </div>
-
-                                </div>
+                                </a>
                             )
                         })
                         }

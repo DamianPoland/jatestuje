@@ -284,8 +284,8 @@ const User = props => {
     // STATE - set user ADDS
     const [userAdds, setUserAdds] = useState([])
 
+    // start/stop listener for user adds
     useEffect(() => {
-
 
         // if user is not sign in then not start listener
         if (!localStorage.getItem(USER_EMAIL)) {
@@ -302,7 +302,7 @@ const User = props => {
                         // console.log(resp.data())
                         setUserAdds(prevState => [...prevState, resp.data()])
                     })
-                    .catch(err => console.log('err', err))
+                    .catch(err => console.log('listener err', err))
             }),
             err => console.log(err.message))
 
@@ -310,6 +310,17 @@ const User = props => {
             listener() // clean up listener
         }
     }, [])
+
+    // delete one add from DB
+    const deleteItemFromDB = (e, item) => {
+        console.log(item.id)
+
+        firestore.collection(ADDS).doc(item.id).delete()
+            .then(() => console.log("deleted add in ADDS"))
+            .then(() => firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).doc(item.id).delete())
+            .then(() => console.log("deleted add in USERS "))
+            .catch(err => console.log(' delete err', err))
+    }
 
     // log out button
     const handlerLogOut = () => {
@@ -506,7 +517,7 @@ const User = props => {
 
                             <div className={style.user__itemsContainer}>
 
-                                {userAdds.length == 0
+                                {userAdds.length === 0
 
                                     ? <p className={style.user__itemText}>Brak</p>
 
@@ -516,7 +527,7 @@ const User = props => {
 
                                                 <div className={style.user__itemContainer}>
                                                     <figure className={style.user__itemFigure}>
-                                                        <img className={style.user__itemImg} src={item.imageURL[0]} />
+                                                        <img className={style.user__itemImg} src={item.imageURL[0]} alt="main add" />
                                                     </figure>
 
                                                     <div className={style.user__itemDescContainer}>
@@ -526,9 +537,9 @@ const User = props => {
                                                         </div>
 
                                                         <div className={style.user__itemDescBottom}>
-                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>zobacz</button>
+                                                            <button className={style.user__itemButton} onClick={() => props.history.push(`/home/${item.id}`)}>zobacz</button>
                                                             <button className={style.user__itemButton} onClick={() => console.log("działą")}>edytuj</button>
-                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>usuń</button>
+                                                            <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
                                                         </div>
                                                     </div>
                                                 </div>

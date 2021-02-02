@@ -14,6 +14,7 @@ import 'aos/dist/aos.css'
 import Nav from "../../components/Nav/Nav";
 import Home from "../../components/Home/Home";
 import User from "../../components/User/User";
+import Add from "../../components/Add/Add";
 import PrivacyPolicy from '../../components/PrivacyPolicy/PrivacyPolicy'
 import AlertPrivacy from '../../UI/AlertPrivacy/AlertPrivacy'
 import Footer from "../../components/Footer/Footer";
@@ -69,7 +70,8 @@ const App = () => {
     <BrowserRouter>
       <Nav />
       <Switch>
-        <Route path='/home' component={Home} />
+        <Route path='/home' exact component={Home} />
+        <Route path='/home/:key' component={Add} />
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />
         <Redirect to='/home' />

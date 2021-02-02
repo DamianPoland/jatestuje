@@ -1,0 +1,40 @@
+.background {
+    margin-top: 4rem;
+    background: var(--backgroundCustom);
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.photos {
+    display: flex;
+}
+
+.photos__container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.photos__figureBig {
+    width: 25rem;
+}
+
+.photos__img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.photos__containerSmall {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photos__figureSmall {
+    width: 5rem;
+}
