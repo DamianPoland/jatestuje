@@ -86,7 +86,7 @@
 }
 
 .add__itemLabel {
-    height: 12rem;
+    height: 9rem;
     width: 12rem;
     padding: 0 !important;
     display: flex;
@@ -136,7 +136,7 @@
 }
 
 .user__itemsContainer {
-    padding: 1rem;
+    padding: 1rem 1rem 4rem 1rem;
 }
 
 .user__item {
@@ -151,9 +151,26 @@
     display: flex;
 }
 
+.user__itemEmpty {
+    display: flex;
+}
+
+.user__itemEmptyText {
+    font-size: 1.5rem;
+    padding: 4rem 0.5rem;
+}
+
+.user__itemEmptySVG {
+    height: 15rem;
+    width: 15rem;
+    padding: 0.5rem;
+}
+
+
+
 .user__itemFigure {
     width: 10rem;
-    height: 10rem;
+    height: 7.5rem;
     padding: 0.5rem;
     display: flex;
     justify-content: center;
@@ -207,8 +224,6 @@
     font-size: inherit;
     padding: 0.5rem;
 }
-
-
 
 
 

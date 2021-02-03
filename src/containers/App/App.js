@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { auth } from '../../shared/fire'
 
 // constans
-import { IS_AUTH, USER_ID, USER_NAME, USER_EMAIL } from '../../shared/constans'
+import { IS_AUTH, USER_ID, USER_NAME, USER_EMAIL, USER_PHOTO } from '../../shared/constans'
 
 // aos
 import AOS from 'aos'
@@ -38,15 +38,18 @@ const App = () => {
         localStorage.setItem(USER_ID, user.uid)
         localStorage.setItem(USER_NAME, user.displayName)
         localStorage.setItem(USER_EMAIL, user.email)
+        localStorage.setItem(USER_PHOTO, user.photoURL)
         console.log("user: ", user)
         console.log("user.uid: ", user.uid)
         console.log("user.displayName: ", user.displayName)
         console.log("user.email: ", user.email)
+        console.log("user.photoUrl: ", user.photoURL)
       } else {
         localStorage.removeItem(IS_AUTH)
         localStorage.removeItem(USER_ID)
         localStorage.removeItem(USER_NAME)
         localStorage.removeItem(USER_EMAIL)
+        localStorage.removeItem(USER_PHOTO)
         console.log(' user Sign Out')
       }
 

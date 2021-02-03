@@ -125,15 +125,11 @@
 /* ALL ADDS */
 
 .adds {
-    padding: 2rem 0;
+    padding: 2rem 1rem;
 }
 
-.adds__title {}
 
-
-.adds__itemsContainer {
-    padding: 1rem;
-}
+.adds__itemsContainer {}
 
 .adds__item {
     background-color: white;
@@ -141,6 +137,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 2rem 0;
+    text-decoration: none;
 }
 
 .adds__itemContainer {
@@ -149,7 +146,7 @@
 
 .adds__itemFigure {
     width: 10rem;
-    height: 10rem;
+    height: 7.5rem;
     padding: 0.5rem;
     display: flex;
     justify-content: center;

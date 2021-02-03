@@ -11,6 +11,9 @@ import { cars, fuel, yearFrom, yearTo, gearbox, regions, cities } from '../../sh
 // constans
 import { ADDS } from '../../shared/constans'
 
+//photos
+import PhotoEmpty from '../../assets/photoEmpty.png'
+
 
 
 
@@ -66,7 +69,10 @@ const Home = props => {
     // filter adds
     const filterAdds = () => {
 
-        console.log("filtrowanie");
+        // filters arguments list TODO
+        const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen]
+
+        console.log("filtrowanie, lista: ", filterArgList);
     }
 
     // ----------------------- STOP FILTERS --------------------------//
@@ -81,24 +87,21 @@ const Home = props => {
     // STATE - set ALL ADDS
     const [allAdds, setAllAdds] = useState([])
 
+    // load adds from DB
     useEffect(() => {
 
-        //clear adds before load
+        //clear adds list before load
         setAllAdds([])
 
-        // listener for all adds
-        const listener = firestore.collection(ADDS).onSnapshot( //have two arguments which are functions
-            resp => resp.forEach(doc => {
+        // load adds from DB
+        firestore.collection(ADDS).get()
+            .then(resp => resp.forEach(doc => {
 
-                // get add with itemID from DB and save in State
-                // console.log("doc: ", doc.data())
+                // save every add in State
                 setAllAdds(prevState => [...prevState, doc.data()])
-            }),
-            err => console.log(err.message))
+            }))
+            .catch(err => console.log('err get adds', err))
 
-        return () => {
-            listener() // clean up listener
-        }
     }, [])
 
     // ----------------------- STOP ADDS  --------------------------//
@@ -204,7 +207,7 @@ const Home = props => {
 
                                     <div className={style.adds__itemContainer}>
                                         <figure className={style.adds__itemFigure}>
-                                            <img className={style.adds__itemImg} src={item.imageURL[0]} />
+                                            <img className={style.adds__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
                                         </figure>
 
                                         <div className={style.adds__itemDescContainer}>

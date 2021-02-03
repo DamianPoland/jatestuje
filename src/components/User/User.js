@@ -1,20 +1,45 @@
 import React, { useState, useEffect } from 'react'
 import style from './User.module.css'
 
+// image compression library
+import imageCompression from 'browser-image-compression';
+
 
 //components
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
+import { ReactComponent as Duplicate } from '../../assets/duplicate.svg'
+
+//data 
 import { cars, fuel, years, gearbox, regions, cities, knowledge, choice } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
+import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
 import { auth, firestore, storage } from '../../shared/fire'
 
 // constans
-import { IS_AUTH, USER_NAME, USER_EMAIL, ADDS, USERS } from '../../shared/constans'
+import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADDS, USERS } from '../../shared/constans'
 
+
+
+// delete images and folder from DB
+const deleteImagesAndFolderFromDB = (isAddingItem) => {
+    const ref = storage.ref(`images/${isAddingItem}`)
+    ref.listAll()
+        .then(resp => {
+            resp.items.forEach(fileRef => {
+                storage.ref(fileRef.fullPath).getDownloadURL()
+                    .then(url => {
+                        storage.refFromURL(url).delete()
+                            .then(() => console.log("deleted succesfully from storage"))
+                            .catch(error => console.log("error deletion, error: ", error))
+                    })
+            })
+        })
+        .catch(error => console.log(error))
+}
 
 
 
@@ -108,25 +133,18 @@ const User = props => {
 
     // hide add item form and clear all
     const hideAddItemForm = () => {
-        setImage(image.map(() => null)) // clear image holder
-        setImageURL(imageURL.map(() => null)) // clear image URL holder
+
+        // clear image holder
+        setImage(image.map(() => null))
+
+        // clear image URL holder
+        setImageURL(imageURL.map(() => null))
 
         // delete images and folder from DB
-        const ref = storage.ref(`images/${isAddingItem}`)
-        ref.listAll()
-            .then(resp => {
-                resp.items.forEach(fileRef => {
-                    storage.ref(fileRef.fullPath).getDownloadURL()
-                        .then(url => {
-                            storage.refFromURL(url).delete()
-                                .then(() => console.log("deleted succesfully from storage"))
-                                .catch(error => console.log("error deletion, error: ", error))
-                        })
-                })
-            })
-            .catch(error => console.log(error))
+        deleteImagesAndFolderFromDB(isAddingItem)
 
-        setIsAddingItem(false) // close item form
+        // close item form
+        setIsAddingItem(false)
     }
 
     // set Regions on Change
@@ -154,21 +172,25 @@ const User = props => {
     // add image 0 to DB and show to user
     useEffect(() => {
         addImgToDB(image[0], 0)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image[0]])
 
     // add image 1 to DB and show to user
     useEffect(() => {
         addImgToDB(image[1], 1)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image[1]])
 
     // add image 2 to DB and show to user
     useEffect(() => {
         addImgToDB(image[2], 2)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image[2]])
 
     // add image 3 to DB and show to user
     useEffect(() => {
         addImgToDB(image[3], 3)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image[3]])
 
 
@@ -179,13 +201,6 @@ const User = props => {
             return
         }
 
-        // check image size, if more than 1MB then show alert and return
-        if (image.size >= 1048576) {
-            // setShowAlertSmall({ name: 'Plik jest za duży. Max. to 1 MB.', icon: 'info', borderColor: 'orange', animationTime: '3' })
-            console.log("Plik jest za duży");
-            return
-        }
-
         // set progress bar visibile
         setShowProgress(prevState => {
             let helpArray = [...prevState]
@@ -193,7 +208,35 @@ const User = props => {
             return helpArray
         })
 
+        // check image size, if more than 1MB then compress photo and try again
+        if (image.size >= 1048576) {
+            console.log("Plik jest za duży, rozmiar: ", image.size / 1000000, "MB");
+            console.log("image before compress: ", image);
 
+            // compression options
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920,
+                useWebWorker: true
+            }
+
+            // start compression
+            imageCompression(image, options)
+                .then(compressedFile => {
+                    console.log("after compression: ", compressedFile);
+                    console.log("after compression size: ", compressedFile.size / 1000000, "MB");
+
+                    // compression img save in state and run again function by state change => use effect
+                    setImage(prevState => {
+                        let helpArray = [...prevState]
+                        helpArray[index] = compressedFile
+                        return helpArray
+                    })
+
+                })
+                .catch(error => console.log("compression error message: ", error.message))
+            return
+        }
 
 
         // send photo to DB
@@ -202,6 +245,7 @@ const User = props => {
             snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
             err => { //show if error
                 console.log('upload error: ', err)
+                setProgress(0)
                 setShowProgress(prevState => {
                     let helpArray = [...prevState]
                     helpArray[index] = false
@@ -219,6 +263,7 @@ const User = props => {
                             helpArray[index] = url
                             return helpArray
                         })
+                        setProgress(0)
                         setShowProgress(prevState => {
                             let helpArray = [...prevState]
                             helpArray[index] = false
@@ -227,6 +272,7 @@ const User = props => {
                     }) // write url in state
                     .catch(errStorage => {
                         console.log('storage errStorage', errStorage);
+                        setProgress(0)
                         setShowProgress(prevState => {
                             let helpArray = [...prevState]
                             helpArray[index] = false
@@ -239,14 +285,24 @@ const User = props => {
     // add item to DB
     const addItemToDB = () => {
 
+
+        // TODO: validations
+
+
+        // filter array imageURL and delete null elements
+        const imageURLFultered = imageURL.filter(item => item != null)
+        console.log(imageURLFultered);
+
+
+
         // object to save in DB
-        const corObject = { id: isAddingItem, user: localStorage.getItem(USER_EMAIL), carIdChosen: carIdChosen, carModelChosen: carModelChosen, yearChosen: yearChosen, fuelChosen: fuelChosen, gearboxChosen: gearboxChosen, imageURL: imageURL, inputDescription: inputDescription, techKnowledge: techKnowledge, choiceDriver: choiceDriver, priceOfMeeting: priceOfMeeting, timeOfDay: timeOfDay, regionChosen: regionChosen, cityChosen: cityChosen, inputName: inputName, inputEmail: inputEmail, inputPhone: inputPhone, inputAgreenent: inputAgreenent }
+        const corObject = { id: isAddingItem, user: localStorage.getItem(USER_EMAIL), userPhoto: localStorage.getItem(USER_PHOTO), carIdChosen: carIdChosen, carModelChosen: carModelChosen, yearChosen: yearChosen, fuelChosen: fuelChosen, gearboxChosen: gearboxChosen, imageURL: imageURLFultered, inputDescription: inputDescription, techKnowledge: techKnowledge, choiceDriver: choiceDriver, priceOfMeeting: priceOfMeeting, timeOfDay: timeOfDay, regionChosen: regionChosen, cityChosen: cityChosen, inputName: inputName, inputEmail: inputEmail, inputPhone: inputPhone, inputAgreenent: inputAgreenent }
         console.log(corObject);
 
         // save obj in DB
         firestore.collection(ADDS).doc(isAddingItem).set(corObject) // save obj in firestore
             .then(() => console.log("corObject saved in firestore"))
-            .then(() => firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).doc(isAddingItem).set({ itemID: isAddingItem })) // save add ID to current user folder in DB
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADDS).doc(isAddingItem).set({ itemID: isAddingItem })) // save add ID to current user folder in DB
             .then(() => console.log("addId saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
 
@@ -293,17 +349,24 @@ const User = props => {
         }
 
         // listener for collection
-        const listener = firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).onSnapshot( //have two arguments which are functions
-            resp => resp.forEach(doc => {
+        const listener = firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADDS).onSnapshot( //have two arguments which are functions
+            resp => {
 
-                // get add with itemID from DB and save in State
-                firestore.collection(ADDS).doc(doc.data().itemID).get()
-                    .then(resp => {
-                        // console.log(resp.data())
-                        setUserAdds(prevState => [...prevState, resp.data()])
-                    })
-                    .catch(err => console.log('listener err', err))
-            }),
+                //clear adds list before load
+                setUserAdds([])
+
+                resp.forEach(doc => {
+
+                    console.log();
+                    // get add with itemID from DB and save in State
+                    firestore.collection(ADDS).doc(doc.data().itemID).get()
+                        .then(resp => {
+                            // console.log(resp.data())
+                            setUserAdds(prevState => [...prevState, resp.data()])
+                        })
+                        .catch(err => console.log('listener err', err))
+                })
+            },
             err => console.log(err.message))
 
         return () => {
@@ -315,9 +378,12 @@ const User = props => {
     const deleteItemFromDB = (e, item) => {
         console.log(item.id)
 
-        firestore.collection(ADDS).doc(item.id).delete()
+        // delete one add from DB STORAGE with images
+        deleteImagesAndFolderFromDB(item.id)
+
+        firestore.collection(ADDS).doc(item.id).delete() // delete one add from DB FIRESTORE in adds folder
             .then(() => console.log("deleted add in ADDS"))
-            .then(() => firestore.collection(USERS).doc(USERS).collection(localStorage.getItem(USER_EMAIL)).doc(item.id).delete())
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADDS).doc(item.id).delete())  // delete one add from DB FIRESTORE in users folder
             .then(() => console.log("deleted add in USERS "))
             .catch(err => console.log(' delete err', err))
     }
@@ -519,7 +585,12 @@ const User = props => {
 
                                 {userAdds.length === 0
 
-                                    ? <p className={style.user__itemText}>Brak</p>
+                                    ? <div className={style.user__itemEmpty}>
+                                        <p className={style.user__itemEmptyText}>Brak</p>
+                                        <div className={style.user__itemEmptySVG}>
+                                            <Duplicate />
+                                        </div>
+                                    </div>
 
                                     : userAdds.map(item => {
                                         return (
@@ -527,7 +598,7 @@ const User = props => {
 
                                                 <div className={style.user__itemContainer}>
                                                     <figure className={style.user__itemFigure}>
-                                                        <img className={style.user__itemImg} src={item.imageURL[0]} alt="main add" />
+                                                        <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main add" />
                                                     </figure>
 
                                                     <div className={style.user__itemDescContainer}>
