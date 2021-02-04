@@ -234,7 +234,15 @@ const User = props => {
                     })
 
                 })
-                .catch(error => console.log("compression error message: ", error.message))
+                .catch(error => {
+                    console.log("compression error message: ", error.message)
+                    setProgress(0)
+                    setShowProgress(prevState => {
+                        let helpArray = [...prevState]
+                        helpArray[index] = false
+                        return helpArray
+                    }) // set progress bar invisibile
+                })
             return
         }
 
