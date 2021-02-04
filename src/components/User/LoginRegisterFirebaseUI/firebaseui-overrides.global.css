@@ -14,7 +14,6 @@
 .login_regiter_UI_imgContainer {
     flex: 1.5;
     max-width: 500px;
-    display: flex;
     width: 100%;
     height: 100%;
     padding-right: 1rem;
