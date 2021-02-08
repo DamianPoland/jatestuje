@@ -7,17 +7,17 @@ import imageCompression from 'browser-image-compression';
 
 //components
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
-import { ReactComponent as Duplicate } from '../../assets/duplicate.svg'
+import { ReactComponent as Add } from '../../assets/add.svg'
 
 //data 
-import { cars, fuel, years, gearbox, regions, cities, knowledge, choice } from '../../shared/data'
+import { cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge, choice } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
 import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
-import { auth, firestore, storage } from '../../shared/fire'
+import { firestore, storage } from '../../shared/fire'
 
 // constans
 import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADDS, USERS } from '../../shared/constans'
@@ -76,6 +76,12 @@ const User = props => {
 
     // STATE - set gearbox
     const [gearboxChosen, setGearboxChosen] = useState("")
+
+    // STATE - set mileage
+    const [mileageChosen, setMileageChosen] = useState("")
+
+    // STATE - set type
+    const [typeChosen, setTypeChosen] = useState("")
 
 
 
@@ -304,7 +310,32 @@ const User = props => {
 
 
         // object to save in DB
-        const corObject = { id: isAddingItem, user: localStorage.getItem(USER_EMAIL), userPhoto: localStorage.getItem(USER_PHOTO), carIdChosen: carIdChosen, carModelChosen: carModelChosen, yearChosen: yearChosen, fuelChosen: fuelChosen, gearboxChosen: gearboxChosen, imageURL: imageURLFultered, inputDescription: inputDescription, techKnowledge: techKnowledge, choiceDriver: choiceDriver, priceOfMeeting: priceOfMeeting, timeOfDay: timeOfDay, regionChosen: regionChosen, cityChosen: cityChosen, inputName: inputName, inputEmail: inputEmail, inputPhone: inputPhone, inputAgreenent: inputAgreenent }
+        const corObject = {
+            id: isAddingItem,
+            userEmail: localStorage.getItem(USER_EMAIL),
+            userPhoto: localStorage.getItem(USER_PHOTO),
+            isPromoted: false, // promowanie wyłaczone zawsze przy odawaniu zdjęcia
+            isApproved: true, // automatycznie ustawia ogłoszenie jako zatwierdzone do wyświetlenia
+            carIdChosen: carIdChosen,
+            carModelChosen: carModelChosen,
+            yearChosen: yearChosen,
+            fuelChosen: fuelChosen,
+            gearboxChosen: gearboxChosen,
+            mileageChosen: mileageChosen,
+            typeChosen: typeChosen,
+            imageURL: imageURLFultered,
+            inputDescription: inputDescription,
+            techKnowledge: techKnowledge,
+            choiceDriver: choiceDriver,
+            priceOfMeeting: priceOfMeeting,
+            timeOfDay: timeOfDay,
+            regionChosen: regionChosen,
+            cityChosen: cityChosen,
+            inputName: inputName,
+            inputEmail: inputEmail,
+            inputPhone: inputPhone,
+            inputAgreenent: inputAgreenent
+        }
         console.log(corObject);
 
         // save obj in DB
@@ -321,6 +352,8 @@ const User = props => {
         setYearChosen("")
         setFuelChosen("")
         setGearboxChosen("")
+        setMileageChosen("")
+        setTypeChosen("")
         setImage(image.map(() => null)) // clear image holder
         setImageURL(imageURL.map(() => null)) // clear image URL holder
         setInputDescription("")
@@ -396,12 +429,6 @@ const User = props => {
             .catch(err => console.log(' delete err', err))
     }
 
-    // log out button
-    const handlerLogOut = () => {
-        auth.signOut() // sign out
-        props.history.replace('/home') // go to /home
-    }
-
 
     // ----------------------- STOP USER VIEW  --------------------------//
 
@@ -460,6 +487,20 @@ const User = props => {
                                         </select>
                                     </div>
 
+                                    <div className={style.add__itemContainer}>
+                                        <p className={style.add__itemDesc}>Przebieg (tyś km.):</p>
+                                        <select className={style.add__itemList} onChange={e => setMileageChosen(e.target.value)}>
+                                            {mileage.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className={style.add__itemContainer}>
+                                        <p className={style.add__itemDesc}>Typ:</p>
+                                        <select className={style.add__itemList} onChange={e => setTypeChosen(e.target.value)}>
+                                            {type.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -491,8 +532,8 @@ const User = props => {
                                     })}
 
                                     <div className={`${style.add__itemContainer} ${style.add__itemTextArea}`}>
-                                        <label className={style.add__itemDesc}>Opis:</label>
-                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.add__itemList} type='textarea' rows='8' placeholder="Krótko opisz jak długo masz pojazd, ile przejchałes nim kilometrów, itp." />
+                                        <label className={style.add__itemDesc}>Opis (50-500 znaków):</label>
+                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.add__itemList} type='textarea' rows='8' placeholder="Opisz szerzej pojazd który, chcesz zaprezentować (np.: stan techniczny i wizualny, jak długo masz pojazd, ile przejchałes nim kilometrów, itp.)" />
                                     </div>
                                 </div>
                             </div>
@@ -518,7 +559,7 @@ const User = props => {
                                     </div>
 
                                     <div className={style.add__itemContainer}>
-                                        <label className={style.add__itemDesc}>Jak jest cena za godzinne spotkanie wliczając około 10 km <br />przejażdżkę w złotówkach? (sugerowanie 100 - 200)</label>
+                                        <label className={style.add__itemDesc}>Jaka jest cena za godzinne spotkanie z <br />przejażdżką min. 10 km?</label>
                                         <input onChange={event => setPriceOfMeeting(event.target.value)} value={priceOfMeeting} className={style.add__itemList} type='number' placeholder="np. 150" />
                                     </div>
 
@@ -556,12 +597,12 @@ const User = props => {
                                     </div>
 
                                     <div className={style.add__itemContainer}>
-                                        <label className={style.add__itemDesc}>Adres e-mail:</label>
+                                        <label className={style.add__itemDesc}>Adres e-mail (opcjonalnie):</label>
                                         <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} className={style.add__itemList} type='text' placeholder="np. jan@gmail.com" />
                                     </div>
 
                                     <div className={style.add__itemContainer}>
-                                        <label className={style.add__itemDesc}>Numer telefonu:</label>
+                                        <label className={style.add__itemDesc}>Numer telefonu (wymagane):</label>
                                         <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.add__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
                                     </div>
 
@@ -585,60 +626,77 @@ const User = props => {
                         // USER LIST ITEMS
                         : <div className={style.user}>
                             <p className={style.user__title}>Witaj {localStorage.getItem(USER_NAME)}</p>
+
+                            <p className={style.user__accountDesc}>Twoje konto:</p>
+
+                            <div className={style.user__accountContainer}>
+
+                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {localStorage.getItem(USER_EMAIL)}</p>
+
+                                <div className={style.user__accountDescContainer}>
+                                    <p className={style.user__accountDescSmall}>Dostępne promowanie ogłoszenia (przez miesiąc): 0 szt. </p>
+                                    <div className={style.user__accountAddSVG} onClick={() => console.log("not redy")}>
+                                        <Add />
+                                    </div>
+                                </div>
+
+                                <div className={style.user__accountDescContainer}>
+                                    <p className={style.user__accountDescSmall}>Dostępne dodanie ogłoszenia (na miesiąc): 20 szt.</p>
+                                    <div className={style.user__accountAddSVG} onClick={() => console.log("not redy")}>
+                                        <Add />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
                             <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
-
-
 
                             <div className={style.user__itemsContainer}>
 
-                                {userAdds.length === 0
+                                {userAdds.map(item => {
+                                    return (
+                                        <div key={item.id} className={style.user__item}>
 
-                                    ? <div className={style.user__itemEmpty}>
-                                        <p className={style.user__itemEmptyText}>Brak</p>
-                                        <div className={style.user__itemEmptySVG}>
-                                            <Duplicate />
-                                        </div>
-                                    </div>
+                                            <figure className={style.user__itemFigure}>
+                                                <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main add" />
+                                            </figure>
 
-                                    : userAdds.map(item => {
-                                        return (
-                                            <div key={item.id} className={style.user__item}>
+                                            <div className={style.user__itemDescContainer}>
+                                                <div className={style.user__itemDescTop}>
+                                                    <div className={style.user__itemDescTopLeft}>
+                                                        <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                        <p className={style.user__itemText}>{item.carModelChosen}</p>
 
-                                                <div className={style.user__itemContainer}>
-                                                    <figure className={style.user__itemFigure}>
-                                                        <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main add" />
-                                                    </figure>
-
-                                                    <div className={style.user__itemDescContainer}>
-                                                        <div className={style.user__itemDescTop}>
-                                                            <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                            <p className={style.user__itemText}>{item.carModelChosen}</p>
-                                                        </div>
-
-                                                        <div className={style.user__itemDescBottom}>
-                                                            <button className={style.user__itemButton} onClick={() => props.history.push(`/home/${item.id}`)}>zobacz</button>
-                                                            <button className={style.user__itemButton} onClick={() => console.log("działą")}>edytuj</button>
-                                                            <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
-                                                        </div>
+                                                    </div>
+                                                    <div className={style.user__itemDescTopRight} >
+                                                        <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
                                                     </div>
                                                 </div>
 
-                                                <div className={style.user__itemDescRight} >
-                                                    <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
+                                                {item.isApproved === true
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zatwierdzone</p>
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApproved}`}</p>}
+
+                                                <div className={style.user__itemDescBottom}>
+                                                    <button className={style.user__itemButton} onClick={() => props.history.push(`/home/${item.id}`)}>zobacz</button>
+                                                    <button className={style.user__itemButton} onClick={() => console.log("not ready")}>edytuj</button>
+                                                    <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
+                                                    <button className={style.user__itemButton} onClick={() => console.log("not ready")}>promuj</button>
+
                                                 </div>
-
                                             </div>
-                                        )
-                                    })
+
+                                        </div>
+                                    )
+                                })
                                 }
-                                <button className={style.btn} onClick={showAddItemForm}>Dodaj</button>
+                                <div className={style.user__itemAddSVG} onClick={showAddItemForm}>
+                                    <Add />
+                                </div>
                             </div>
 
-
-
-                            <div className={style.btnContainer}>
-                                <button className={style.btn} onClick={handlerLogOut}>Wyloguj z konta: {localStorage.getItem(USER_EMAIL)}</button>
-                            </div>
                         </div>
 
                     }

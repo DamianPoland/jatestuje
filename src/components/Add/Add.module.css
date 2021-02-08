@@ -4,7 +4,7 @@
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: auto;
     padding: 2rem 1rem;
 }
@@ -20,7 +20,7 @@
 
 .photos__container {
     padding: 2rem 1rem 2rem 2rem;
-    flex: 1;
+    flex: 4;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -84,6 +84,7 @@
 
 .photos__itemDescRightContainer {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .photos__itemTextCar {
@@ -104,7 +105,7 @@
 
 .photos__itemTextRegion {
     font-size: 1.2rem;
-    padding-right: 2rem;
+    padding: 1rem 1rem 0 0;
 
 }
 
@@ -165,6 +166,7 @@
     display: flex;
     align-items: center;
     margin: 0.5rem;
+    cursor: pointer;
 }
 
 .desc__svg {
@@ -176,4 +178,10 @@
 .desc__textContact {
     font-size: 1rem;
     color: black;
+}
+
+@media (max-width: 800px) {
+    .photos__descRight {
+        display: none;
+    }
 }

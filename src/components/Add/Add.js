@@ -5,7 +5,7 @@ import style from './Add.module.css'
 import { firestore } from '../../shared/fire'
 
 // constans
-import { ADDS } from '../../shared/constans'
+import { ADDS, USER_EMAIL } from '../../shared/constans'
 
 //photos
 import PhotoEmpty from '../../assets/photoEmpty.png'
@@ -13,6 +13,7 @@ import User from '../../assets/user.png'
 import { ReactComponent as Phone } from '../../assets/phone.svg'
 import { ReactComponent as Email } from '../../assets/email.svg'
 import { ReactComponent as Location } from '../../assets/location.svg'
+import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 
 
 // data
@@ -35,7 +36,6 @@ const Add = props => {
         firestore.collection(ADDS).doc(props.match.params.key).get()
             .then(resp => {
                 setOneAdd(resp.data())
-                console.log("resp: ", resp.data());
 
                 // set first photo as mine
                 setMainPhoto(resp.data().imageURL[0])
@@ -92,24 +92,33 @@ const Add = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Dane pojazdu:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>Marka: {cars.find(i => i.id === oneAdd.carIdChosen).name}</p>
-                            <p className={style.desc__text}>Model: {oneAdd.carModelChosen}</p>
-                            <p className={style.desc__text}>Rok produkcji: {oneAdd.yearChosen}</p>
-                            <p className={style.desc__text}>Paliwo: {oneAdd.fuelChosen}</p>
-                            <p className={style.desc__text}>Skrzynia biegów: {oneAdd.gearboxChosen}</p>
+                            <p className={style.desc__text}>Marka: <b>{cars.find(i => i.id === oneAdd.carIdChosen).name}</b></p>
+                            <p className={style.desc__text}>Model: <b>{oneAdd.carModelChosen}</b></p>
+                            <p className={style.desc__text}>Rok produkcji: <b>>{oneAdd.yearChosen}</b></p>
+                            <p className={style.desc__text}>Paliwo: <b>{oneAdd.fuelChosen}</b></p>
+                            <p className={style.desc__text}>Skrzynia biegów: <b>{oneAdd.gearboxChosen}</b></p>
+                            <p className={style.desc__text}>Przebieg: <b>{oneAdd.mileageChosen} tyś. km.</b></p>
+                            <p className={style.desc__text}>Typ: <b>{oneAdd.typeChosen}</b></p>
                         </div>
                     </div>
 
 
                     {/* DESC meet section */}
                     <div className={style.desc}>
+                        <p className={style.desc__title}>Opis użytkownika:</p>
+                        <div className={style.desc__container}>
+                            <p className={style.desc__text}>{oneAdd.inputDescription}</p>
+                        </div>
+                    </div>
+
+                    {/* DESC meet section */}
+                    <div className={style.desc}>
                         <p className={style.desc__title}>Spotkanie:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>Opis użytkownika: {oneAdd.inputDescription}</p>
-                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną na temat samochodu?: {oneAdd.techKnowledge}</p>
-                            <p className={style.desc__text}>Czy istnieje możliwość, aby oglądający sam poprowadził samochód?: {oneAdd.choiceDriver}</p>
-                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie wliczając około 10 km przejażdżkę w złotówkach: {oneAdd.priceOfMeeting}zł</p>
-                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: {oneAdd.timeOfDay}</p>
+                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną na temat samochodu?: <b>{oneAdd.techKnowledge}</b></p>
+                            <p className={style.desc__text}>Czy istnieje możliwość, aby oglądający sam poprowadził samochód?: <b>{oneAdd.choiceDriver}</b></p>
+                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie wliczając około 10 km przejażdżkę w złotówkach: <b>{oneAdd.priceOfMeeting} zł/h</b></p>
+                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAdd.timeOfDay}</b></p>
                         </div>
                     </div>
 
@@ -138,12 +147,20 @@ const Add = props => {
                                 </div>
                                 <p className={style.desc__textContact}>e-mail: {oneAdd.inputEmail}</p>
                             </a>
+
                             <a className={style.desc__containerContact} href={`tel:${oneAdd.inputPhone}`}>
                                 <div className={style.desc__svg}>
                                     <Phone />
                                 </div>
                                 <p className={style.desc__textContact}>tel: {oneAdd.inputPhone}</p>
                             </a>
+
+                            <div className={style.desc__containerContact} onClick={() => console.log(props.history.push('/useradds', oneAdd.userEmail))}>
+                                <div className={style.desc__svg}>
+                                    <Cubes />
+                                </div>
+                                <p className={style.desc__textContact}>Zobacz inne ogłoszenia uzytkownika</p>
+                            </div>
                         </div>
                     </div>
 

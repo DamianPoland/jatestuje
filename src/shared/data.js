@@ -1,11 +1,18 @@
-export const fuel = ["", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
+
+/* dane pojazdu */
 
 const year = [2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992, 1991, 1990, 1989, 1988, 1987, 1986, 1985, 1984, 1983, 1982, 1981, 1980]
 export const years = ["", ...year]
 export const yearFrom = ["od", ...year]
 export const yearTo = ["do", ...year]
 
+export const fuel = ["", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
+
 export const gearbox = ["", "Manualna", "Automatyczna"]
+
+export const mileage = ["", "0-50", "50-100", "100-150", "150-200", "200-300", "powyżej 300"]
+
+export const type = ["", "Sedan", "Hatchback", "Kombi", "Coupe", "Kabriolet", "SUV", "Minivan/Bus"]
 
 export const knowledge = ["", "Słaba", "Dobra", "Bardzo dobra"]
 

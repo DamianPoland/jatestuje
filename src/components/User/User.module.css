@@ -7,7 +7,7 @@
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: auto;
 }
 
@@ -40,7 +40,6 @@
 
 .add__itemContainer {
     min-width: 12rem;
-
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -119,6 +118,8 @@
 }
 
 
+/* USER SECTION */
+
 .user {
     padding: 2rem 1rem;
 }
@@ -131,42 +132,50 @@
 }
 
 
+.user__accountDesc {
+    font-size: 1.5rem;
+    padding: 1rem 0;
+}
+
+.user__accountContainer {
+    padding: 0 1rem 1rem 1rem;
+}
+
+.user__accountDescContainer {
+    display: flex;
+    align-items: center;
+}
+
+.user__accountDescSmall {
+    font-size: 1.2rem;
+    padding: 1rem 0.2rem 1rem 0;
+}
+
+.user__accountAddSVG {
+    height: 1.5rem;
+    width: 1.5rem;
+    padding: 0.2rem;
+    padding: 0.2rem;
+    fill: rgb(var(--accent));
+    border-radius: 50%;
+}
+
+.user__accountAddSVG:active {
+    fill: black;
+}
+
+
 .user__itemsDesc {
     font-size: 1.5rem;
 }
 
-.user__itemsContainer {
-    padding: 1rem 1rem 4rem 1rem;
-}
+.user__itemsContainer {}
 
 .user__item {
     background-color: white;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin: 2rem 0;
 }
-
-.user__itemContainer {
-    display: flex;
-}
-
-.user__itemEmpty {
-    display: flex;
-}
-
-.user__itemEmptyText {
-    font-size: 1.5rem;
-    padding: 4rem 0.5rem;
-}
-
-.user__itemEmptySVG {
-    height: 15rem;
-    width: 15rem;
-    padding: 0.5rem;
-}
-
-
 
 .user__itemFigure {
     width: 10rem;
@@ -184,6 +193,7 @@
 
 .user__itemDescContainer {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -191,15 +201,28 @@
 .user__itemDescTop {
     display: flex;
     font-size: 1.5rem;
+    justify-content: space-between;
+}
+
+.user__itemDescTopLeft {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.5rem;
+}
+
+.user__itemDescMiddleText {
+    font-size: 1rem;
+    padding-left: 0.5rem;
 }
 
 .user__itemDescBottom {
     display: flex;
+    flex-wrap: wrap;
     font-size: 1rem;
 }
 
 .user__itemButton {
-    padding: 0.2rem 1rem;
+    padding: 0.2rem 0.6rem;
     margin: 0.5rem;
     font-size: 1rem;
     outline: none;
@@ -213,7 +236,7 @@
 }
 
 
-.user__itemDescRight {
+.user__itemDescTopRight {
     display: flex;
     font-size: 1rem;
     font-weight: bold;
@@ -225,13 +248,25 @@
     padding: 0.5rem;
 }
 
+.user__itemAddSVG {
+    height: 3rem;
+    width: 3rem;
+    padding: 0.2rem;
+    fill: rgb(var(--accent));
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgb(var(--accent));
+}
+
+.user__itemAddSVG:active {
+    box-shadow: none;
+}
+
 
 
 .btnContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .btn {
