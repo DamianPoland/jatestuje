@@ -15,7 +15,7 @@ import { IS_AUTH } from '../../shared/constans'
 
 const Nav = ({ isLogin }) => {
 
-    // show hide log out button and change my account to add
+    // show hide log out button and change my account to ad
     const [isLoginFromStorage, setIsLoginFromStorage] = useState(false)
     useEffect(() => {
         setIsLoginFromStorage(localStorage.getItem(IS_AUTH))
@@ -40,10 +40,10 @@ const Nav = ({ isLogin }) => {
                     <li className={style.listItem}><NavLink to='/home' activeClassName={style.activeLink} className={style.listItemAnchor}>Ogłoszenia</NavLink></li>
 
 
-                    {/* add or user acount */}
+                    {/* ad or user acount */}
                     {isLoginFromStorage
                         ? <li className={style.listItem}><NavLink to='/user' activeClassName={style.activeLink} className={style.listItemAnchor}>Moje konto</NavLink></li>
-                        : <li className={style.listItem}><NavLink to='/user' className={style.listItemAnchorAdd}>Dodaj ogłoszenie</NavLink></li>
+                        : <li className={style.listItem}><NavLink to='/user' className={style.listItemAnchorAd}>Dodaj ogłoszenie</NavLink></li>
                     }
 
                     {/* sign out button*/}

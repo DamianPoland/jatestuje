@@ -3,7 +3,7 @@
 .background {
     margin-top: 4rem;
     background: var(--backgroundCustom);
-    min-height: calc(100vh - 10rem);
+    min-height: calc(100vh - 15rem);
 }
 
 .container {
@@ -13,11 +13,11 @@
 
 
 /* ADD ITEM*/
-.add {
+.ad {
     padding: 2rem 1rem;
 }
 
-.add__section {
+.ad__section {
     padding: 2rem 0;
     margin: 0 0 2rem 0;
     display: flex;
@@ -26,19 +26,19 @@
 
 }
 
-.add__title {
+.ad__title {
     font-size: 1.5rem;
     padding: 0 2rem;
     font-weight: bold;
 }
 
-.add__container {
+.ad__container {
     display: flex;
     flex-wrap: wrap;
     padding: 1rem 2rem 0 2rem;
 }
 
-.add__itemContainer {
+.ad__itemContainer {
     min-width: 12rem;
     padding: 0.5rem;
     display: flex;
@@ -46,12 +46,12 @@
     position: relative;
 }
 
-.add__itemDesc {
+.ad__itemDesc {
     padding-bottom: 0.5rem;
     font-size: 1rem;
 }
 
-.add__itemList {
+.ad__itemList {
     background-color: white;
     color: rgba(var(--accent), 1);
     width: 100%;
@@ -62,29 +62,29 @@
     outline: none;
 }
 
-.add_checkBoxContainer {
+.ad_checkBoxContainer {
     width: 100%;
     font-size: 1rem;
     display: flex;
     align-items: center;
 }
 
-.add__inputCheckBox {
+.ad__inputCheckBox {
     width: 1.2rem;
     height: 1.2rem;
     cursor: pointer;
 }
 
-.add__labelCheckBox {
+.ad__labelCheckBox {
     font-size: 1rem;
     padding: 0.5rem;
 }
 
-.add__itemTextArea {
+.ad__itemTextArea {
     width: 100%;
 }
 
-.add__itemLabel {
+.ad__itemLabel {
     height: 9rem;
     width: 12rem;
     padding: 0 !important;
@@ -93,12 +93,12 @@
     align-items: center;
 }
 
-.add__itemImage {
+.ad__itemImage {
     max-height: 100%;
     max-width: 100%;
 }
 
-.add__progressContainer {
+.ad__progressContainer {
     padding: 0.5rem;
     background: rgba(196, 196, 196, 0.8);
     position: absolute;
@@ -110,7 +110,7 @@
     z-index: 1;
 }
 
-.add__progressBar {
+.ad__progressBar {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
@@ -151,16 +151,15 @@
     padding: 1rem 0.2rem 1rem 0;
 }
 
-.user__accountAddSVG {
+.user__accountAdSVG {
     height: 1.5rem;
     width: 1.5rem;
-    padding: 0.2rem;
     padding: 0.2rem;
     fill: rgb(var(--accent));
     border-radius: 50%;
 }
 
-.user__accountAddSVG:active {
+.user__accountAdSVG:active {
     fill: black;
 }
 
@@ -248,16 +247,17 @@
     padding: 0.5rem;
 }
 
-.user__itemAddSVG {
+.user__itemAdSVG {
     height: 3rem;
     width: 3rem;
     padding: 0.2rem;
+    margin: 2rem 0 0 0;
     fill: rgb(var(--accent));
     border-radius: 50%;
     box-shadow: 0 0 10px rgb(var(--accent));
 }
 
-.user__itemAddSVG:active {
+.user__itemAdSVG:active {
     box-shadow: none;
 }
 

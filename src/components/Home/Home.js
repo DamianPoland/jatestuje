@@ -6,7 +6,7 @@ import { firestore } from '../../shared/fire'
 import { cars, fuel, yearFrom, yearTo, gearbox, mileage, type, regions, cities } from '../../shared/data'
 
 // constans
-import { ADDS } from '../../shared/constans'
+import { ADS } from '../../shared/constans'
 
 //photos
 import PhotoEmpty from '../../assets/photoEmpty.png'
@@ -72,8 +72,10 @@ const Home = props => {
     }
 
 
-    // filter adds
-    const filterAdds = () => {
+
+
+    // filter ads
+    const filterAds = () => {
 
         // filters arguments list TODO
         const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen, mileageChosen, typeChosen]
@@ -86,33 +88,68 @@ const Home = props => {
 
 
 
-    // ----------------------- START ADDS  --------------------------//
+    // ----------------------- START ADS  --------------------------//
+
+    // STATE - set ALL ADS
+    const [allAds, setAllAds] = useState([])
+
+
+    // query to DB for items
+    const queryToDB = async () => {
+
+        // reset array
+        setAllAds([])
+
+        //set query constructor
+        const queryConstructor = firestore.collection(ADS)
 
 
 
-    // STATE - set ALL ADDS
-    const [allAdds, setAllAdds] = useState([])
 
-    // load adds from DB
+        //  filters TODO
+        // .where("regionChosen", "==", "pomorskie")
+        // .where("carIdChosen", "==", "bmw")
+
+
+
+        try {
+
+            const query = await queryConstructor
+
+                // main filters
+                // .where("isApproved", "==", true) // only approwed ads
+                .orderBy("adDate", 'desc') // sortowanie od najnowszego po polu adDate, 'desc' odwraca tablicę i idzie od końca - jak się usunie to będzie brałod początku
+                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : new Date().getTime()) // get ads according to value of orderBy("adDate")
+                .limit(2) // how many items be loaded from DB
+                .get()
+
+            query.forEach(doc => {
+
+                // Jeśli mają być ogłoszenia nie starsze niż miesiąc (miesiac = 86400000 * 30 milisekund))
+                //if (doc.data().adDate < (new Date().getTime() - 86400000 * 30)) { return }
+
+                // save  ad in State
+                setAllAds(prevState => [...prevState, doc.data()])
+
+                // promoted ad put extra on top, change adDate because Each child in a list should have a unique "key"
+                if (doc.data().isPromoted === true) {
+                    const item = { ...doc.data() }
+                    item.adDate = `1${item.adDate}`
+                    setAllAds(prevState => [item, ...prevState])
+                }
+            })
+        } catch (err) { console.log('err get ads', err) }
+    }
+
+    // load ads from DB first time
     useEffect(() => {
 
-        //clear adds list before load
-        setAllAdds([])
-
-        // load adds from DB
-        firestore.collection(ADDS).get()
-            .then(resp => resp.forEach(doc => {
-
-                // save every approved add in State
-                doc.data().isApproved === true && setAllAdds(prevState => [...prevState, doc.data()])
-            }))
-            .catch(err => console.log('err get adds', err))
+        // start query
+        queryToDB()
 
     }, [])
 
-    // ----------------------- STOP ADDS  --------------------------//
-
-    // {allAdds.filter(item => item.isApproved === true).map(item => { // show only approved adds
+    // ----------------------- STOP ADS  --------------------------//
 
 
     return (
@@ -211,42 +248,43 @@ const Home = props => {
                         </div>
 
                         <div className={style.btnContainer}>
-                            <button className={style.btn} onClick={filterAdds}>Filtruj</button>
+                            <button className={style.btn} onClick={filterAds}>Filtruj</button>
                         </div>
                     </div>
                 </div>
 
 
-                {/* ALL ADDS */}
-                <div className={style.adds}>
+                {/* ALL ADS */}
+                <div className={style.ads}>
                     <p className={style.title}>Ogłoszenia</p>
 
-                    <div className={style.adds__itemsContainer}>
-                        {allAdds.map(item => {
+                    <div className={style.ads__itemsContainer}>
+                        {allAds.map((item) => {
                             return (
-                                <a href={`/home/${item.id}`} key={item.id} className={style.adds__item} >
+                                <a href={`/home/${item.documentKey}`} key={item.adDate} className={style.ads__item} >
 
-                                    <div className={style.adds__itemContainer}>
-                                        <figure className={style.adds__itemFigure}>
-                                            <img className={style.adds__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
+                                    <div className={style.ads__itemContainer}>
+                                        <figure className={style.ads__itemFigure}>
+                                            <img className={style.ads__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
                                         </figure>
 
-                                        <div className={style.adds__itemDescContainer}>
-                                            <div className={style.adds__itemDescTop}>
-                                                <p className={style.adds__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                <p className={style.adds__itemText}>{item.carModelChosen}</p>
-
+                                        <div className={style.ads__itemDescContainer}>
+                                            <div className={style.ads__itemDescTop}>
+                                                <p className={style.ads__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                <p className={style.ads__itemText}>{item.carModelChosen}</p>
                                             </div>
 
-                                            <div className={style.adds__itemDescBottom}>
-                                                <p className={style.adds__itemText}>{item.regionChosen}</p>
-                                                <p className={style.adds__itemText}>{item.cityChosen}</p>
+                                            {item.isPromoted && <p className={style.ads__itemText}>promowane</p>}
+
+                                            <div className={style.ads__itemDescBottom}>
+                                                <p className={style.ads__itemText}>{item.regionChosen}</p>
+                                                <p className={style.ads__itemText}>{item.cityChosen}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className={style.adds__itemDescRight} >
-                                        <p className={style.adds__itemText}>{item.priceOfMeeting} zł/h</p>
+                                    <div className={style.ads__itemDescRight} >
+                                        <p className={style.ads__itemText}>{item.priceOfMeeting} zł/h</p>
                                     </div>
                                 </a>
                             )
@@ -254,6 +292,7 @@ const Home = props => {
                         }
 
                     </div>
+                    <button onClick={queryToDB}>następne</button>
 
                 </div>
 

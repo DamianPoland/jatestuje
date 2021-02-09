@@ -5,7 +5,7 @@ export const USER_NAME = 'USER_NAME'
 export const USER_EMAIL = 'USER_EMAIL'
 export const USER_PHOTO = 'USER_PHOTO'
 
-export const ADDS = 'adds'
+export const ADS = 'adds'
 export const USERS = 'users'
 
 

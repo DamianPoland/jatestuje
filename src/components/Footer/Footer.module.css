@@ -1,6 +1,13 @@
 .background {
-    background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgb(var(--accent)) 50%, rgba(0, 0, 0, 1) 100%);
+    background: var(--backgroundCustom);
     position: relative;
+}
+
+.line {
+    background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgb(var(--accent)) 50%, rgba(0, 0, 0, 1) 100%);
+    padding-top: 0.5rem;
+
+
 }
 
 .container {
@@ -9,15 +16,23 @@
     display: flex;
     justify-content: space-between;
     padding: 2rem;
+}
 
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.socialMedia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .text {
     text-align: center;
-    padding: 1rem;
-    color: white;
-    text-decoration: none;
-
+    padding: 1rem 0.5rem;
+    color: black;
 }
 
 .textLeft {
@@ -28,16 +43,6 @@
     padding-left: 4px;
 }
 
-.link {
-    cursor: pointer;
-    opacity: 0.8;
-
-}
-
-.link:hover {
-    opacity: 1;
-
-}
 
 .designedBy {
     display: flex;
@@ -46,8 +51,9 @@
 }
 
 .logo {
-    height: 20px;
-    width: 20px;
+    height: 1.25rem;
+    width: 1.25rem;
+    fill: rgb(var(--accent));
 }
 
 

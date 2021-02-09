@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import style from './Add.module.css'
+import style from './Ad.module.css'
+
 
 //firebase
 import { firestore } from '../../shared/fire'
 
 // constans
-import { ADDS, USER_EMAIL } from '../../shared/constans'
+import { ADS } from '../../shared/constans'
 
-//photos
+//photos images svg
 import PhotoEmpty from '../../assets/photoEmpty.png'
 import User from '../../assets/user.png'
 import { ReactComponent as Phone } from '../../assets/phone.svg'
@@ -16,26 +17,26 @@ import { ReactComponent as Location } from '../../assets/location.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 
 
+
 // data
 import { cars } from '../../shared/data'
 
 
+const Ad = props => {
 
-const Add = props => {
 
-
-    // STATE - set one ADD
-    const [oneAdd, setOneAdd] = useState()
+    // STATE - set one AD
+    const [oneAd, setOneAd] = useState()
 
     // STATE - set main photo
     const [mainPhoto, setMainPhoto] = useState()
 
     useEffect(() => {
 
-        // get add with itemID from DB and save in State
-        firestore.collection(ADDS).doc(props.match.params.key).get()
+        // get ad with itemID from DB and save in State
+        firestore.collection(ADS).doc(props.match.params.key).get()
             .then(resp => {
-                setOneAdd(resp.data())
+                setOneAd(resp.data())
 
                 // set first photo as mine
                 setMainPhoto(resp.data().imageURL[0])
@@ -49,7 +50,7 @@ const Add = props => {
 
     return (
         <section className={style.background}>
-            {oneAdd &&
+            {oneAd &&
                 <div className={style.container}>
 
                     {/* photos section */}
@@ -62,7 +63,7 @@ const Add = props => {
                             </figure>
 
                             <div className={style.photos__containerSmall}>
-                                {oneAdd.imageURL.map((item, id) => {
+                                {oneAd.imageURL.map((item, id) => {
                                     return (
                                         <figure className={`${style.photos__figureSmall} ${mainPhoto === item && style.photos__figureSmallBorder}`} key={id}>
                                             <img onClick={() => setMainPhoto(item)} className={style.photos__imgSmall} src={item || PhotoEmpty} alt={`main${id}`} />
@@ -74,15 +75,15 @@ const Add = props => {
 
                         <div className={style.photos__descRight}>
                             <div className={style.photos__itemDescRightContainer}>
-                                <p className={style.photos__itemTextCar}>{cars.find(i => i.id === oneAdd.carIdChosen).name}</p>
-                                <p className={style.photos__itemTextCar}>{oneAdd.carModelChosen}</p>
+                                <p className={style.photos__itemTextCar}>{cars.find(i => i.id === oneAd.carIdChosen).name}</p>
+                                <p className={style.photos__itemTextCar}>{oneAd.carModelChosen}</p>
 
                             </div>
-                            <p className={style.photos__itemTextPrice}>{oneAdd.priceOfMeeting} zł/h</p>
+                            <p className={style.photos__itemTextPrice}>{oneAd.priceOfMeeting} zł/h</p>
 
                             <div className={style.photos__itemDescRightContainerRegion}>
-                                <p className={style.photos__itemTextRegion}>woj. {oneAdd.regionChosen},</p>
-                                <p className={style.photos__itemTextRegion}>Miasto: {oneAdd.cityChosen}</p>
+                                <p className={style.photos__itemTextRegion}>woj. {oneAd.regionChosen},</p>
+                                <p className={style.photos__itemTextRegion}>Miasto: {oneAd.cityChosen}</p>
                             </div>
                         </div>
                     </div>
@@ -92,13 +93,13 @@ const Add = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Dane pojazdu:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>Marka: <b>{cars.find(i => i.id === oneAdd.carIdChosen).name}</b></p>
-                            <p className={style.desc__text}>Model: <b>{oneAdd.carModelChosen}</b></p>
-                            <p className={style.desc__text}>Rok produkcji: <b>>{oneAdd.yearChosen}</b></p>
-                            <p className={style.desc__text}>Paliwo: <b>{oneAdd.fuelChosen}</b></p>
-                            <p className={style.desc__text}>Skrzynia biegów: <b>{oneAdd.gearboxChosen}</b></p>
-                            <p className={style.desc__text}>Przebieg: <b>{oneAdd.mileageChosen} tyś. km.</b></p>
-                            <p className={style.desc__text}>Typ: <b>{oneAdd.typeChosen}</b></p>
+                            <p className={style.desc__text}>Marka: <b>{cars.find(i => i.id === oneAd.carIdChosen).name}</b></p>
+                            <p className={style.desc__text}>Model: <b>{oneAd.carModelChosen}</b></p>
+                            <p className={style.desc__text}>Rok produkcji: <b>{oneAd.yearChosen}</b></p>
+                            <p className={style.desc__text}>Paliwo: <b>{oneAd.fuelChosen}</b></p>
+                            <p className={style.desc__text}>Skrzynia biegów: <b>{oneAd.gearboxChosen}</b></p>
+                            <p className={style.desc__text}>Przebieg: <b>{oneAd.mileageChosen} tyś. km.</b></p>
+                            <p className={style.desc__text}>Typ: <b>{oneAd.typeChosen}</b></p>
                         </div>
                     </div>
 
@@ -107,7 +108,7 @@ const Add = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Opis użytkownika:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>{oneAdd.inputDescription}</p>
+                            <p className={style.desc__text}>{oneAd.inputDescription}</p>
                         </div>
                     </div>
 
@@ -115,10 +116,10 @@ const Add = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Spotkanie:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną na temat samochodu?: <b>{oneAdd.techKnowledge}</b></p>
-                            <p className={style.desc__text}>Czy istnieje możliwość, aby oglądający sam poprowadził samochód?: <b>{oneAdd.choiceDriver}</b></p>
-                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie wliczając około 10 km przejażdżkę w złotówkach: <b>{oneAdd.priceOfMeeting} zł/h</b></p>
-                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAdd.timeOfDay}</b></p>
+                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną na temat samochodu?: <b>{oneAd.techKnowledge}</b></p>
+                            <p className={style.desc__text}>Czy istnieje możliwość, aby oglądający sam poprowadził samochód?: <b>{oneAd.choiceDriver}</b></p>
+                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie wliczając około 10 km przejażdżkę w złotówkach: <b>{oneAd.priceOfMeeting} zł/h</b></p>
+                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAd.timeOfDay}</b></p>
                         </div>
                     </div>
 
@@ -128,34 +129,34 @@ const Add = props => {
                         <div className={style.desc__container}>
                             <div className={style.desc__containerUser}>
                                 <figure className={style.desc__containerfigure}>
-                                    <img className={style.desc__containerimg} src={oneAdd.userPhoto || User} alt="main" />
+                                    <img className={style.desc__containerimg} src={oneAd.userPhoto || User} alt="main" />
                                 </figure>
-                                <p className={style.desc__textName}>{oneAdd.inputName}</p>
+                                <p className={style.desc__textName}>{oneAd.inputName}</p>
                             </div>
 
-                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAdd.cityChosen}`} target='blank' >
+                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAd.cityChosen}`} target='blank' >
                                 <div className={style.desc__svg}>
                                     <Location />
                                 </div>
-                                <p className={style.desc__textContact}>{oneAdd.cityChosen}&nbsp;</p>
-                                <p className={style.desc__textContact}>(woj. {oneAdd.regionChosen})</p>
+                                <p className={style.desc__textContact}>{oneAd.cityChosen}&nbsp;</p>
+                                <p className={style.desc__textContact}>(woj. {oneAd.regionChosen})</p>
                             </a>
 
-                            <a className={style.desc__containerContact} href={`mailto:${oneAdd.inputEmail}?subject=Ogłoszenie z portalu jaTestuje.pl`}>
+                            <a className={style.desc__containerContact} href={`mailto:${oneAd.inputEmail}?subject=Ogłoszenie z portalu jaTestuje.pl`}>
                                 <div className={style.desc__svg}>
                                     <Email />
                                 </div>
-                                <p className={style.desc__textContact}>e-mail: {oneAdd.inputEmail}</p>
+                                <p className={style.desc__textContact}>e-mail: {oneAd.inputEmail}</p>
                             </a>
 
-                            <a className={style.desc__containerContact} href={`tel:${oneAdd.inputPhone}`}>
+                            <a className={style.desc__containerContact} href={`tel:${oneAd.inputPhone}`}>
                                 <div className={style.desc__svg}>
                                     <Phone />
                                 </div>
-                                <p className={style.desc__textContact}>tel: {oneAdd.inputPhone}</p>
+                                <p className={style.desc__textContact}>tel: {oneAd.inputPhone}</p>
                             </a>
 
-                            <div className={style.desc__containerContact} onClick={() => console.log(props.history.push('/useradds', oneAdd.userEmail))}>
+                            <div className={style.desc__containerContact} onClick={() => console.log(props.history.push('/userads', oneAd.userEmail))}>
                                 <div className={style.desc__svg}>
                                     <Cubes />
                                 </div>
@@ -176,4 +177,4 @@ const Add = props => {
     )
 }
 
-export default Add
+export default Ad

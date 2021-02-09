@@ -1,6 +1,8 @@
 .background {
     margin-top: 4rem;
     background: var(--backgroundCustom);
+    min-height: calc(100vh - 15rem);
+
 }
 
 .container {

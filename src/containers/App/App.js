@@ -14,8 +14,9 @@ import 'aos/dist/aos.css'
 import Nav from "../../components/Nav/Nav";
 import Home from "../../components/Home/Home";
 import User from "../../components/User/User";
-import Add from "../../components/Add/Add";
-import UserAdds from "../../components/UserAdds/UserAdds";
+import Ad from "../../components/Ad/Ad";
+import UserAds from "../../components/UserAds/UserAds";
+import Contact from '../../components/Contact/Contact'
 import PrivacyPolicy from '../../components/PrivacyPolicy/PrivacyPolicy'
 import AlertPrivacy from '../../UI/AlertPrivacy/AlertPrivacy'
 import Footer from "../../components/Footer/Footer";
@@ -75,9 +76,10 @@ const App = () => {
       <Nav isLogin={isLogin} />
       <Switch>
         <Route path='/home' exact component={Home} />
-        <Route path='/useradds' component={UserAdds} />
-        <Route path='/home/:key' component={Add} />
+        <Route path='/userads' component={UserAds} />
+        <Route path='/home/:key' component={Ad} />
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
+        <Route path='/contact' component={Contact} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />
         <Redirect to='/home' />
       </Switch>

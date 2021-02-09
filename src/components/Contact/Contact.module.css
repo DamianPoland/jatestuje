@@ -1,0 +1,346 @@
+* {
+    /* add color in index.css eg: --accent: 0, 200, 0;*/
+    --colorContact: var(--accent);
+}
+
+
+.background {
+    width: 100%;
+    min-height: calc(100vh - 15rem);
+    margin-top: 4rem;
+    background: var(--backgroundCustom);
+}
+
+.section {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contact {
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.head {
+    display: flex;
+    flex-direction: column;
+    padding-top: 3rem;
+    align-self: center;
+}
+
+.header {
+    color: black;
+    font-size: 2.5rem;
+    opacity: 1;
+    font-family: 'Kalam', cursive;
+}
+
+.line {
+    width: 100%;
+    padding: 0.3rem;
+    background: rgba(var(--colorContact), 0.2);
+}
+
+/* START of contact links */
+
+.content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.contentItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-decoration: none;
+}
+
+.content .contentItem:nth-child(1) {
+    animation: shiftFromLeft .8s 0s ease-out both;
+}
+
+.content .contentItem:nth-child(2) {
+    animation: shiftFromLeft .8s .25s ease-out both;
+}
+
+.content .contentItem:nth-child(3) {
+    animation: shiftFromLeft 1s .5s ease-out both;
+}
+
+.content .contentItem:nth-child(4) {
+    animation: shiftFromLeft .8s .75s ease-out both;
+}
+
+.content .contentItem:nth-child(5) {
+    animation: shiftFromLeft .8s 1s ease-out both;
+}
+
+.content .contentItem:nth-child(6) {
+    animation: shiftFromLeft .8s 1.25s ease-out both;
+}
+
+.content .contentItem:nth-child(7) {
+    animation: shiftFromLeft .8s 1.5s ease-out both;
+}
+
+@keyframes shiftFromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.contentItem:active {
+    background-color: rgba(var(--colorContact), 0.4);
+}
+
+.contentIcon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    fill: rgb(var(--colorContact));
+}
+
+.contentIcon:hover {
+    background-color: rgba(var(--colorContact), 0.2);
+}
+
+.contentDesc {
+    width: 100%;
+    padding: 1rem;
+    color: black;
+    font-size: 1.5rem;
+}
+
+/* END of contact links */
+
+/* START of form */
+
+.formContainer {
+    padding: 1.5rem;
+    width: 100%;
+    flex: 1;
+    position: relative;
+}
+
+.contactUs {
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    fill: rgb(var(--colorContact));
+}
+
+.form {
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: #8f8f8f;
+}
+
+.inputContainer {
+    width: 100%;
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 3rem;
+    align-self: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px transparent solid;
+    color: black;
+    font-size: 1.5rem;
+    outline: none;
+}
+
+/* custom scroll bar in textarea */
+textarea::-webkit-scrollbar {
+    width: 0.2rem;
+}
+
+textarea::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: rgba(var(--accent), 0.5);
+    border-radius: 999px;
+}
+
+.inputIsInvalid {
+    border: red 2px solid;
+}
+
+.label {
+    font-size: 1.5rem;
+    padding: 1rem;
+    color: rgb(110, 110, 110);
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: 0.5s ease;
+}
+
+.input:focus+.label,
+.input:required:valid+.label {
+    /* to work in htmml must be required:true*/
+    display: flex;
+    transform: scale(0.7) translate(-1rem, -4rem);
+    color: rgb(var(--colorContact));
+}
+
+.input:focus {
+    border-left: rgb(var(--colorContact)) .3rem solid;
+    border-right: rgb(var(--colorContact)) .3rem solid;
+}
+
+/* Change background and color if input is autocompleate ;) */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s, color 9999s ease-in-out 0s;
+}
+
+.input::placeholder {
+    color: rgb(190, 190, 190);
+}
+
+.btn {
+    align-self: flex-end;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border: 2px solid rgb(var(--colorContact));
+    color: black;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn:hover {
+    background-color: rgba(var(--colorContact), 0.4);
+}
+
+.btn:active {
+    background-color: rgba(var(--colorContact), 0.8);
+    box-shadow: 0 0 40px rgba(var(--colorContact), 0.8);
+    color: white;
+}
+
+.formAnim {
+    animation: formAnimation 4s ease-in forwards;
+}
+
+@keyframes formAnimation {
+    25% {
+        transform: scale(0, 0);
+        opacity: 0;
+    }
+
+    75% {
+        transform: scale(0, 0);
+        opacity: 1;
+    }
+}
+
+.envelope {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(0, 0);
+}
+
+.envelopeAnim {
+    animation: envelopeAnimation 4s 0.5s ease-in forwards;
+}
+
+@keyframes envelopeAnimation {
+    25% {
+        transform: scale(0.2, 0.2) translateX(0) rotate(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(0.2, 0.2) translateX(0) rotate(0);
+        opacity: 1;
+    }
+
+    75% {
+        transform: scale(0.2, 0.2) translateX(1000%) rotate(720deg);
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.svgOkId {
+    opacity: 0;
+}
+
+.svgOkIdAnim {
+    animation: envelopeSvgOkIdAnimation 4s 0.5s ease-in;
+}
+
+@keyframes envelopeSvgOkIdAnimation {
+    25% {
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}
+
+
+
+/* END of form */
+
+
+@media screen and (max-width: 1000px) {
+    .contact {
+        flex-direction: column;
+    }
+}
+
+
+@media screen and (max-width: 380px) {
+
+    .contentItem {
+        flex-direction: column;
+    }
+
+    .contentDesc {
+        text-align: center;
+    }
+}
