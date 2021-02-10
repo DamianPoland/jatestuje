@@ -5,23 +5,17 @@ const admin = require('firebase-admin')// daje dostęp do baz aplikacji w fireba
 admin.initializeApp() // inicjalizacja dostępu do baz
 
 
-const cors = require('cors')({ origin: true }) // (musi być zainstalowane cors w dependences) true można zamienić na domenę np: ‘https://mydomain.com’ i wtedy tylko z tej domeny będą obsługiwane zapytania
-
-
 // contains
 const USERS = "users"
 const PAYMENTS = "payments"
-const PROMOTION = "promotion"
-const ADS = "ads"
+const POINTS = "points"
 
 
 // function type: background triggers, start automatycally when new user sign up - add data about user payments in firebase 
 exports.newUserSignUp = functions.auth.user().onCreate(user => {
 
-    // make promotion points
-    admin.firestore().collection(USERS).doc(user.email).collection(PAYMENTS).doc(PROMOTION).set({ points: 5 })
-    // make points to add ad
-    admin.firestore().collection(USERS).doc(user.email).collection(PAYMENTS).doc(ADS).set({ points: 20 })
+    // add to firestore promotion and ads points
+    admin.firestore().collection(USERS).doc(user.email).collection(PAYMENTS).doc(POINTS).set({ promotion: 5, ads: -1 }) // if ads: -1 then no limits
 
 })
 

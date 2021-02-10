@@ -9,7 +9,8 @@ export const ADS = 'adds'
 export const USERS = 'users'
 
 
-
+export const PAYMENTS = "payments"
+export const POINTS = "points"
 
 
 

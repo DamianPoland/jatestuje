@@ -20,7 +20,7 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 import { firestore, storage } from '../../shared/fire'
 
 // constans
-import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADS, USERS } from '../../shared/constans'
+import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADS, USERS, PAYMENTS, POINTS } from '../../shared/constans'
 
 
 
@@ -130,6 +130,12 @@ const User = props => {
 
     // show ad item form
     const showAdItemForm = () => {
+
+        // check if is enought point
+        if (adPoints === 0) { // -1 is no limit
+            console.log("Brak środków. Najpierw doładuj konto")
+            return
+        }
 
         //unique name of documentKey in DB storage and firestore - data and random string
         const itemMainNameInDB = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
@@ -342,6 +348,7 @@ const User = props => {
 
 
 
+        // TODO move to backend
 
 
         // save obj in DB
@@ -350,6 +357,7 @@ const User = props => {
             .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(isAddingItem).set({ documentKey: isAddingItem })) // save ad ID to current user folder in DB
             .then(() => console.log("adId saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
+
 
 
 
@@ -436,6 +444,40 @@ const User = props => {
             .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(item.documentKey).delete())  // delete one ad from DB FIRESTORE in users folder
             .then(() => console.log("deleted ad in USERS "))
             .catch(err => console.log(' delete err', err))
+    }
+
+
+    //get points from DB
+    const [promotionPoints, setPromotionPoints] = useState("?")
+    const [adPoints, setAdPoints] = useState("?")
+    useEffect(() => {
+
+        // if user is not sign in then return
+        if (!localStorage.getItem(USER_EMAIL)) {
+            return
+        }
+
+        // get points from db and set in useState
+        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
+
+            // if document is not created by backend yet then return
+            if (i.data() === undefined) {
+                return
+            }
+
+            // set points in useState
+            setPromotionPoints(i.data().promotion)
+            setAdPoints(i.data().ads) // if ads: -1 then no limits
+        }, err => console.log('err onSnapshot:', err))
+
+        return () => {
+            getUserPointsInfo() // clean up listener
+        }
+
+    }, [])
+
+    const buyPoints = type => {
+        console.log("not ready: ", type);
     }
 
 
@@ -643,18 +685,21 @@ const User = props => {
                                 <p className={style.user__accountDescSmall}>Twój adres e-mail: {localStorage.getItem(USER_EMAIL)}</p>
 
                                 <div className={style.user__accountDescContainer}>
-                                    <p className={style.user__accountDescSmall}>Dostępne promowanie ogłoszenia (przez miesiąc): 0 szt. </p>
-                                    <div className={style.user__accountAdSVG} onClick={() => console.log("not redy")}>
+                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): {promotionPoints} szt.</p>
+                                    <div className={style.user__accountAdSVG} onClick={() => buyPoints("promotion points")}>
                                         <Ad />
                                     </div>
                                 </div>
 
-                                <div className={style.user__accountDescContainer}>
-                                    <p className={style.user__accountDescSmall}>Dostępne dodanie ogłoszenia (na miesiąc): 20 szt.</p>
-                                    <div className={style.user__accountAdSVG} onClick={() => console.log("not redy")}>
-                                        <Ad />
+                                {adPoints !== -1
+                                    ? <div className={style.user__accountDescContainer}>
+                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): {adPoints} szt.</p>
+                                        <div className={style.user__accountAdSVG} onClick={() => buyPoints("ad points")}>
+                                            <Ad />
+                                        </div>
                                     </div>
-                                </div>
+                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: bez limitu</p>
+                                }
 
                             </div>
 
