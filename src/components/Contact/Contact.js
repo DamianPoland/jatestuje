@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import style from './Contact.module.css'
-import axios from 'axios'
+import { functions } from '../../shared/fire'
 
 // components
 import Alert from '../../UI/Alert/Alert'
@@ -15,6 +15,7 @@ import { ReactComponent as YouTube } from '../../assets/youtube.svg'
 import { ReactComponent as Instagram } from '../../assets/instagram.svg'
 import { ReactComponent as ContactUs } from '../../assets/contact_us.svg'
 import { ReactComponent as Envelope } from '../../assets/envelope.svg'
+
 
 
 
@@ -86,8 +87,9 @@ const Contact = () => {
         setIsSpinnerShow(true)
 
 
-        //sent email
-        axios.put(process.env.REACT_APP_TO_SEND_EMAIL_PATH, { name: inputName, email: inputEmail, message: inputMessage })
+        //sent email new function
+        const sendEmail = functions.httpsCallable('sendEmail')
+        sendEmail({ name: inputName, email: inputEmail, message: inputMessage })
             .then(resp => {
 
                 // turn off spinner
@@ -110,13 +112,11 @@ const Contact = () => {
                     setIsFormAnimation(false)
                     okId.classList.remove(style.svgOkIdAnim)
                 }, 4000)
-
             })
             .catch(err => {
                 setIsSpinnerShow(false) // turn off spinner
                 setIsAlertShow(true) // show error alert
             })
-        // .finally(() => setIsSpinnerShow(false))
     }
 
     return (

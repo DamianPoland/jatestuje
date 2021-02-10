@@ -45,7 +45,6 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
 
 const User = props => {
 
-
     useEffect(() => {
 
         // scroll to top when component render
@@ -340,12 +339,22 @@ const User = props => {
         }
         console.log(corObject);
 
+
+
+
+
+
         // save obj in DB
         firestore.collection(ADS).doc(isAddingItem).set(corObject) // save obj in firestore
             .then(() => console.log("corObject saved in firestore"))
             .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(isAddingItem).set({ documentKey: isAddingItem })) // save ad ID to current user folder in DB
             .then(() => console.log("adId saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
+
+
+
+
+
 
         // close and clear ad edition
         setIsAddingItem(false)

@@ -3,7 +3,7 @@ import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
 // data
-import { cars, fuel, yearFrom, yearTo, gearbox, mileage, type, regions, cities } from '../../shared/data'
+import { cars, fuel, yearFrom, yearTo, gearbox, type, regions, cities } from '../../shared/data'
 
 // constans
 import { ADS } from '../../shared/constans'
@@ -51,9 +51,6 @@ const Home = props => {
     // STATE - set gearbox
     const [gearboxChosen, setGearboxChosen] = useState("")
 
-    // STATE - set mileage
-    const [mileageChosen, setMileageChosen] = useState("")
-
     // STATE - set type
     const [typeChosen, setTypeChosen] = useState("")
 
@@ -78,7 +75,7 @@ const Home = props => {
     const filterAds = () => {
 
         // filters arguments list TODO
-        const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen, mileageChosen, typeChosen]
+        const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen, typeChosen]
 
         console.log("filtrowanie, lista: ", filterArgList);
     }
@@ -152,6 +149,9 @@ const Home = props => {
     // ----------------------- STOP ADS  --------------------------//
 
 
+
+
+
     return (
         <section className={style.background}>
             <div className={style.container}>
@@ -190,6 +190,7 @@ const Home = props => {
                             </div>
                         </div>
 
+                        {/* Filter cars car brand */}
                         <div className={style.filter__itemContainer}>
                             {/* Filter cars id (name) */}
                             <div className={style.filter__itemContainerSmall}>
@@ -198,6 +199,7 @@ const Home = props => {
                                     {cars.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                                 </select>
                             </div>
+
                             {/* Filter cars model */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Model:</p>
@@ -205,6 +207,7 @@ const Home = props => {
                                     {cars.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
                                 </select>
                             </div>
+
                             {/* Filter fuel */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Paliwo:</p>
@@ -212,6 +215,7 @@ const Home = props => {
                                     {fuel.map(item => <option key={item} value={item}>{item}</option>)}
                                 </select>
                             </div>
+
                             {/* Filter year */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Rok produkcji:</p>
@@ -224,6 +228,7 @@ const Home = props => {
                                     </select>
                                 </div>
                             </div>
+
                             {/* Filter gearbox */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Skrzynia biegów:</p>
@@ -231,13 +236,7 @@ const Home = props => {
                                     {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
                                 </select>
                             </div>
-                            {/* Filter mileage */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Przebieg:</p>
-                                <select className={style.filter__itemList} onChange={e => setMileageChosen(e.target.value)}>
-                                    {mileage.map(item => <option key={item} value={item}>{item}</option>)}
-                                </select>
-                            </div>
+
                             {/* Filter type */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Typ:</p>
@@ -295,8 +294,8 @@ const Home = props => {
                     <button onClick={queryToDB}>następne</button>
 
                 </div>
-
             </div>
+
         </section>
     )
 }
