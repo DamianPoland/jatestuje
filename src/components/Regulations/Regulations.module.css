@@ -1,0 +1,12 @@
+.background {
+    margin-top: 4rem;
+    background: var(--backgroundCustom);
+    min-height: calc(100vh - 15rem);
+
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 2rem 1rem;
+}

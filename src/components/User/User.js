@@ -10,7 +10,7 @@ import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFire
 import { ReactComponent as Ad } from '../../assets/ad.svg'
 
 //data 
-import { cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge, choice } from '../../shared/data'
+import { mainCategories, cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge, choice } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
@@ -60,6 +60,11 @@ const User = props => {
     // STATE - is Adding Item
     const [isAddingItem, setIsAddingItem] = useState(false)
 
+    // STATE - set mainCategory
+    const [mainCategory, setMainCategory] = useState(mainCategories[0].nameDB)
+
+    // STATE - set documentKey
+    const [documentKey, setDocumentKey] = useState("")
 
     // STATE - set car id (name)
     const [carIdChosen, setCarIdChosen] = useState("")
@@ -128,8 +133,8 @@ const User = props => {
     const [inputAgreenent, setAgreenent] = useState(false) // input value
 
 
-    // show ad item form
-    const showAdItemForm = () => {
+    //unique name of documentKey in DB storage and firestore
+    useEffect(() => {
 
         // check if is enought point
         if (adPoints === 0) { // -1 is no limit
@@ -137,10 +142,13 @@ const User = props => {
             return
         }
 
-        //unique name of documentKey in DB storage and firestore - data and random string
-        const itemMainNameInDB = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
-        setIsAddingItem(itemMainNameInDB)
-    }
+        //main category +  data + random string
+        const adMainNameInDB = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
+
+        setDocumentKey(adMainNameInDB)
+
+    }, [mainCategory])
+
 
     // hide ad item form and clear all
     const hideAdItemForm = () => {
@@ -310,14 +318,12 @@ const User = props => {
 
         // filter array imageURL and delete null elements
         const imageURLFultered = imageURL.filter(item => item != null)
-        console.log(imageURLFultered);
-
-
 
         // object to save in DB
         const corObject = {
             id: `${new Date().getTime()} ${Math.random().toString(36).substr(2)}`, // unique ID to e.g. item list because Each child in a list should have a unique "key"
-            documentKey: isAddingItem, // is always the same as document Key in DB
+            mainCategory: mainCategory, // main category of ad
+            documentKey: documentKey, // is always the same as document Key in DB
             adDate: new Date().getTime(), // data dodania lub odświerzenia ogłoszenia w ms od 1970, typ w firestore NUMBER
             userEmail: localStorage.getItem(USER_EMAIL),
             userPhoto: localStorage.getItem(USER_PHOTO),
@@ -350,11 +356,10 @@ const User = props => {
 
         // TODO move to backend
 
-
         // save obj in DB
-        firestore.collection(ADS).doc(isAddingItem).set(corObject) // save obj in firestore
+        firestore.collection(mainCategory).doc(documentKey).set(corObject) // save obj in firestore
             .then(() => console.log("corObject saved in firestore"))
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(isAddingItem).set({ documentKey: isAddingItem })) // save ad ID to current user folder in DB
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(documentKey).set({ documentKey: documentKey })) // save ad ID to current user folder in DB
             .then(() => console.log("adId saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
 
@@ -417,11 +422,16 @@ const User = props => {
 
                 resp.forEach(doc => {
 
+                    //get collection name as main category
+                    const collectionName = doc.data().documentKey.split(" ")[0]
+
                     // get ad with itemID from DB and save in State
-                    firestore.collection(ADS).doc(doc.data().documentKey).get()
+                    firestore.collection(collectionName).doc(doc.data().documentKey).get()
                         .then(resp => {
-                            // console.log(resp.data())
-                            setUserAds(prevState => [...prevState, resp.data()])
+
+                            // if response is not undefined
+                            resp.data() && setUserAds(prevState => [...prevState, resp.data()])
+
                         })
                         .catch(err => console.log('listener err', err))
                 })
@@ -439,7 +449,7 @@ const User = props => {
         // delete one ad from DB STORAGE with images
         deleteImagesAndFolderFromDB(item.documentKey)
 
-        firestore.collection(ADS).doc(item.documentKey).delete() // delete one ad from DB FIRESTORE in ads folder
+        firestore.collection(item.mainCategory).doc(item.documentKey).delete() // delete one ad from DB FIRESTORE in ads folder
             .then(() => console.log("deleted ad in ADS"))
             .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(item.documentKey).delete())  // delete one ad from DB FIRESTORE in users folder
             .then(() => console.log("deleted ad in USERS "))
@@ -496,6 +506,23 @@ const User = props => {
 
                         // AD ITEM
                         <div className={style.ad}>
+
+                            {/* MAIN CATEGORY */}
+                            <div className={style.categories}>
+                                <p className={style.title}>Kategorie</p>
+                                <div className={style.categories__container}>
+                                    {mainCategories.map(item => {
+                                        return (
+                                            <div key={item.nameDB} className={`${style.categories__itemContainer} ${(mainCategory === item.nameDB) && style.categories__itemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
+                                                <figure className={style.categories__itemFigure}>
+                                                    <img className={style.categories__itemImg} src={item.photo} alt="main" />
+                                                </figure>
+                                                <p className={style.categories__itemDesc}>{item.name}</p>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
 
                             {/* car section */}
                             <div className={style.ad__section}>
@@ -746,7 +773,7 @@ const User = props => {
                                     )
                                 })
                                 }
-                                <div className={style.user__itemAdSVG} onClick={showAdItemForm}>
+                                <div className={style.user__itemAdSVG} onClick={() => setIsAddingItem(true)}>
                                     <Ad />
                                 </div>
                             </div>

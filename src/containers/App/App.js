@@ -18,6 +18,7 @@ import Ad from "../../components/Ad/Ad";
 import UserAds from "../../components/UserAds/UserAds";
 import Contact from '../../components/Contact/Contact'
 import PrivacyPolicy from '../../components/PrivacyPolicy/PrivacyPolicy'
+import Regulations from '../../components/Regulations/Regulations'
 import AlertPrivacy from '../../UI/AlertPrivacy/AlertPrivacy'
 import Footer from "../../components/Footer/Footer";
 
@@ -81,6 +82,7 @@ const App = () => {
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
         <Route path='/contact' component={Contact} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />
+        <Route path='/regulations' component={Regulations} />
         <Redirect to='/home' />
       </Switch>
       <AlertPrivacy />

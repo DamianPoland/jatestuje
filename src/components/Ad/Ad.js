@@ -5,8 +5,6 @@ import style from './Ad.module.css'
 //firebase
 import { firestore } from '../../shared/fire'
 
-// constans
-import { ADS } from '../../shared/constans'
 
 //photos images svg
 import PhotoEmpty from '../../assets/photoEmpty.png'
@@ -34,7 +32,7 @@ const Ad = props => {
     useEffect(() => {
 
         // get ad with itemID from DB and save in State
-        firestore.collection(ADS).doc(props.match.params.key).get()
+        firestore.collection(props.match.params.key.split(" ")[0]).doc(props.match.params.key).get()
             .then(resp => {
                 setOneAd(resp.data())
 

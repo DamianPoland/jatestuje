@@ -22,7 +22,7 @@ const Footer = () => {
                 </div>
                 <div className={style.column}>
                     <a href='/privacy-policy' className={style.text} target='blank'>Polityka prywatności</a>
-                    <a href='/privacy-policy' className={style.text} target='blank'>Regulamin</a>
+                    <a href='/regulations' className={style.text} target='blank'>Regulamin</a>
                     <a href='/contact' className={style.text} target='blank'>Kontakt</a>
                 </div>
 

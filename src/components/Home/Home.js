@@ -3,10 +3,8 @@ import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
 // data
-import { cars, fuel, yearFrom, yearTo, gearbox, type, regions, cities } from '../../shared/data'
+import { mainCategories, cars, fuel, yearFrom, yearTo, gearbox, type, regions, cities } from '../../shared/data'
 
-// constans
-import { ADS } from '../../shared/constans'
 
 //photos
 import PhotoEmpty from '../../assets/photoEmpty.png'
@@ -23,6 +21,21 @@ const Home = props => {
     //     window.scrollTo(0, 0)
 
     // }, [])
+
+    // ----------------------- START CATEGORIES --------------------------//
+
+
+    // STATE - set mainCategory
+    const [mainCategory, setMainCategory] = useState(mainCategories[0].nameDB)
+
+    useEffect(() => {
+
+
+    }, [])
+
+
+
+    // ----------------------- STOP CATEGORIES --------------------------//
 
 
     // ----------------------- START FILTERS --------------------------//
@@ -90,6 +103,14 @@ const Home = props => {
     // STATE - set ALL ADS
     const [allAds, setAllAds] = useState([])
 
+    // load ads from DB first time
+    useEffect(() => {
+
+        // start query
+        queryToDB()
+
+    }, [mainCategory])
+
 
     // query to DB for items
     const queryToDB = async () => {
@@ -98,12 +119,13 @@ const Home = props => {
         setAllAds([])
 
         //set query constructor
-        const queryConstructor = firestore.collection(ADS)
+        const queryConstructor = firestore.collection(mainCategory)
 
 
 
+        console.log(mainCategory);
 
-        //  filters TODO
+        //  custom filters TODO
         // .where("regionChosen", "==", "pomorskie")
         // .where("carIdChosen", "==", "bmw")
 
@@ -115,14 +137,14 @@ const Home = props => {
 
                 // main filters
                 // .where("isApproved", "==", true) // only approwed ads
-                .orderBy("adDate", 'desc') // sortowanie od najnowszego po polu adDate, 'desc' odwraca tablicę i idzie od końca - jak się usunie to będzie brałod początku
-                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : new Date().getTime()) // get ads according to value of orderBy("adDate")
-                .limit(2) // how many items be loaded from DB
+                .orderBy("adDate", 'desc') // sort in field adDate, 'desc' reverse table and get items from DB from end
+                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : new Date().getTime()) // get ads from last displayed or newest according to field adDate
+                .limit(2) // how many items be loaded from DB on one time
                 .get()
 
             query.forEach(doc => {
 
-                // Jeśli mają być ogłoszenia nie starsze niż miesiąc (miesiac = 86400000 * 30 milisekund))
+                // ONLY ads no older than month (month = 86400000 * 30 milisekund))
                 //if (doc.data().adDate < (new Date().getTime() - 86400000 * 30)) { return }
 
                 // save  ad in State
@@ -138,14 +160,6 @@ const Home = props => {
         } catch (err) { console.log('err get ads', err) }
     }
 
-    // load ads from DB first time
-    useEffect(() => {
-
-        // start query
-        queryToDB()
-
-    }, [])
-
     // ----------------------- STOP ADS  --------------------------//
 
 
@@ -157,13 +171,30 @@ const Home = props => {
             <div className={style.container}>
 
 
+                {/* MAIN CATEGORY */}
+                <div className={style.categories}>
+                    <p className={style.title}>Kategorie</p>
+                    <div className={style.categories__container}>
+                        {mainCategories.map(item => {
+                            return (
+                                <div key={item.nameDB} className={`${style.categories__itemContainer} ${(mainCategory === item.nameDB) && style.categories__itemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
+                                    <figure className={style.categories__itemFigure}>
+                                        <img className={style.categories__itemImg} src={item.photo} alt="main" />
+                                    </figure>
+                                    <p className={style.categories__itemDesc}>{item.name}</p>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+
+
                 {/* DESCRIPTION */}
                 <div className={style.description}>
                     <p className={style.description__title}>O co chodzi ... ?</p>
                     <div className={style.description__textContainer}>
-
-                        <p className={style.description__text}><strong>Szukasz używanego samochodu</strong> ale nie wiesz jaki model będzie odpowiedni dla Ciebie i Twojej rodziny? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
-                        <p className={style.description__text}><strong>Masz już samochód?</strong> Pokazuj go innym i przy okazji <strong>możesz zarabiać</strong>. Dodaj swoje auto do bazy i czekaj na zgłoszenie. Pokażesz swój samochód, opowiesz o nim i dostaniesz za to wcześniej ustaloną kwotę.</p>
+                        <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
+                        <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swóją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
                     </div>
                 </div>
 
@@ -257,41 +288,47 @@ const Home = props => {
                 <div className={style.ads}>
                     <p className={style.title}>Ogłoszenia</p>
 
-                    <div className={style.ads__itemsContainer}>
-                        {allAds.map((item) => {
-                            return (
-                                <a href={`/home/${item.documentKey}`} key={item.adDate} className={style.ads__item} >
+                    {allAds.length !== 0
+                        ? <div className={style.ads__itemsContainer}>
+                            {allAds.map((item) => {
+                                return (
+                                    <a href={`/home/${item.documentKey}`} key={item.adDate} className={style.ads__item} >
 
-                                    <div className={style.ads__itemContainer}>
-                                        <figure className={style.ads__itemFigure}>
-                                            <img className={style.ads__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
-                                        </figure>
+                                        <div className={style.ads__itemContainer}>
+                                            <figure className={style.ads__itemFigure}>
+                                                <img className={style.ads__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
+                                            </figure>
 
-                                        <div className={style.ads__itemDescContainer}>
-                                            <div className={style.ads__itemDescTop}>
-                                                <p className={style.ads__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                <p className={style.ads__itemText}>{item.carModelChosen}</p>
-                                            </div>
+                                            <div className={style.ads__itemDescContainer}>
+                                                <div className={style.ads__itemDescTop}>
+                                                    <p className={style.ads__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                    <p className={style.ads__itemText}>{item.carModelChosen}</p>
+                                                </div>
 
-                                            {item.isPromoted && <p className={style.ads__itemText}>promowane</p>}
+                                                {item.isPromoted && <p className={style.ads__itemText}>promowane</p>}
 
-                                            <div className={style.ads__itemDescBottom}>
-                                                <p className={style.ads__itemText}>{item.regionChosen}</p>
-                                                <p className={style.ads__itemText}>{item.cityChosen}</p>
+                                                <div className={style.ads__itemDescBottom}>
+                                                    <p className={style.ads__itemText}>{item.regionChosen}</p>
+                                                    <p className={style.ads__itemText}>{item.cityChosen}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className={style.ads__itemDescRight} >
-                                        <p className={style.ads__itemText}>{item.priceOfMeeting} zł/h</p>
-                                    </div>
-                                </a>
-                            )
-                        })
-                        }
+                                        <div className={style.ads__itemDescRight} >
+                                            <p className={style.ads__itemText}>{item.priceOfMeeting} zł/h</p>
+                                        </div>
+                                    </a>
+                                )
+                            })
+                            }
 
-                    </div>
-                    <button onClick={queryToDB}>następne</button>
+                            <button onClick={queryToDB}>następne</button>
+                        </div>
+
+                        : <p>brak</p>
+                    }
+
+
 
                 </div>
             </div>
