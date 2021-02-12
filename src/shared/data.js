@@ -1,7 +1,7 @@
 
 /* MAIN CATEGORIES */
-import { CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, DRONES, CAMERAS, OTHERS } from '../shared/constans'
-export const mainCategories = [CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, DRONES, CAMERAS, OTHERS]
+import { CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, ELECTRONICS, OTHERS } from '../shared/constans'
+export const mainCategories = [CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, ELECTRONICS, OTHERS]
 
 /* CAR DATA */
 
@@ -20,7 +20,7 @@ export const type = ["", "Sedan", "Hatchback", "Kombi", "Coupe", "Kabriolet", "S
 
 export const knowledge = ["", "Słaba", "Dobra", "Bardzo dobra"]
 
-export const choice = ["", "Tak", "Nie", "To zależy"]
+
 
 
 

@@ -10,7 +10,8 @@ import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFire
 import { ReactComponent as Ad } from '../../assets/ad.svg'
 
 //data 
-import { mainCategories, cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge, choice } from '../../shared/data'
+import { mainCategories, cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge } from '../../shared/data'
+import { CARS } from '../../shared/constans'
 
 //photos
 import Photo from '../../assets/photo.png'
@@ -24,7 +25,7 @@ import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADS, USERS, PAYMENTS, POINT
 
 
 
-// delete images and folder from DB
+// delete all images and folder from DB
 const deleteImagesAndFolderFromDB = (isAdingItem) => {
     const ref = storage.ref(`images/${isAdingItem}`)
     ref.listAll()
@@ -33,7 +34,7 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
                 storage.ref(fileRef.fullPath).getDownloadURL()
                     .then(url => {
                         storage.refFromURL(url).delete()
-                            .then(() => console.log("deleted succesfully from storage"))
+                            .then(() => console.log("deleted ad from storage"))
                             .catch(error => console.log("error deletion, error: ", error))
                     })
             })
@@ -44,15 +45,6 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
 
 
 const User = props => {
-
-    useEffect(() => {
-
-        // scroll to top when component render
-        window.scrollTo(0, 0)
-
-    }, [])
-
-
 
 
     // ----------------------- START ADD ITEM --------------------------//
@@ -66,28 +58,14 @@ const User = props => {
     // STATE - set documentKey
     const [documentKey, setDocumentKey] = useState("")
 
-    // STATE - set car id (name)
-    const [carIdChosen, setCarIdChosen] = useState("")
-
-    // STATE - set car model
-    const [carModelChosen, setCarModelChosen] = useState("")
+    // STATE - set type
+    const [typeChosen, setTypeChosen] = useState("")
 
     // STATE - set year from
     const [yearChosen, setYearChosen] = useState("")
 
-    // STATE - set fuel
-    const [fuelChosen, setFuelChosen] = useState("")
-
-    // STATE - set gearbox
-    const [gearboxChosen, setGearboxChosen] = useState("")
-
-    // STATE - set mileage
-    const [mileageChosen, setMileageChosen] = useState("")
-
-    // STATE - set type
-    const [typeChosen, setTypeChosen] = useState("")
-
-
+    // STATE - input Title
+    const [adTitle, setAdTitle] = useState('') // input value
 
     // STATE - input Image
     const [image, setImage] = useState([null, null, null, null]) // input image value
@@ -98,21 +76,14 @@ const User = props => {
     // STATE - input Description
     const [inputDescription, setInputDescription] = useState('') // input value
 
-
-
     // STATE - set technical knowlage
     const [techKnowledge, setTechKnowledge] = useState("")
-
-    // STATE - set is posible to client drive a car
-    const [choiceDriver, setChoiceDriver] = useState("")
 
     // STATE - set price of meeting
     const [priceOfMeeting, setPriceOfMeeting] = useState("")
 
-    // STATE - set region
+    // STATE - set day time to meeting
     const [timeOfDay, setTimeOfDay] = useState("")
-
-
 
     // STATE - set region
     const [regionChosen, setRegionChosen] = useState("")
@@ -133,6 +104,114 @@ const User = props => {
     const [inputAgreenent, setAgreenent] = useState(false) // input value
 
 
+    // CATEGORY CAR ONLY
+
+    // STATE - set car id (name)
+    const [carIdChosen, setCarIdChosen] = useState("")
+
+    // STATE - set car model
+    const [carModelChosen, setCarModelChosen] = useState("")
+
+    // STATE - set fuel
+    const [fuelChosen, setFuelChosen] = useState("")
+
+    // STATE - set gearbox
+    const [gearboxChosen, setGearboxChosen] = useState("")
+
+    // STATE - set mileage
+    const [mileageChosen, setMileageChosen] = useState("")
+
+    // STATE - set capacity
+    const [capacityChosen, setCapacityChosen] = useState("")
+
+    // STATE - set power
+    const [powerChosen, setPowerChosen] = useState("")
+
+    // STATE - set Equipment
+    const [electricWindows, setElectricWindows] = useState(false)
+    const [sirConditioning, setAirConditioning] = useState(false)
+    const [xenonLights, setXenonLights] = useState(false)
+    const [multifunctionWheel, setMultifunctionWheel] = useState(false)
+    const [rainSensor, setRainSensor] = useState(false)
+    const [isofix, setIsofix] = useState(false)
+    const [onBoardComputer, setOnBoardComputer] = useState(false)
+    const [GPSNavigation, setGPSNavigation] = useState(false)
+    const [leatherUpholstery, setLeatherUpholstery] = useState(false)
+    const [factoryRadio, setFactoryRadio] = useState(false)
+    const [parkingSensors, setParkingSensors] = useState(false)
+    const [cruiseControl, setCruiseControl] = useState(false)
+    const [bluetooth, setBluetooth] = useState(false)
+    const [startStopSystem, setStartStopSystem] = useState(false)
+    const [electricallyAdjustableSeats, setElectricallyAdjustableSeats] = useState(false)
+    const [duskSensor, setDuskSensor] = useState(false)
+
+
+    // scroll to top when start/stop form
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [isAddingItem])
+
+
+    // clear all data from form and close item form
+    const clearAllDataFromForm = () => {
+
+        //all categories
+        setMainCategory(mainCategories[0].nameDB)
+        // setDocumentKey("") - NOT clear that - can't be empty - auto generate when main category change
+        setTypeChosen("")
+        setYearChosen("")
+        setAdTitle("")
+        setImage(image.map(() => null)) // clear image holder
+        setImageURL(imageURL.map(() => null)) // clear image URL holder
+        setInputDescription("")
+        setTechKnowledge("")
+        setPriceOfMeeting("")
+        setTimeOfDay("")
+        setRegionChosen("")
+        setCityChosen("")
+        setInputName("")
+        setInputEmail("")
+        setInputPhone("")
+        setAgreenent(false)
+
+        // only car category
+        setCarIdChosen("")
+        setCarModelChosen("")
+        setFuelChosen("")
+        setGearboxChosen("")
+        setMileageChosen("")
+        setCapacityChosen("")
+        setPowerChosen("")
+        setElectricWindows(false)
+        setAirConditioning(false)
+        setXenonLights(false)
+        setMultifunctionWheel(false)
+        setRainSensor(false)
+        setIsofix(false)
+        setOnBoardComputer(false)
+        setGPSNavigation(false)
+        setLeatherUpholstery(false)
+        setFactoryRadio(false)
+        setParkingSensors(false)
+        setCruiseControl(false)
+        setBluetooth(false)
+        setStartStopSystem(false)
+        setElectricallyAdjustableSeats(false)
+        setDuskSensor(false)
+
+        // close item form
+        setIsAddingItem(false)
+    }
+
+    // clear all data from form and close item form
+    const hideAdItemForm = () => {
+
+        // clear all data from form and close item form
+        clearAllDataFromForm()
+
+    }
+
+
     //unique name of documentKey in DB storage and firestore
     useEffect(() => {
 
@@ -142,29 +221,17 @@ const User = props => {
             return
         }
 
-        //main category +  data + random string
-        const adMainNameInDB = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
+        //first part of documentKey is DB name +  data + random string
+        const documentKeyGenerator = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
 
-        setDocumentKey(adMainNameInDB)
+        setDocumentKey(documentKeyGenerator)
+
+        console.log("documentKey: ", documentKeyGenerator);
 
     }, [mainCategory])
 
 
-    // hide ad item form and clear all
-    const hideAdItemForm = () => {
 
-        // clear image holder
-        setImage(image.map(() => null))
-
-        // clear image URL holder
-        setImageURL(imageURL.map(() => null))
-
-        // delete images and folder from DB
-        deleteImagesAndFolderFromDB(isAddingItem)
-
-        // close item form
-        setIsAddingItem(false)
-    }
 
     // set Regions on Change
     const setRegionChosenChandler = e => {
@@ -267,7 +334,7 @@ const User = props => {
 
 
         // send photo to DB
-        const uploadTask = storage.ref(`images/${isAddingItem}/${image.name}`).put(image)
+        const uploadTask = storage.ref(`images/${documentKey}/${image.name}`).put(image)
         uploadTask.on('state_changed',
             snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
             err => { //show if error
@@ -281,7 +348,7 @@ const User = props => {
             },
             () => {
                 storage // get url
-                    .ref(`images/${isAddingItem}`)
+                    .ref(`images/${documentKey}`)
                     .child(image.name)
                     .getDownloadURL() // get url
                     .then(url => {
@@ -321,25 +388,24 @@ const User = props => {
 
         // object to save in DB
         const corObject = {
-            id: `${new Date().getTime()} ${Math.random().toString(36).substr(2)}`, // unique ID to e.g. item list because Each child in a list should have a unique "key"
+
+            // data for all ads
+            id: `${new Date().getTime()} ${Math.random().toString(36).substr(2)}`, // unique ID only to item list because Each child in a list should have a unique "key"
             mainCategory: mainCategory, // main category of ad
-            documentKey: documentKey, // is always the same as document Key in DB
-            adDate: new Date().getTime(), // data dodania lub odświerzenia ogłoszenia w ms od 1970, typ w firestore NUMBER
-            userEmail: localStorage.getItem(USER_EMAIL),
-            userPhoto: localStorage.getItem(USER_PHOTO),
-            isPromoted: false, // promowanie wyłaczone zawsze przy odawaniu zdjęcia
-            isApproved: true, // automatycznie ustawia ogłoszenie jako zatwierdzone do wyświetlenia
-            carIdChosen: carIdChosen,
-            carModelChosen: carModelChosen,
-            yearChosen: yearChosen,
-            fuelChosen: fuelChosen,
-            gearboxChosen: gearboxChosen,
-            mileageChosen: mileageChosen,
+            documentKey: documentKey, // is always the same as document Key in DB, first part of documentKey is collection name, second is adding date, third is time ,fourts is random
+            adDate: new Date().getTime(), // date of add or refresh in DB - will be changed after by backend when user want to refresch ad, name in ms from 1970, type in firestore NUMBER
+            userEmail: localStorage.getItem(USER_EMAIL), // user login email
+            userPhoto: localStorage.getItem(USER_PHOTO), // user login photo from login social media
+            isPromoted: false, // always false when first add ad, can by change by add promoting by backend
+            isApproved: true, // always true when first add ad, can be change by admin only
+
+            // all ads from form
             typeChosen: typeChosen,
+            yearChosen: yearChosen,
+            adTitle: adTitle,
             imageURL: imageURLFultered,
             inputDescription: inputDescription,
             techKnowledge: techKnowledge,
-            choiceDriver: choiceDriver,
             priceOfMeeting: priceOfMeeting,
             timeOfDay: timeOfDay,
             regionChosen: regionChosen,
@@ -347,7 +413,33 @@ const User = props => {
             inputName: inputName,
             inputEmail: inputEmail,
             inputPhone: inputPhone,
-            inputAgreenent: inputAgreenent
+            inputAgreenent: inputAgreenent,
+
+            // only car category from form
+            carIdChosen: carIdChosen,
+            carModelChosen: carModelChosen,
+            fuelChosen: fuelChosen,
+            gearboxChosen: gearboxChosen,
+            mileageChosen: mileageChosen,
+            capacityChosen: capacityChosen,
+            powerChosen: powerChosen,
+            electricWindows: electricWindows,
+            sirConditioning: sirConditioning,
+            xenonLights: xenonLights,
+            multifunctionWheel: multifunctionWheel,
+            rainSensor: rainSensor,
+            isofix: isofix,
+            onBoardComputer: onBoardComputer,
+            GPSNavigation: GPSNavigation,
+            leatherUpholstery: leatherUpholstery,
+            factoryRadio: factoryRadio,
+            parkingSensors: parkingSensors,
+            cruiseControl: cruiseControl,
+            bluetooth: bluetooth,
+            startStopSystem: startStopSystem,
+            electricallyAdjustableSeats: electricallyAdjustableSeats,
+            duskSensor: duskSensor,
+
         }
         console.log(corObject);
 
@@ -355,6 +447,8 @@ const User = props => {
 
 
         // TODO move to backend
+
+
 
         // save obj in DB
         firestore.collection(mainCategory).doc(documentKey).set(corObject) // save obj in firestore
@@ -364,33 +458,8 @@ const User = props => {
             .catch(err => console.log("error saving in firestore: ", err))
 
 
-
-
-
-
-
-        // close and clear ad edition
-        setIsAddingItem(false)
-        setCarIdChosen("")
-        setCarModelChosen("")
-        setYearChosen("")
-        setFuelChosen("")
-        setGearboxChosen("")
-        setMileageChosen("")
-        setTypeChosen("")
-        setImage(image.map(() => null)) // clear image holder
-        setImageURL(imageURL.map(() => null)) // clear image URL holder
-        setInputDescription("")
-        setTechKnowledge("")
-        setChoiceDriver("")
-        setPriceOfMeeting("")
-        setTimeOfDay("")
-        setRegionChosen("")
-        setCityChosen("")
-        setInputName("")
-        setInputEmail("")
-        setInputPhone("")
-        setAgreenent("")
+        // clear all data from form
+        clearAllDataFromForm()
     }
 
     // ----------------------- STOP ADD ITEM --------------------------//
@@ -443,18 +512,55 @@ const User = props => {
         }
     }, [])
 
+
+    // edit one ad in DB
+    const editItemFromDB = (e, item) => {
+
+        console.log("not ready editItemFromDB")
+
+        // TODO move to backend
+
+    }
+
     // delete one ad from DB
     const deleteItemFromDB = (e, item) => {
 
-        // delete one ad from DB STORAGE with images
+
+        // TODO move to backend
+
+
+        // 1. delete one ad from DB STORAGE with images
         deleteImagesAndFolderFromDB(item.documentKey)
 
-        firestore.collection(item.mainCategory).doc(item.documentKey).delete() // delete one ad from DB FIRESTORE in ads folder
-            .then(() => console.log("deleted ad in ADS"))
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(item.documentKey).delete())  // delete one ad from DB FIRESTORE in users folder
-            .then(() => console.log("deleted ad in USERS "))
+        // 2. delete one ad from DB FIRESTORE in xpecyfic folder
+        firestore.collection(item.mainCategory).doc(item.documentKey).delete()
+            .then(() => console.log(`deleted ad from ${item.mainCategory}`))
+
+            // 3. delete one ad from DB FIRESTORE in users folder
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(item.documentKey).delete())
+            .then(() => console.log(`deleted ad from ${USERS}`))
             .catch(err => console.log(' delete err', err))
     }
+
+    // promote one ad in DB
+    const promoteItemFromDB = (e, item) => {
+
+        console.log("not ready promoteItemFromDB")
+
+        // TODO move to backend
+
+    }
+
+    // promote one ad in DB
+    const refreshItemFromDB = (e, item) => {
+
+        console.log("not ready refreshItemFromDB")
+
+        // TODO move to backend
+
+    }
+
+
 
 
     //get points from DB
@@ -487,7 +593,7 @@ const User = props => {
     }, [])
 
     const buyPoints = type => {
-        console.log("not ready: ", type);
+        console.log("not ready: ", type)
     }
 
 
@@ -501,23 +607,97 @@ const User = props => {
             ? <section className={style.background}>
                 <div className={style.container}>
 
-                    {isAddingItem
-                        ?
+                    {!isAddingItem
+
+                        // USER LIST ITEMS
+                        ? <div className={style.user}>
+                            <p className={style.user__title}>Witaj {localStorage.getItem(USER_NAME)}</p>
+
+                            <p className={style.user__accountDesc}>Twoje konto:</p>
+
+                            <div className={style.user__accountContainer}>
+
+                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {localStorage.getItem(USER_EMAIL)}</p>
+
+                                <div className={style.user__accountDescContainer}>
+                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): {promotionPoints} szt.</p>
+                                    <div className={style.user__accountAdSVG} onClick={() => buyPoints("promotion points")}>
+                                        <Ad />
+                                    </div>
+                                </div>
+
+                                {adPoints !== -1
+                                    ? <div className={style.user__accountDescContainer}>
+                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): {adPoints} szt.</p>
+                                        <div className={style.user__accountAdSVG} onClick={() => buyPoints("ad points")}>
+                                            <Ad />
+                                        </div>
+                                    </div>
+                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: bez limitu</p>
+                                }
+                            </div>
+
+                            <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
+                            <div className={style.user__itemsContainer}>
+
+                                {userAds.map(item => {
+                                    return (
+                                        <div key={item.id} className={style.user__item}>
+
+                                            <figure className={style.user__itemFigure}>
+                                                <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main ad" />
+                                            </figure>
+
+                                            <div className={style.user__itemDescContainer}>
+                                                <div className={style.user__itemDescTop}>
+                                                    <div className={style.user__itemDescTopLeft}>
+                                                        <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
+                                                        <p className={style.user__itemText}>{item.carModelChosen}</p>
+
+                                                    </div>
+                                                    <div className={style.user__itemDescTopRight} >
+                                                        <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
+                                                    </div>
+                                                </div>
+
+                                                {item.isApproved === true
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zatwierdzone</p>
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApproved}`}</p>}
+
+                                                <div className={style.user__itemDescBottom}>
+                                                    <a className={style.user__itemButton} href={`/home/${item.documentKey}`}>zobacz</a>
+                                                    <button className={style.user__itemButton} onClick={e => editItemFromDB(e, item)}>edytuj</button>
+                                                    <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
+                                                    <button className={style.user__itemButton} onClick={e => promoteItemFromDB(e, item)}>promuj</button>
+                                                    <button className={style.user__itemButton} onClick={e => refreshItemFromDB(e, item)}>odśwież</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    )
+                                })
+                                }
+                                <div className={style.user__itemAdSVG} onClick={() => setIsAddingItem(true)}>
+                                    <Ad />
+                                </div>
+                            </div>
+                        </div>
+
 
                         // AD ITEM
-                        <div className={style.ad}>
+                        : <div className={style.ad}>
 
-                            {/* MAIN CATEGORY */}
-                            <div className={style.categories}>
-                                <p className={style.title}>Kategorie</p>
-                                <div className={style.categories__container}>
+                            {/* main category section */}
+                            <div className={style.ad__section}>
+                                <p className={style.ad__title}>Kategorie:</p>
+                                <div className={style.ad__container}>
                                     {mainCategories.map(item => {
                                         return (
-                                            <div key={item.nameDB} className={`${style.categories__itemContainer} ${(mainCategory === item.nameDB) && style.categories__itemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
-                                                <figure className={style.categories__itemFigure}>
-                                                    <img className={style.categories__itemImg} src={item.photo} alt="main" />
+                                            <div key={item.nameDB} className={`${style.add__categoriesItemContainer} ${(mainCategory === item.nameDB) && style.add__categoriesItemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
+                                                <figure className={style.add__categoriesItemFigure}>
+                                                    <img className={style.add__categoriesItemImg} src={item.photo} alt="main" />
                                                 </figure>
-                                                <p className={style.categories__itemDesc}>{item.name}</p>
+                                                <p className={style.add__categoriesItemDesc}>{item.name}</p>
                                             </div>
                                         )
                                     })}
@@ -526,51 +706,60 @@ const User = props => {
 
                             {/* car section */}
                             <div className={style.ad__section}>
-                                <p className={style.ad__title}>Dane pojazdu:</p>
+                                <p className={style.ad__title}>Dane:</p>
+
+                                {(mainCategory === CARS.nameDB)
+                                    && <div className={style.ad__container}>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <p className={style.ad__itemDesc}>Marka:</p>
+                                            <select className={style.ad__itemList} onChange={setCarIdChosenChandler}>
+                                                {cars.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <p className={style.ad__itemDesc}>Model:</p>
+                                            <select className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)}>
+                                                {cars.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <p className={style.ad__itemDesc}>Paliwo:</p>
+                                            <select className={style.ad__itemList} onChange={e => setFuelChosen(e.target.value)}>
+                                                {fuel.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <p className={style.ad__itemDesc}>Skrzynia biegów:</p>
+                                            <select className={style.ad__itemList} onChange={e => setGearboxChosen(e.target.value)}>
+                                                {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <p className={style.ad__itemDesc}>Przebieg (tyś km.):</p>
+                                            <select className={style.ad__itemList} onChange={e => setMileageChosen(e.target.value)}>
+                                                {mileage.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <label className={style.ad__itemDesc}>Pojemność (cm3):</label>
+                                            <input onChange={event => setCapacityChosen(event.target.value)} value={capacityChosen} className={style.ad__itemList} type='number' />
+                                        </div>
+
+                                        <div className={style.ad__itemContainer}>
+                                            <label className={style.ad__itemDesc}>Moc (KM):</label>
+                                            <input onChange={event => setPowerChosen(event.target.value)} value={powerChosen} className={style.ad__itemList} type='number' />
+                                        </div>
+                                    </div>
+                                }
+
+
                                 <div className={style.ad__container}>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Marka:</p>
-                                        <select className={style.ad__itemList} onChange={setCarIdChosenChandler}>
-                                            {cars.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
-                                        </select>
-                                    </div>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Model:</p>
-                                        <select className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)}>
-                                            {cars.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
-
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Rok produkcji:</p>
-                                        <select className={style.ad__itemList} onChange={e => setYearChosen(e.target.value)}>
-                                            {years.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Paliwo:</p>
-                                        <select className={style.ad__itemList} onChange={e => setFuelChosen(e.target.value)}>
-                                            {fuel.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Skrzynia biegów:</p>
-                                        <select className={style.ad__itemList} onChange={e => setGearboxChosen(e.target.value)}>
-                                            {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Przebieg (tyś km.):</p>
-                                        <select className={style.ad__itemList} onChange={e => setMileageChosen(e.target.value)}>
-                                            {mileage.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
 
                                     <div className={style.ad__itemContainer}>
                                         <p className={style.ad__itemDesc}>Typ:</p>
@@ -579,40 +768,134 @@ const User = props => {
                                         </select>
                                     </div>
 
+                                    <div className={style.ad__itemContainer}>
+                                        <p className={style.ad__itemDesc}>Rok produkcji:</p>
+                                        <select className={style.ad__itemList} onChange={e => setYearChosen(e.target.value)}>
+                                            {years.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
+
                                 </div>
+
+                                {(mainCategory === CARS.nameDB)
+                                    && <div className={style.ad__container}>
+                                        <fieldset className={style.ad__containerEquipment}>
+                                            <legend className={style.ad__legendEquipment}>Wyposarzenie: </legend>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setElectricWindows(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Elektryczne szyby</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setAirConditioning(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Klimatyzacja</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setXenonLights(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Światła Xenonowe</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setMultifunctionWheel(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Wielofunkcyjna kierownica</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setRainSensor(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Czujnik deszczu</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setIsofix(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Isofix</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setOnBoardComputer(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Komputer pokładowy</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setGPSNavigation(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Nawigacja GPS</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setLeatherUpholstery(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Tapicerka skórzana</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setFactoryRadio(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Radio fabryczne</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setParkingSensors(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Czujniki parkowania</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setCruiseControl(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Tempomat</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setBluetooth(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Bluetooth</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setStartStopSystem(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>System Start-Stop</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setElectricallyAdjustableSeats(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Elektrycznie ustawiane fotele</label>
+                                            </div>
+                                            <div className={style.ad_checkBoxContainerEquipment}>
+                                                <input onChange={event => setDuskSensor(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                <label className={style.ad__labelCheckBoxEquipment}>Czujnik zmierzchu</label>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                }
                             </div>
-
-
 
                             {/* photo and description section */}
                             <div className={style.ad__section}>
-                                <p className={style.ad__title}>Zdjęcia i opis:</p>
+
+                                <p className={style.ad__title}>Opis:</p>
                                 <div className={style.ad__container}>
 
-                                    {[...Array(4)].map((item, index) => {
-                                        return (
-                                            <div key={index} className={style.ad__itemContainer}>
-                                                <input
-                                                    id={`file${index}`}
-                                                    // className=""
-                                                    style={{ display: "none" }}
-                                                    type='file'
-                                                    onChange={(e) => getPhoto(e, index)}
-                                                    accept='image/*' //image/* = .jpg, .jpeg, .bmp, .svg, .png
-                                                />
-                                                <label htmlFor={`file${index}`} className={` ${style.btn} ${style.ad__itemLabel}`}><img className={style.ad__itemImage} src={imageURL[index] || Photo} alt='podgląd zdjęcia.' /> </label>
-                                                {showProgress[index] &&
-                                                    <div className={style.ad__progressContainer}>
-                                                        <progress className={style.ad__progressBar} value={progress} max='100' />
-                                                    </div>}
-                                            </div>
-                                        )
-                                    })}
+                                    <div className={`${style.ad__itemContainer} ${style.ad__itemContainerWide}`}>
+                                        <label className={style.ad__itemDesc}>Tytuł ogłoszenia (10-20 znaków):</label>
+                                        <input onChange={event => setAdTitle(event.target.value)} value={adTitle} className={style.ad__itemList} type='text' />
+                                    </div>
+
+
+                                    <div className={style.ad__containerPhotos}>
+                                        <p className={style.ad__itemContainer}>Zdjęcia:</p>
+                                        <div className={style.ad__containerPhotos}>
+
+
+                                            {[...Array(4)].map((item, index) => {
+                                                return (
+                                                    <div key={index} className={style.ad__itemContainer}>
+                                                        <input
+                                                            id={`file${index}`}
+                                                            // className=""
+                                                            style={{ display: "none" }}
+                                                            type='file'
+                                                            onChange={(e) => getPhoto(e, index)}
+                                                            accept='image/*' //image/* = .jpg, .jpeg, .bmp, .svg, .png
+                                                        />
+                                                        <label htmlFor={`file${index}`} className={` ${style.btn} ${style.ad__itemLabel}`}><img className={style.ad__itemImage} src={imageURL[index] || Photo} alt='podgląd zdjęcia.' /> </label>
+                                                        {showProgress[index] &&
+                                                            <div className={style.ad__progressContainer}>
+                                                                <progress className={style.ad__progressBar} value={progress} max='100' />
+                                                            </div>}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+
 
                                     <div className={`${style.ad__itemContainer} ${style.ad__itemTextArea}`}>
                                         <label className={style.ad__itemDesc}>Opis (50-500 znaków):</label>
-                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej pojazd który, chcesz zaprezentować (np.: stan techniczny i wizualny, jak długo masz pojazd, ile przejchałes nim kilometrów, itp.)" />
+                                        <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej przedmiot, chcesz zaprezentować." />
                                     </div>
+
                                 </div>
                             </div>
 
@@ -623,21 +906,14 @@ const User = props => {
                                 <div className={style.ad__container}>
 
                                     <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Jak oceniasz swoją więdzę techniczną <br />na temat samochodu?</p>
+                                        <p className={style.ad__itemDesc}>Jak oceniasz swoją wiedzę techniczną.</p>
                                         <select className={style.ad__itemList} onChange={e => setTechKnowledge(e.target.value)}>
                                             {knowledge.map(item => <option key={item} value={item}> {item} </option>)}
                                         </select>
                                     </div>
 
                                     <div className={style.ad__itemContainer}>
-                                        <p className={style.ad__itemDesc}>Czy instnieje możliwość aby <br />oglądający sam poprowadził samochód?</p>
-                                        <select className={style.ad__itemList} onChange={e => setChoiceDriver(e.target.value)}>
-                                            {choice.map(item => <option key={item} value={item}> {item} </option>)}
-                                        </select>
-                                    </div>
-
-                                    <div className={style.ad__itemContainer}>
-                                        <label className={style.ad__itemDesc}>Jaka jest cena za godzinne spotkanie z <br />przejażdżką min. 10 km?</label>
+                                        <label className={style.ad__itemDesc}>Jaka jest cena za godzinne spotkanie?</label>
                                         <input onChange={event => setPriceOfMeeting(event.target.value)} value={priceOfMeeting} className={style.ad__itemList} type='number' placeholder="np. 150" />
                                     </div>
 
@@ -697,87 +973,6 @@ const User = props => {
                                 <button className={`${style.btn} ${style.btnMmargin}`} onClick={hideAdItemForm}>Anuluj</button>
                                 <button className={style.btn} onClick={addItemToDB}>Dodaj</button>
                             </div>
-                        </div>
-
-
-
-                        // USER LIST ITEMS
-                        : <div className={style.user}>
-                            <p className={style.user__title}>Witaj {localStorage.getItem(USER_NAME)}</p>
-
-                            <p className={style.user__accountDesc}>Twoje konto:</p>
-
-                            <div className={style.user__accountContainer}>
-
-                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {localStorage.getItem(USER_EMAIL)}</p>
-
-                                <div className={style.user__accountDescContainer}>
-                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): {promotionPoints} szt.</p>
-                                    <div className={style.user__accountAdSVG} onClick={() => buyPoints("promotion points")}>
-                                        <Ad />
-                                    </div>
-                                </div>
-
-                                {adPoints !== -1
-                                    ? <div className={style.user__accountDescContainer}>
-                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): {adPoints} szt.</p>
-                                        <div className={style.user__accountAdSVG} onClick={() => buyPoints("ad points")}>
-                                            <Ad />
-                                        </div>
-                                    </div>
-                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: bez limitu</p>
-                                }
-
-                            </div>
-
-
-
-                            <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
-
-                            <div className={style.user__itemsContainer}>
-
-                                {userAds.map(item => {
-                                    return (
-                                        <div key={item.id} className={style.user__item}>
-
-                                            <figure className={style.user__itemFigure}>
-                                                <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main ad" />
-                                            </figure>
-
-                                            <div className={style.user__itemDescContainer}>
-                                                <div className={style.user__itemDescTop}>
-                                                    <div className={style.user__itemDescTopLeft}>
-                                                        <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                        <p className={style.user__itemText}>{item.carModelChosen}</p>
-
-                                                    </div>
-                                                    <div className={style.user__itemDescTopRight} >
-                                                        <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
-                                                    </div>
-                                                </div>
-
-                                                {item.isApproved === true
-                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zatwierdzone</p>
-                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApproved}`}</p>}
-
-                                                <div className={style.user__itemDescBottom}>
-                                                    <button className={style.user__itemButton} onClick={() => props.history.push(`/home/${item.documentKey}`)}>zobacz</button>
-                                                    <button className={style.user__itemButton} onClick={() => console.log("not ready")}>edytuj</button>
-                                                    <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
-                                                    <button className={style.user__itemButton} onClick={() => console.log("not ready")}>promuj</button>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    )
-                                })
-                                }
-                                <div className={style.user__itemAdSVG} onClick={() => setIsAddingItem(true)}>
-                                    <Ad />
-                                </div>
-                            </div>
-
                         </div>
 
                     }

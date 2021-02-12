@@ -154,12 +154,12 @@ const Ad = props => {
                                 <p className={style.desc__textContact}>tel: {oneAd.inputPhone}</p>
                             </a>
 
-                            <div className={style.desc__containerContact} onClick={() => console.log(props.history.push('/userads', oneAd.userEmail))}>
+                            <a className={style.desc__containerContact} href={`/userads/${props.match.params.key}`} >
                                 <div className={style.desc__svg}>
                                     <Cubes />
                                 </div>
                                 <p className={style.desc__textContact}>Zobacz inne ogłoszenia uzytkownika</p>
-                            </div>
+                            </a>
                         </div>
                     </div>
 

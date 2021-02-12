@@ -23,7 +23,7 @@ const UserAds = props => {
     // load ads from DB
     useEffect(() => {
 
-        console.log(props.location.state);
+        console.log("props.match.params.key", props.match.params.key);
 
         //clear ads list before load
         setAllAds([])
@@ -32,22 +32,17 @@ const UserAds = props => {
         // load ads from DB
         const loadAdsFromDB = async () => {
             try {
-                const firestoreGet = await firestore.collection(USERS).doc(props.location.state).collection(ADS).get()
+
+                // get ad with userEmail which is collection name
+                const getUsedAd = await firestore.collection(props.match.params.key.split(" ")[0]).doc(props.match.params.key).get()
+                const userEmail = getUsedAd.data().userEmail
+
+                // get all user ads by collection userEmail
+                const firestoreGet = await firestore.collection(USERS).doc(userEmail).collection(ADS).get()
                 firestoreGet.forEach(doc => {
                     const firebaseGetEveryUserAd = async () => {
                         try {
-
-
-
-
-                            // TODO zmienić ADS na odpowiednią bazę danych !!!
-
-
-
-
-
-
-                            const firestoreGetUserAds = await firestore.collection(ADS).doc(doc.data().documentKey).get()
+                            const firestoreGetUserAds = await firestore.collection(doc.data().documentKey.split(" ")[0]).doc(doc.data().documentKey).get()
                             // eslint-disable-next-line no-unused-vars
                             const ex = firestoreGetUserAds.data().isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
                         } catch (err) { console.log('err get ads in for each', err) }

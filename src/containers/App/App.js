@@ -77,7 +77,7 @@ const App = () => {
       <Nav isLogin={isLogin} />
       <Switch>
         <Route path='/home' exact component={Home} />
-        <Route path='/userads' component={UserAds} />
+        <Route path='/userads/:key' component={UserAds} />
         <Route path='/home/:key' component={Ad} />
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
         <Route path='/contact' component={Contact} />

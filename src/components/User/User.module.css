@@ -11,113 +11,6 @@
     margin: auto;
 }
 
-
-/* ADD ITEM*/
-.ad {
-    padding: 2rem 1rem;
-}
-
-.ad__section {
-    padding: 2rem 0;
-    margin: 0 0 2rem 0;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-
-}
-
-.ad__title {
-    font-size: 1.5rem;
-    padding: 0 2rem;
-    font-weight: bold;
-}
-
-.ad__container {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1rem 2rem 0 2rem;
-}
-
-.ad__itemContainer {
-    min-width: 12rem;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.ad__itemDesc {
-    padding-bottom: 0.5rem;
-    font-size: 1rem;
-}
-
-.ad__itemList {
-    background-color: white;
-    color: rgba(var(--accent), 1);
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 0.1rem solid rgba(var(--accent), 0.3);
-    /* box-shadow: 0 0 10px rgba(var(--accent), 0.3); */
-    outline: none;
-}
-
-.ad_checkBoxContainer {
-    width: 100%;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-}
-
-.ad__inputCheckBox {
-    width: 1.2rem;
-    height: 1.2rem;
-    cursor: pointer;
-}
-
-.ad__labelCheckBox {
-    font-size: 1rem;
-    padding: 0.5rem;
-}
-
-.ad__itemTextArea {
-    width: 100%;
-}
-
-.ad__itemLabel {
-    height: 9rem;
-    width: 12rem;
-    padding: 0 !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.ad__itemImage {
-    max-height: 100%;
-    max-width: 100%;
-}
-
-.ad__progressContainer {
-    padding: 0.5rem;
-    background: rgba(196, 196, 196, 0.8);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-    z-index: 1;
-}
-
-.ad__progressBar {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 1rem;
-}
-
-
 /* USER SECTION */
 
 .user {
@@ -228,6 +121,8 @@
     border: 0.1rem solid black;
     background: white;
     cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 
 .user__itemButton:active {
@@ -261,6 +156,190 @@
     box-shadow: none;
 }
 
+
+
+/* ADD ITEM*/
+
+.add__categoriesItemContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.2rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 0 rgb(var(--accent));
+}
+
+.add__categoriesItemContainerActive {
+    box-shadow: 0 0 10px rgb(var(--accent));
+}
+
+.add__categoriesItemFigure {
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: circle(50%);
+}
+
+.add__categoriesItemImg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.add__categoriesItemDesc {
+    padding-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+
+
+
+
+.ad {
+    padding: 2rem 1rem;
+}
+
+.ad__section {
+    padding: 2rem 0;
+    margin: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+
+}
+
+.ad__title {
+    font-size: 1.5rem;
+    padding: 0 2rem;
+    font-weight: bold;
+}
+
+.ad__container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem 2rem 0 2rem;
+}
+
+.ad__containerPhotos {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.ad__itemContainer {
+    min-width: 12rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.ad__itemContainerWide {
+    width: 100%;
+}
+
+.ad__itemDesc {
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.ad__itemList {
+    background-color: white;
+    color: rgba(var(--accent), 1);
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 0.1rem solid rgba(var(--accent), 0.3);
+    /* box-shadow: 0 0 10px rgba(var(--accent), 0.3); */
+    outline: none;
+}
+
+.ad__containerEquipment {
+    margin: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    border-color: rgb(var(--accent));
+
+}
+
+.ad__legendEquipment {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.ad_checkBoxContainerEquipment {
+    display: flex;
+    align-items: center;
+}
+
+.ad__inputCheckBoxEquipment {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.ad__labelCheckBoxEquipment {
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.2rem;
+}
+
+
+.ad_checkBoxContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ad__inputCheckBox {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.ad__labelCheckBox {
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.ad__itemTextArea {
+    width: 100%;
+}
+
+.ad__itemLabel {
+    height: 9rem;
+    width: 12rem;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ad__itemImage {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.ad__progressContainer {
+    padding: 0.5rem;
+    background: rgba(196, 196, 196, 0.8);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.ad__progressBar {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1rem;
+}
 
 
 .btnContainer {
