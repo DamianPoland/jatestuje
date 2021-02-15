@@ -11,6 +11,10 @@
     margin: auto;
 }
 
+.flexRow {
+    display: flex
+}
+
 /* USER SECTION */
 
 .user {
@@ -99,7 +103,8 @@
 .user__itemDescTopLeft {
     display: flex;
     flex-wrap: wrap;
-    font-size: 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .user__itemDescMiddleText {

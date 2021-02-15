@@ -10,24 +10,24 @@ import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFire
 import { ReactComponent as Ad } from '../../assets/ad.svg'
 
 //data 
-import { mainCategories, cars, fuel, years, gearbox, mileage, type, regions, cities, knowledge } from '../../shared/data'
-import { CARS } from '../../shared/constans'
+import { mainCategories, fuel, years, gearbox, carEquipment, mileage, regions, cities, knowledge } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
 import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
-import { firestore, storage } from '../../shared/fire'
+import firebase from "firebase/app"
+import { auth, firestore, storage } from '../../shared/fire'
 
 // constans
-import { IS_AUTH, USER_NAME, USER_EMAIL, USER_PHOTO, ADS, USERS, PAYMENTS, POINTS } from '../../shared/constans'
+import { IS_AUTH, USER_NAME, ADS, USERS, PAYMENTS, POINTS } from '../../shared/constans'
 
 
 
 // delete all images and folder from DB
 const deleteImagesAndFolderFromDB = (isAdingItem) => {
-    const ref = storage.ref(`images/${isAdingItem}`)
+    const ref = storage.ref(`images/${localStorage.getItem(IS_AUTH)}/${isAdingItem}`)
     ref.listAll()
         .then(resp => {
             resp.items.forEach(fileRef => {
@@ -42,6 +42,8 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
         .catch(error => console.log(error))
 }
 
+// set equimpment array
+let equipmentChosen = []
 
 
 const User = props => {
@@ -127,24 +129,6 @@ const User = props => {
     // STATE - set power
     const [powerChosen, setPowerChosen] = useState("")
 
-    // STATE - set Equipment
-    const [electricWindows, setElectricWindows] = useState(false)
-    const [sirConditioning, setAirConditioning] = useState(false)
-    const [xenonLights, setXenonLights] = useState(false)
-    const [multifunctionWheel, setMultifunctionWheel] = useState(false)
-    const [rainSensor, setRainSensor] = useState(false)
-    const [isofix, setIsofix] = useState(false)
-    const [onBoardComputer, setOnBoardComputer] = useState(false)
-    const [GPSNavigation, setGPSNavigation] = useState(false)
-    const [leatherUpholstery, setLeatherUpholstery] = useState(false)
-    const [factoryRadio, setFactoryRadio] = useState(false)
-    const [parkingSensors, setParkingSensors] = useState(false)
-    const [cruiseControl, setCruiseControl] = useState(false)
-    const [bluetooth, setBluetooth] = useState(false)
-    const [startStopSystem, setStartStopSystem] = useState(false)
-    const [electricallyAdjustableSeats, setElectricallyAdjustableSeats] = useState(false)
-    const [duskSensor, setDuskSensor] = useState(false)
-
 
     // scroll to top when start/stop form
     useEffect(() => {
@@ -152,8 +136,44 @@ const User = props => {
     }, [isAddingItem])
 
 
+    // call when click new category
+    const mainCategoryHandler = (nameDB) => {
+
+        // delete photos from DB STORAGE with images
+        deleteImagesAndFolderFromDB(documentKey)
+        setImage(image.map(() => null)) // clear image holder
+        setImageURL(imageURL.map(() => null)) // clear image URL holder
+
+        //set new category
+        setMainCategory(nameDB)
+
+        //clear all form data
+        setTypeChosen("")
+        setCarIdChosen("")
+        setCarModelChosen("")
+        setFuelChosen("")
+        setGearboxChosen("")
+        setMileageChosen("")
+        setCapacityChosen("")
+        setPowerChosen("")
+        equipmentChosen = []
+    }
+
+
+
+    // clear all data from form, clear photos from storage and close item form
+    const cancelForm = () => {
+
+        // delete photos from DB STORAGE with images
+        deleteImagesAndFolderFromDB(documentKey)
+
+        // clear all data from form and close item form
+        clearAllDataFromFormAndClose()
+
+    }
+
     // clear all data from form and close item form
-    const clearAllDataFromForm = () => {
+    const clearAllDataFromFormAndClose = () => {
 
         //all categories
         setMainCategory(mainCategories[0].nameDB)
@@ -182,33 +202,10 @@ const User = props => {
         setMileageChosen("")
         setCapacityChosen("")
         setPowerChosen("")
-        setElectricWindows(false)
-        setAirConditioning(false)
-        setXenonLights(false)
-        setMultifunctionWheel(false)
-        setRainSensor(false)
-        setIsofix(false)
-        setOnBoardComputer(false)
-        setGPSNavigation(false)
-        setLeatherUpholstery(false)
-        setFactoryRadio(false)
-        setParkingSensors(false)
-        setCruiseControl(false)
-        setBluetooth(false)
-        setStartStopSystem(false)
-        setElectricallyAdjustableSeats(false)
-        setDuskSensor(false)
+        equipmentChosen = []
 
         // close item form
         setIsAddingItem(false)
-    }
-
-    // clear all data from form and close item form
-    const hideAdItemForm = () => {
-
-        // clear all data from form and close item form
-        clearAllDataFromForm()
-
     }
 
 
@@ -230,9 +227,6 @@ const User = props => {
 
     }, [mainCategory])
 
-
-
-
     // set Regions on Change
     const setRegionChosenChandler = e => {
         setRegionChosen(e.target.value)
@@ -243,6 +237,11 @@ const User = props => {
     const setCarIdChosenChandler = e => {
         setCarIdChosen(e.target.value)
         setCarModelChosen("") // reset model when Car ID change
+    }
+
+    // push or pull equipment item
+    const equipmentOnChangeHandler = (item, isChecked) => {
+        isChecked ? equipmentChosen.push(item) : equipmentChosen.splice(equipmentChosen.findIndex(i => i === item), 1)
     }
 
     // get photo from file/camera
@@ -334,7 +333,7 @@ const User = props => {
 
 
         // send photo to DB
-        const uploadTask = storage.ref(`images/${documentKey}/${image.name}`).put(image)
+        const uploadTask = storage.ref(`images/${localStorage.getItem(IS_AUTH)}/${documentKey}/${image.name}`).put(image)
         uploadTask.on('state_changed',
             snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
             err => { //show if error
@@ -348,7 +347,7 @@ const User = props => {
             },
             () => {
                 storage // get url
-                    .ref(`images/${documentKey}`)
+                    .ref(`images/${localStorage.getItem(IS_AUTH)}/${documentKey}`)
                     .child(image.name)
                     .getDownloadURL() // get url
                     .then(url => {
@@ -391,13 +390,14 @@ const User = props => {
 
             // data for all ads
             id: `${new Date().getTime()} ${Math.random().toString(36).substr(2)}`, // unique ID only to item list because Each child in a list should have a unique "key"
+            userId: localStorage.getItem(IS_AUTH), // user Id
             mainCategory: mainCategory, // main category of ad
             documentKey: documentKey, // is always the same as document Key in DB, first part of documentKey is collection name, second is adding date, third is time ,fourts is random
             adDate: new Date().getTime(), // date of add or refresh in DB - will be changed after by backend when user want to refresch ad, name in ms from 1970, type in firestore NUMBER
-            userEmail: localStorage.getItem(USER_EMAIL), // user login email
-            userPhoto: localStorage.getItem(USER_PHOTO), // user login photo from login social media
+            userPhoto: auth.currentUser.photoURL, // user login photo from login social media
             isPromoted: false, // always false when first add ad, can by change by add promoting by backend
             isApproved: true, // always true when first add ad, can be change by admin only
+            isApprovedReason: "", // always empty when first add ad, will be info why rejected
 
             // all ads from form
             typeChosen: typeChosen,
@@ -423,22 +423,7 @@ const User = props => {
             mileageChosen: mileageChosen,
             capacityChosen: capacityChosen,
             powerChosen: powerChosen,
-            electricWindows: electricWindows,
-            sirConditioning: sirConditioning,
-            xenonLights: xenonLights,
-            multifunctionWheel: multifunctionWheel,
-            rainSensor: rainSensor,
-            isofix: isofix,
-            onBoardComputer: onBoardComputer,
-            GPSNavigation: GPSNavigation,
-            leatherUpholstery: leatherUpholstery,
-            factoryRadio: factoryRadio,
-            parkingSensors: parkingSensors,
-            cruiseControl: cruiseControl,
-            bluetooth: bluetooth,
-            startStopSystem: startStopSystem,
-            electricallyAdjustableSeats: electricallyAdjustableSeats,
-            duskSensor: duskSensor,
+            equipmentChosen: equipmentChosen,
 
         }
         console.log(corObject);
@@ -453,13 +438,13 @@ const User = props => {
         // save obj in DB
         firestore.collection(mainCategory).doc(documentKey).set(corObject) // save obj in firestore
             .then(() => console.log("corObject saved in firestore"))
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(documentKey).set({ documentKey: documentKey })) // save ad ID to current user folder in DB
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).set({ [documentKey]: documentKey }, { merge: true })) // save ad ID to current user folder in DB
             .then(() => console.log("adId saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
 
 
         // clear all data from form
-        clearAllDataFromForm()
+        clearAllDataFromFormAndClose()
     }
 
     // ----------------------- STOP ADD ITEM --------------------------//
@@ -478,12 +463,12 @@ const User = props => {
     useEffect(() => {
 
         // if user is not sign in then not start listener
-        if (!localStorage.getItem(USER_EMAIL)) {
+        if (!localStorage.getItem(IS_AUTH)) {
             return
         }
 
         // listener for collection
-        const listener = firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).onSnapshot( //have two arguments which are functions
+        const listener = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).onSnapshot( //have two arguments which are functions
             resp => {
 
                 //clear ads list before load
@@ -491,18 +476,31 @@ const User = props => {
 
                 resp.forEach(doc => {
 
-                    //get collection name as main category
-                    const collectionName = doc.data().documentKey.split(" ")[0]
+                    // if no data then stop
+                    if (Object.keys(doc.data()).length === 0) {
+                        return
+                    }
 
-                    // get ad with itemID from DB and save in State
-                    firestore.collection(collectionName).doc(doc.data().documentKey).get()
-                        .then(resp => {
+                    // change object to array
+                    const dataArray = Object.values(doc.data())
 
-                            // if response is not undefined
-                            resp.data() && setUserAds(prevState => [...prevState, resp.data()])
 
-                        })
-                        .catch(err => console.log('listener err', err))
+                    dataArray.forEach(item => {
+
+                        //get collection name as main category
+                        const collectionName = item.split(" ")[0]
+
+                        // get ad with itemID from DB and save in State
+                        firestore.collection(collectionName).doc(item).get()
+                            .then(resp => {
+
+                                // if response is not undefined
+                                resp.data() && setUserAds(prevState => [...prevState, resp.data()])
+                            })
+                            .catch(err => console.log('listener err', err))
+                    })
+
+
                 })
             },
             err => console.log(err.message))
@@ -525,19 +523,15 @@ const User = props => {
     // delete one ad from DB
     const deleteItemFromDB = (e, item) => {
 
-
-        // TODO move to backend
-
-
         // 1. delete one ad from DB STORAGE with images
         deleteImagesAndFolderFromDB(item.documentKey)
 
-        // 2. delete one ad from DB FIRESTORE in xpecyfic folder
+        // 2. delete one ad from DB FIRESTORE in specyfic folder
         firestore.collection(item.mainCategory).doc(item.documentKey).delete()
             .then(() => console.log(`deleted ad from ${item.mainCategory}`))
 
             // 3. delete one ad from DB FIRESTORE in users folder
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(ADS).doc(item.documentKey).delete())
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).update({ [item.documentKey]: firebase.firestore.FieldValue.delete() }))
             .then(() => console.log(`deleted ad from ${USERS}`))
             .catch(err => console.log(' delete err', err))
     }
@@ -569,12 +563,12 @@ const User = props => {
     useEffect(() => {
 
         // if user is not sign in then return
-        if (!localStorage.getItem(USER_EMAIL)) {
+        if (!localStorage.getItem(IS_AUTH)) {
             return
         }
 
         // get points from db and set in useState
-        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(USER_EMAIL)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
+        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
 
             // if document is not created by backend yet then return
             if (i.data() === undefined) {
@@ -601,7 +595,7 @@ const User = props => {
 
 
     return (
-        JSON.parse(localStorage.getItem(IS_AUTH))
+        localStorage.getItem(IS_AUTH)
 
             // user Log In
             ? <section className={style.background}>
@@ -617,7 +611,7 @@ const User = props => {
 
                             <div className={style.user__accountContainer}>
 
-                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {localStorage.getItem(USER_EMAIL)}</p>
+                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {auth.currentUser?.email}</p>
 
                                 <div className={style.user__accountDescContainer}>
                                     <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): {promotionPoints} szt.</p>
@@ -650,9 +644,20 @@ const User = props => {
 
                                             <div className={style.user__itemDescContainer}>
                                                 <div className={style.user__itemDescTop}>
+                                                    <p className={style.user__itemText}>{item.adTitle}</p>
+                                                </div>
+
+                                                <div className={style.user__itemDescTop}>
                                                     <div className={style.user__itemDescTopLeft}>
-                                                        <p className={style.user__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                        <p className={style.user__itemText}>{item.carModelChosen}</p>
+                                                        <p className={style.user__itemText}>{mainCategories.find(i => i.nameDB === item.mainCategory).name}:</p>
+
+                                                        {item.carIdChosen
+                                                            ? <div className={style.flexRow}>
+                                                                <p className={style.user__itemText}>{mainCategories[0].carBrands.find(i => i.id === item.carIdChosen).name}</p>
+                                                                <p className={style.user__itemText}>{item.carModelChosen}</p>
+                                                            </div>
+                                                            : <p className={style.user__itemText}>{item.typeChosen}</p>
+                                                        }
 
                                                     </div>
                                                     <div className={style.user__itemDescTopRight} >
@@ -660,9 +665,9 @@ const User = props => {
                                                     </div>
                                                 </div>
 
-                                                {item.isApproved === true
+                                                {item.isApproved
                                                     ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zatwierdzone</p>
-                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApproved}`}</p>}
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApprovedReason}`}</p>}
 
                                                 <div className={style.user__itemDescBottom}>
                                                     <a className={style.user__itemButton} href={`/home/${item.documentKey}`}>zobacz</a>
@@ -693,7 +698,7 @@ const User = props => {
                                 <div className={style.ad__container}>
                                     {mainCategories.map(item => {
                                         return (
-                                            <div key={item.nameDB} className={`${style.add__categoriesItemContainer} ${(mainCategory === item.nameDB) && style.add__categoriesItemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
+                                            <div key={item.nameDB} className={`${style.add__categoriesItemContainer} ${(mainCategory === item.nameDB) && style.add__categoriesItemContainerActive}`} onClick={() => mainCategoryHandler(item.nameDB)}>
                                                 <figure className={style.add__categoriesItemFigure}>
                                                     <img className={style.add__categoriesItemImg} src={item.photo} alt="main" />
                                                 </figure>
@@ -708,63 +713,64 @@ const User = props => {
                             <div className={style.ad__section}>
                                 <p className={style.ad__title}>Dane:</p>
 
-                                {(mainCategory === CARS.nameDB)
-                                    && <div className={style.ad__container}>
+                                <div className={style.ad__container}>
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Marka:</p>
                                             <select className={style.ad__itemList} onChange={setCarIdChosenChandler}>
-                                                {cars.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                                {mainCategories[0].carBrands.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                                             </select>
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Model:</p>
                                             <select className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)}>
-                                                {cars.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
+                                                {mainCategories[0].carBrands.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Paliwo:</p>
                                             <select className={style.ad__itemList} onChange={e => setFuelChosen(e.target.value)}>
                                                 {fuel.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Skrzynia biegów:</p>
                                             <select className={style.ad__itemList} onChange={e => setGearboxChosen(e.target.value)}>
                                                 {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Przebieg (tyś km.):</p>
                                             <select className={style.ad__itemList} onChange={e => setMileageChosen(e.target.value)}>
                                                 {mileage.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Pojemność (cm3):</label>
                                             <input onChange={event => setCapacityChosen(event.target.value)} value={capacityChosen} className={style.ad__itemList} type='number' />
-                                        </div>
+                                        </div>}
 
-                                        <div className={style.ad__itemContainer}>
+                                    {(mainCategory === mainCategories[0].nameDB)
+                                        && <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Moc (KM):</label>
                                             <input onChange={event => setPowerChosen(event.target.value)} value={powerChosen} className={style.ad__itemList} type='number' />
-                                        </div>
-                                    </div>
-                                }
-
-
-                                <div className={style.ad__container}>
+                                        </div>}
 
                                     <div className={style.ad__itemContainer}>
                                         <p className={style.ad__itemDesc}>Typ:</p>
                                         <select className={style.ad__itemList} onChange={e => setTypeChosen(e.target.value)}>
-                                            {type.map(item => <option key={item} value={item}>{item}</option>)}
+                                            {mainCategories.find(i => mainCategory === i.nameDB).type.map(item => <option key={item} value={item}>{item}</option>)}
                                         </select>
                                     </div>
 
@@ -774,79 +780,23 @@ const User = props => {
                                             {years.map(item => <option key={item} value={item}>{item}</option>)}
                                         </select>
                                     </div>
-
                                 </div>
 
-                                {(mainCategory === CARS.nameDB)
+                                {(mainCategory === mainCategories[0].nameDB)
                                     && <div className={style.ad__container}>
                                         <fieldset className={style.ad__containerEquipment}>
                                             <legend className={style.ad__legendEquipment}>Wyposarzenie: </legend>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setElectricWindows(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Elektryczne szyby</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setAirConditioning(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Klimatyzacja</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setXenonLights(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Światła Xenonowe</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setMultifunctionWheel(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Wielofunkcyjna kierownica</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setRainSensor(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Czujnik deszczu</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setIsofix(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Isofix</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setOnBoardComputer(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Komputer pokładowy</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setGPSNavigation(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Nawigacja GPS</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setLeatherUpholstery(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Tapicerka skórzana</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setFactoryRadio(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Radio fabryczne</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setParkingSensors(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Czujniki parkowania</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setCruiseControl(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Tempomat</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setBluetooth(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Bluetooth</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setStartStopSystem(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>System Start-Stop</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setElectricallyAdjustableSeats(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Elektrycznie ustawiane fotele</label>
-                                            </div>
-                                            <div className={style.ad_checkBoxContainerEquipment}>
-                                                <input onChange={event => setDuskSensor(event.target.checked ? true : false)} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
-                                                <label className={style.ad__labelCheckBoxEquipment}>Czujnik zmierzchu</label>
-                                            </div>
-                                        </fieldset>
 
+                                            {carEquipment.map(item => {
+                                                return (
+                                                    <div key={item.id} className={style.ad_checkBoxContainerEquipment}>
+                                                        <input name={item.id} onChange={event => equipmentOnChangeHandler((event.target.name), (event.target.checked ? true : false))} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                        <label className={style.ad__labelCheckBoxEquipment}>{item.name}</label>
+                                                    </div>
+                                                )
+                                            })}
+
+                                        </fieldset>
                                     </div>
                                 }
                             </div>
@@ -858,7 +808,7 @@ const User = props => {
                                 <div className={style.ad__container}>
 
                                     <div className={`${style.ad__itemContainer} ${style.ad__itemContainerWide}`}>
-                                        <label className={style.ad__itemDesc}>Tytuł ogłoszenia (10-20 znaków):</label>
+                                        <label className={style.ad__itemDesc}>Tytuł ogłoszenia (10-50 znaków):</label>
                                         <input onChange={event => setAdTitle(event.target.value)} value={adTitle} className={style.ad__itemList} type='text' />
                                     </div>
 
@@ -970,7 +920,7 @@ const User = props => {
 
 
                             <div className={style.btnContainer}>
-                                <button className={`${style.btn} ${style.btnMmargin}`} onClick={hideAdItemForm}>Anuluj</button>
+                                <button className={`${style.btn} ${style.btnMmargin}`} onClick={cancelForm}>Anuluj</button>
                                 <button className={style.btn} onClick={addItemToDB}>Dodaj</button>
                             </div>
                         </div>

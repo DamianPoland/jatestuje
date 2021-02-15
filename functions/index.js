@@ -15,8 +15,7 @@ const POINTS = "points"
 exports.newUserSignUp = functions.auth.user().onCreate(user => {
 
     // add to firestore promotion and ads points
-    admin.firestore().collection(USERS).doc(user.email).collection(PAYMENTS).doc(POINTS).set({ promotion: 5, ads: -1 }) // if ads: -1 then no limits
-
+    admin.firestore().collection(USERS).doc(user.uid).collection(PAYMENTS).doc(POINTS).set({ promotion: 5, ads: -1 }) // if ads: -1 then no limits
 })
 
 

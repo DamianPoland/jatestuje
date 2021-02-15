@@ -3,11 +3,11 @@ import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
 // data
-import { mainCategories, cars, fuel, yearFrom, yearTo, gearbox, type, regions, cities } from '../../shared/data'
+import { mainCategories, fuel, yearFrom, yearTo, gearbox, regions, cities } from '../../shared/data'
 
+//component
+import ListItemAd from '../ListItemAd/ListItemAd'
 
-//photos
-import PhotoEmpty from '../../assets/photoEmpty.png'
 
 
 
@@ -28,10 +28,25 @@ const Home = props => {
     // STATE - set mainCategory
     const [mainCategory, setMainCategory] = useState(mainCategories[0].nameDB)
 
-    useEffect(() => {
 
+    // call when click new category
+    const mainCategoryHandler = (nameDB) => {
 
-    }, [])
+        // reset array
+        setAllAds([])
+
+        //set new category
+        setMainCategory(nameDB)
+
+        //clear all states\
+        setCarIdChosen("")
+        setCarModelChosen("")
+        setFuelChosen("")
+        setYearFromChosen("")
+        setYearToChosen("")
+        setGearboxChosen("")
+        setTypeChosen("")
+    }
 
 
 
@@ -115,9 +130,6 @@ const Home = props => {
     // query to DB for items
     const queryToDB = async () => {
 
-        // reset array
-        setAllAds([])
-
         //set query constructor
         const queryConstructor = firestore.collection(mainCategory)
 
@@ -177,7 +189,7 @@ const Home = props => {
                     <div className={style.categories__container}>
                         {mainCategories.map(item => {
                             return (
-                                <div key={item.nameDB} className={`${style.categories__itemContainer} ${(mainCategory === item.nameDB) && style.categories__itemContainerActive}`} onClick={() => setMainCategory(item.nameDB)}>
+                                <div key={item.nameDB} className={`${style.categories__itemContainer} ${(mainCategory === item.nameDB) && style.categories__itemContainerActive}`} onClick={() => mainCategoryHandler(item.nameDB)}>
                                     <figure className={style.categories__itemFigure}>
                                         <img className={style.categories__itemImg} src={item.photo} alt="main" />
                                     </figure>
@@ -221,58 +233,64 @@ const Home = props => {
                             </div>
                         </div>
 
+
                         {/* Filter cars car brand */}
-                        <div className={style.filter__itemContainer}>
-                            {/* Filter cars id (name) */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Marka:</p>
-                                <select className={style.filter__itemList} onChange={setCarIdChosenChandler}>
-                                    {cars.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
-                                </select>
-                            </div>
+                        < div className={style.filter__itemContainer}>
+                            {mainCategory === mainCategories[0].nameDB
+                                &&
+                                <div className={style.filter__itemContainerForCar}>
+                                    {/* Filter cars id (name) */}
+                                    <div className={style.filter__itemContainerSmall}>
+                                        <p className={style.filter__itemDesc}>Marka:</p>
+                                        <select className={style.filter__itemList} onChange={setCarIdChosenChandler}>
+                                            {mainCategories[0].carBrands.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                        </select>
+                                    </div>
 
-                            {/* Filter cars model */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Model:</p>
-                                <select className={style.filter__itemList} onChange={e => setCarModelChosen(e.target.value)}>
-                                    {cars.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
-                                </select>
-                            </div>
+                                    {/* Filter cars model */}
+                                    <div className={style.filter__itemContainerSmall}>
+                                        <p className={style.filter__itemDesc}>Model:</p>
+                                        <select className={style.filter__itemList} onChange={e => setCarModelChosen(e.target.value)}>
+                                            {mainCategories[0].carBrands.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
 
-                            {/* Filter fuel */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Paliwo:</p>
-                                <select className={style.filter__itemList} onChange={e => setFuelChosen(e.target.value)}>
-                                    {fuel.map(item => <option key={item} value={item}>{item}</option>)}
-                                </select>
-                            </div>
+                                    {/* Filter fuel */}
+                                    <div className={style.filter__itemContainerSmall}>
+                                        <p className={style.filter__itemDesc}>Paliwo:</p>
+                                        <select className={style.filter__itemList} onChange={e => setFuelChosen(e.target.value)}>
+                                            {fuel.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
 
-                            {/* Filter year */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Rok produkcji:</p>
-                                <div className={style.filter__itemContainerItems}>
-                                    <select className={style.filter__itemList} onChange={e => setYearFromChosen(e.target.value)}>
-                                        {yearFrom.map(item => <option key={item} value={item}>{item}</option>)}
-                                    </select>
-                                    <select className={style.filter__itemList} onChange={e => setYearToChosen(e.target.value)}>
-                                        {yearTo.map(item => <option key={item} value={item}>{item}</option>)}
-                                    </select>
+                                    {/* Filter year */}
+                                    <div className={style.filter__itemContainerSmall}>
+                                        <p className={style.filter__itemDesc}>Rok produkcji:</p>
+                                        <div className={style.filter__itemContainerItems}>
+                                            <select className={style.filter__itemList} onChange={e => setYearFromChosen(e.target.value)}>
+                                                {yearFrom.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                            <select className={style.filter__itemList} onChange={e => setYearToChosen(e.target.value)}>
+                                                {yearTo.map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Filter gearbox */}
+                                    <div className={style.filter__itemContainerSmall}>
+                                        <p className={style.filter__itemDesc}>Skrzynia biegów:</p>
+                                        <select className={style.filter__itemList} onChange={e => setGearboxChosen(e.target.value)}>
+                                            {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-
-                            {/* Filter gearbox */}
-                            <div className={style.filter__itemContainerSmall}>
-                                <p className={style.filter__itemDesc}>Skrzynia biegów:</p>
-                                <select className={style.filter__itemList} onChange={e => setGearboxChosen(e.target.value)}>
-                                    {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
-                                </select>
-                            </div>
+                            }
 
                             {/* Filter type */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Typ:</p>
                                 <select className={style.filter__itemList} onChange={e => setTypeChosen(e.target.value)}>
-                                    {type.map(item => <option key={item} value={item}>{item}</option>)}
+                                    {mainCategories.find(i => mainCategory === i.nameDB).type.map(item => <option key={item} value={item}>{item}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -289,35 +307,10 @@ const Home = props => {
                     <p className={style.title}>Ogłoszenia</p>
 
                     {allAds.length !== 0
-                        ? <div className={style.ads__itemsContainer}>
+                        ? <div>
                             {allAds.map((item) => {
                                 return (
-                                    <a href={`/home/${item.documentKey}`} key={item.adDate} className={style.ads__item} >
-
-                                        <div className={style.ads__itemContainer}>
-                                            <figure className={style.ads__itemFigure}>
-                                                <img className={style.ads__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
-                                            </figure>
-
-                                            <div className={style.ads__itemDescContainer}>
-                                                <div className={style.ads__itemDescTop}>
-                                                    <p className={style.ads__itemText}>{cars.find(i => i.id === item.carIdChosen).name}</p>
-                                                    <p className={style.ads__itemText}>{item.carModelChosen}</p>
-                                                </div>
-
-                                                {item.isPromoted && <p className={style.ads__itemText}>promowane</p>}
-
-                                                <div className={style.ads__itemDescBottom}>
-                                                    <p className={style.ads__itemText}>{item.regionChosen}</p>
-                                                    <p className={style.ads__itemText}>{item.cityChosen}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className={style.ads__itemDescRight} >
-                                            <p className={style.ads__itemText}>{item.priceOfMeeting} zł/h</p>
-                                        </div>
-                                    </a>
+                                    <ListItemAd key={item.id} item={item} />
                                 )
                             })
                             }
@@ -328,12 +321,10 @@ const Home = props => {
                         : <p>brak</p>
                     }
 
-
-
                 </div>
             </div>
 
-        </section>
+        </section >
     )
 }
 

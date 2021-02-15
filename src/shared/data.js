@@ -1,28 +1,4 @@
-
-/* MAIN CATEGORIES */
-import { CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, ELECTRONICS, OTHERS } from '../shared/constans'
-export const mainCategories = [CARS, MOTORCYCLES, TRUCKS, TRAILERS, BUILD, AGRICULTURE, ELECTRONICS, OTHERS]
-
-/* CAR DATA */
-
-const year = [2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992, 1991, 1990, 1989, 1988, 1987, 1986, 1985, 1984, 1983, 1982, 1981, 1980]
-export const years = ["", ...year]
-export const yearFrom = ["od", ...year]
-export const yearTo = ["do", ...year]
-
-export const fuel = ["", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
-
-export const gearbox = ["", "Manualna", "Automatyczna"]
-
-export const mileage = ["", "0-50", "50-100", "100-150", "150-200", "200-300", "powyżej 300"]
-
-export const type = ["", "Sedan", "Hatchback", "Kombi", "Coupe", "Kabriolet", "SUV", "Minivan/Bus"]
-
-export const knowledge = ["", "Słaba", "Dobra", "Bardzo dobra"]
-
-
-
-
+import CAR from '../assets/car.jpg'
 
 
 // ----------------------- START REGIONS ARRAY --------------------------//
@@ -657,7 +633,12 @@ export const cities = [
 
 
 
-// ----------------------- START CARS ARRAY --------------------------//
+
+
+
+
+
+// ----------------------- START CAR BRANDS ARRAY --------------------------//
 
 
 const alfaromeo = {
@@ -1696,53 +1677,213 @@ const volvo = {
 const empty = {
     id: "", name: "", models: [""]
 }
-//     "Alfa Romeo",
-//     "Audi",
-//     "BMW",
-//     "Cadillac",
-//     "Chevrolet",
-//     "Chrysler",
-//     "Citroen",
-//     "Dacia",
-//     "Daewoo",
-//     "Daihatsu",
-//     "Dodge",
-//     "Fiat",
-//     "Ford",
-//     "Honda",
-//     "Hyundai",
-//     "Infiniti",
-//     "Jaguar",
-//     "Jeep",
-//     "Kia",
-//     "Lancia",
-//     "Land Rover",
-//     "Lexus",
-//     "Mazda",
-//     "Mercedes-Benz",
-//     "Mini",
-//     "Mitsubishi",
-//     "Nissan",
-//     "Opel",
-//     "Peugeot",
-//     "Porsche",
-//     "Renault",
-//     "Rover",
-//     "Saab",
-//     "Seat",
-//     "Skoda",
-//     "Smart",
-//     "SsangYong",
-//     "Subaru",
-//     "Suzuki",
-//     "Toyota",
-//     "Volkswagen",
-//     "Volvo",
-//     "Pozostałe",
 
 
-export const cars = [empty, alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo,]
+// ----------------------- STOP CAR BRANDS ARRAY --------------------------//
 
 
-// ----------------------- STOP CARS ARRAY --------------------------//
+
+const carsType = [
+    "",
+    "Sedan",
+    "Hatchback",
+    "Kombi",
+    "Coupe",
+    "Kabriolet",
+    "SUV",
+    "Minivan/Bus"
+]
+
+
+const motorcyclesType = [
+    "",
+    "Chopper",
+    "Cross",
+    "Enduro",
+    "Motorower",
+    "Quad",
+    "Sportowy",
+    "Szosowo-Turystyczny",
+    "Pozostałe",
+]
+
+const trucksType = [
+    "",
+    "Betonomieszarka",
+    "Autobus",
+    "Ciągnik siodłowy",
+    "Chłodnia i izotermy",
+    "Dźwigi, żurawie, podnośniki mobilne",
+    "Wywrotka",
+    "Kontener",
+    "Plandeka (firana)",
+    "Pompa do betonu",
+    "Cysterna",
+    "Autolaweta",
+    "Pojazdy do zabudowy",
+    "Pojazdy użyteczności publicznej",
+    "Skrzynia",
+    "Specjalny",
+    "Zestaw (ciągnik z naczepą/przyczepą)",
+    "Hakowce i bramowce",
+    "Akcesoria do pojazdów ciężarowych",
+    "Pozostałe",
+
+]
+
+const trailersType = [
+    "",
+    "Przyczepy kempingowe",
+    "Przyczepy do samochodów osobowych",
+    "Przyczepy wywrotki",
+    "Naczepy burtowe i plandeki",
+    "Naczepy chłodnie i izotermy",
+    "Naczepy z ruchomą podłogą",
+    "Naczepy cysterny",
+    "Naczepy do przewozu pojazdów",
+    "Naczepy niskopodłogowe",
+    "Naczepy pod kontener",
+    "Naczepy wywrotki",
+    "Przyczepy burtowe i plandeki",
+    "Przyczepy chłodnie i izotermy",
+    "Przyczepy cysterny",
+    "Przyczepy do przewozu pojazdów",
+    "Przyczepy gastronomiczne",
+    "Przyczepy kontenery",
+    "Pozostałe",
+
+]
+
+const buildType = [
+    "",
+    "Koparko-ładowarki",
+    "Spycharki",
+    "Dźwigi, żurawie, podnośniki",
+    "Koparki gąsienicowe",
+    "Koparki kołowe",
+    "Minikoparki",
+    "Wózki widłowe",
+    "Ładowarki",
+    "Generatory (agregaty)",
+    "Maszyny drogowe",
+    "Wozidła",
+    "Kruszarki i przesiewacze",
+    "Pozostałe",
+]
+
+
+const agricultureType = [
+    "",
+    "Ciągniki (traktory)",
+    "Kombajny",
+    "Agregaty",
+    "Pługi",
+    "Rozsiewacze",
+    "Kosiarki",
+    "Ładowacze czołowe",
+    "Prasy i owijarki",
+    "Opryskiwacze",
+    "Sadzarki i siewniki",
+    "Maszyny leśne",
+    "Maszyny dla hodowli zwierząt",
+    "Przyczepy rolnicze",
+    "Akcesoria do maszyn rolniczych/hedery/przystawki",
+    "Ładowarki teleskopowe i miniładowarki",
+    "Rozrzutniki obornika",
+    "Sieczkarnie",
+    "Pozostałe",
+]
+
+const electronicsType = [
+    "",
+    "AGD",
+    "Audio i video",
+    "Car audio",
+    "Drones",
+    "Fotografia",
+    "Komputery",
+    "Konsole",
+    "Tablety",
+    "Telefony komórkowe",
+    "Telewizory",
+    "Pozostałe",
+]
+
+const othersType = [
+    "",
+    "Dla dzieci",
+    "Dom i ogród",
+    "Moda",
+    "Sport i hobby",
+    "Zwierzęta",
+    "Pozostałe",
+]
+
+
+/* START COLLECT ALL DATA */
+
+const carBrands = [empty, alfaromeo, audi, bmw, cadillac, chevrolet, chrysler, citroen, dacia, daewoo, daihatsu, dodge, fiat, ford, honda, hyundai, infiniti, jaguar, jeep, kia, lancia, landrover, lexus, mazda, mercedesbenz, mini, mitsubishi, nissan, opel, peugeot, porsche, renault, rover, saab, seat, skoda, smart, ssangyong, subaru, suzuki, toyota, volkswagen, volvo,]
+
+const motorcycleBrands = []
+const truckBrands = []
+const trailerBrands = []
+const buildBrands = []
+const agricultureBrands = []
+const electronicsBrands = []
+const othersBrands = []
+
+
+
+const cars = { name: "Osobowe", nameDB: "cars", photo: CAR, type: carsType, carBrands: carBrands }
+const motorcycles = { name: "Motocykle", nameDB: "motorcycles", photo: CAR, type: motorcyclesType, carBrands: motorcycleBrands }
+const trucks = { name: "Ciężarowe", nameDB: "trucks", photo: CAR, type: trucksType, carBrands: truckBrands }
+const trailers = { name: "Przyczepy", nameDB: "trailers", photo: CAR, type: trailersType, carBrands: trailerBrands }
+const build = { name: "Budowlane", nameDB: "build", photo: CAR, type: buildType, carBrands: buildBrands }
+const agriculture = { name: "Rolnicze", nameDB: "agriculture", photo: CAR, type: agricultureType, carBrands: agricultureBrands }
+const electronics = { name: "Elektronika", nameDB: "electronics", photo: CAR, type: electronicsType, carBrands: electronicsBrands }
+const others = { name: "Pozostałe", nameDB: "others", photo: CAR, type: othersType, carBrands: othersBrands }
+
+const year = [2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992, 1991, 1990, 1989, 1988, 1987, 1986, 1985, 1984, 1983, 1982, 1981, 1980]
+
+const equipment = [
+    { id: "electricWindows", name: "Elektryczne szyby" },
+    { id: "airConditioning", name: "Klimatyzacja" },
+    { id: "xenonLights", name: "Światła Xenonowe" },
+    { id: "multifunctionWheel", name: "Wielofunkcyjna kierownica" },
+    { id: "rainSensor", name: "Czujnik deszczu" },
+    { id: "isofix", name: "Isofix" },
+    { id: "onBoardComputer", name: "Komputer pokładowy" },
+    { id: "GPSNavigation", name: "Nawigacja GPS" },
+    { id: "leatherUpholstery", name: "Tapicerka skórzana" },
+    { id: "factoryRadio", name: "Radio fabryczne" },
+    { id: "parkingSensors", name: "Czujniki parkowania" },
+    { id: "cruiseControl", name: "Tempomat" },
+    { id: "bluetooth", name: "Bluetooth" },
+    { id: "startStopSystem", name: "System Start-Stop" },
+    { id: "electricallyAdjustableSeats", name: "Elektrycznie ustawiane fotele" },
+    { id: "duskSensor", name: "Czujnik zmierzchu" },
+]
+
+/* STOP COLLECT ALL DATA */
+
+
+
+/* EXPORT DATA */
+
+export const years = ["", ...year]
+export const yearFrom = ["od", ...year]
+export const yearTo = ["do", ...year]
+export const fuel = ["", "Benzyna", "Diesel", "Hybryda", "LPG", "CNG", "Elektryczny"]
+export const gearbox = ["", "Manualna", "Automatyczna"]
+export const mileage = ["", "0-50", "50-100", "100-150", "150-200", "200-300", "powyżej 300"]
+export const knowledge = ["", "Słaba", "Dobra", "Bardzo dobra"]
+export const carEquipment = equipment
+
+export const mainCategories = [cars, motorcycles, trucks, trailers, build, agriculture, electronics, others]
+
+
+
+
+
+
 
