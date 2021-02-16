@@ -14,14 +14,6 @@ import ListItemAd from '../ListItemAd/ListItemAd'
 
 const Home = props => {
 
-
-    // useEffect(() => {
-
-    //     // scroll to top when component render
-    //     window.scrollTo(0, 0)
-
-    // }, [])
-
     // ----------------------- START CATEGORIES --------------------------//
 
 
@@ -47,8 +39,6 @@ const Home = props => {
         setGearboxChosen("")
         setTypeChosen("")
     }
-
-
 
     // ----------------------- STOP CATEGORIES --------------------------//
 
@@ -97,12 +87,15 @@ const Home = props => {
     }
 
 
-
-
     // filter ads
     const filterAds = () => {
 
+
         // filters arguments list TODO
+
+
+
+
         const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen, typeChosen]
 
         console.log("filtrowanie, lista: ", filterArgList);
@@ -137,7 +130,10 @@ const Home = props => {
 
         console.log(mainCategory);
 
+
         //  custom filters TODO
+
+
         // .where("regionChosen", "==", "pomorskie")
         // .where("carIdChosen", "==", "bmw")
 
@@ -156,16 +152,16 @@ const Home = props => {
 
             query.forEach(doc => {
 
-                // ONLY ads no older than month (month = 86400000 * 30 milisekund))
+                // show ONLY ads no older than month (month = 86400000 * 30 milisekund))
                 //if (doc.data().adDate < (new Date().getTime() - 86400000 * 30)) { return }
 
                 // save  ad in State
                 setAllAds(prevState => [...prevState, doc.data()])
 
-                // promoted ad put extra on top, change adDate because Each child in a list should have a unique "key"
+                // promoted ad put extra on top, change id because Each child in a list should have a unique "key"
                 if (doc.data().isPromoted === true) {
                     const item = { ...doc.data() }
-                    item.adDate = `1${item.adDate}`
+                    item.id = ` ${item.id}` // add only space because can't change url in browser to ad
                     setAllAds(prevState => [item, ...prevState])
                 }
             })
@@ -182,6 +178,15 @@ const Home = props => {
         <section className={style.background}>
             <div className={style.container}>
 
+                {/* DESCRIPTION */}
+                <div className={style.description}>
+                    <p className={style.description__title}>O co chodzi ... ?</p>
+                    <div className={style.description__textContainer}>
+                        <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
+                        <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swóją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
+                    </div>
+                </div>
+
 
                 {/* MAIN CATEGORY */}
                 <div className={style.categories}>
@@ -197,16 +202,6 @@ const Home = props => {
                                 </div>
                             )
                         })}
-                    </div>
-                </div>
-
-
-                {/* DESCRIPTION */}
-                <div className={style.description}>
-                    <p className={style.description__title}>O co chodzi ... ?</p>
-                    <div className={style.description__textContainer}>
-                        <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
-                        <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swóją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
                     </div>
                 </div>
 

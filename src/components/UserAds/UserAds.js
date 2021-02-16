@@ -19,20 +19,17 @@ const UserAds = props => {
     // load ads from DB
     useEffect(() => {
 
-        console.log("props.match.params.key", props.match.params.key);
-
         //clear ads list before load
         setAllAds([])
-
 
         // load ads from DB
         const loadAdsFromDB = async () => {
             try {
 
-                // get user adds from DB with documentKey
+                // get user adds from DB with ad id
                 const getUserAds = await firestore.collection(USERS).doc(props.match.params.key).collection(ADS).doc(ADS).get()
 
-                // change for array of ads documentKey
+                // change for array of ads id
                 const getUserAdsArray = Object.values(getUserAds.data())
 
                 // get all user ads by collection userEmail
@@ -42,7 +39,7 @@ const UserAds = props => {
                             const firestoreGetUserAds = await firestore.collection(doc.split(" ")[0]).doc(doc).get()
                             // eslint-disable-next-line no-unused-vars
                             const ex = firestoreGetUserAds.data().isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
-                        } catch (err) { console.log('err get ads in for each', err) }
+                        } catch (err) { console.log('err get ads: ', err) }
                     }
                     firebaseGetEveryUserAd()
                 })
@@ -50,14 +47,6 @@ const UserAds = props => {
 
         }
         loadAdsFromDB()
-
-        // firestore.collection(USERS).doc(props.location.state).collection("ADS").get()
-        //     .then(resp => resp.forEach(doc => {
-        //         firestore.collection(ADS).doc(doc.data().documentKey).get()
-        //             .then(itemResp => itemResp.data().isApproved === true ? setAllAds(prevState => [...prevState, itemResp.data()]) : null) 
-        //             .catch(err => console.log('err get ads in for each', err))
-        //     }))
-        //     .catch(err => console.log('err get ads', err))
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

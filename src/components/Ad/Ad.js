@@ -149,7 +149,7 @@ const Ad = props => {
                         <div className={style.desc__container}>
                             <div className={style.desc__containerUser}>
                                 <figure className={style.desc__containerfigure}>
-                                    <img className={style.desc__containerimg} src={oneAd.userPhoto || User} alt="main" />
+                                    <img className={style.desc__containerimg} src={oneAd.userPhoto} onError={(e) => { e.target.onerror = null; e.target.src = User }} alt="main" />
                                 </figure>
                                 <p className={style.desc__textName}>{oneAd.inputName}</p>
                             </div>

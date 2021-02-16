@@ -49,3 +49,4 @@ exports.sendEmail = functions.https.onCall((data, context) => {
         })
 })
 
+

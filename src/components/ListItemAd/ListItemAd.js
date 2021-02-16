@@ -8,11 +8,11 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 
 const ListItemAd = ({ item }) => {
     return (
-        <a href={`/home/${item.documentKey}`} className={style.ads__item} >
+        <a href={`/home/${item.id}`} className={style.ads__item} >
 
             <div className={style.ads__itemContainer}>
                 <figure className={style.ads__itemFigure}>
-                    <img className={style.ads__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main" />
+                    <img className={style.ads__itemImg} src={item.smallImageURL || PhotoEmpty} onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} alt="main" />
                 </figure>
 
                 <div className={style.ads__itemDescContainer}>

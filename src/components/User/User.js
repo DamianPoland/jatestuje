@@ -8,6 +8,7 @@ import imageCompression from 'browser-image-compression';
 //components
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
 import { ReactComponent as Ad } from '../../assets/ad.svg'
+import AlertSmall from "../../UI/AlertSmall/AlertSmall";
 
 //data 
 import { mainCategories, fuel, years, gearbox, carEquipment, mileage, regions, cities, knowledge } from '../../shared/data'
@@ -46,7 +47,151 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
 let equipmentChosen = []
 
 
-const User = props => {
+const User = () => {
+
+    const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
+
+
+    // ----------------------- START USER VIEW  --------------------------//
+
+
+    // STATE - set user ADS
+    const [userAds, setUserAds] = useState([])
+
+    // start/stop listener for user ads
+    useEffect(() => {
+
+        // if user is not sign in then not start listener
+        if (!localStorage.getItem(IS_AUTH)) {
+            return
+        }
+
+        // listener for collection
+        const listener = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).onSnapshot( //have two arguments which are functions
+            resp => {
+
+                //clear ads list before load
+                setUserAds([])
+
+                resp.forEach(doc => {
+
+                    // if no data then stop
+                    if (Object.keys(doc.data()).length === 0) {
+                        return
+                    }
+
+                    // change object to array
+                    const dataArray = Object.values(doc.data())
+
+
+                    dataArray.forEach(item => {
+
+                        //get collection name as main category
+                        const collectionName = item.split(" ")[0]
+
+                        // get ad with itemID from DB and save in State
+                        firestore.collection(collectionName).doc(item).get()
+                            .then(resp => {
+
+                                // if response is not undefined
+                                resp.data() && setUserAds(prevState => [...prevState, resp.data()])
+                            })
+                            .catch(err => console.log('listener err', err))
+                    })
+
+
+                })
+            },
+            err => console.log(err.message))
+
+        return () => {
+            listener() // clean up listener
+        }
+    }, [])
+
+    //get points from DB
+    const [promotionPoints, setPromotionPoints] = useState("?")
+    const [adPoints, setAdPoints] = useState("?")
+
+    useEffect(() => {
+
+        // if user is not sign in then return
+        if (!localStorage.getItem(IS_AUTH)) {
+            return
+        }
+
+        // get points from db and set in useState
+        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
+
+            // if document is not created by backend yet then return
+            if (i.data() === undefined) {
+                return
+            }
+
+            // set points in useState
+            setPromotionPoints(i.data().promotion)
+            setAdPoints(i.data().ads) // if ads: -1 then no limits
+        }, err => console.log('err onSnapshot:', err))
+
+        return () => {
+            getUserPointsInfo() // clean up listener
+        }
+
+    }, [])
+
+    // buy points
+    const buyPoints = type => {
+        console.log("not ready: ", type)
+    }
+
+
+    // edit one ad in DB
+    const editItemFromDB = (e, item) => {
+
+        console.log("not ready editItemFromDB")
+        setIsAlertSmallShow({ alertIcon: 'info', description: 'Not ready', animationTime: '2', borderColor: 'orange' })
+
+        // TODO move to backend
+    }
+
+
+    // refresh one ad in DB
+    const refreshItemFromDB = (e, item) => {
+
+        console.log("not ready refreshItemFromDB")
+        setIsAlertSmallShow({ alertIcon: 'info', description: 'Not ready', animationTime: '2', borderColor: 'orange' })
+
+        // TODO move to backend
+    }
+
+
+    // promote one ad in DB
+    const promoteItemFromDB = (e, item) => {
+
+        console.log("not ready promoteItemFromDB")
+        setIsAlertSmallShow({ alertIcon: 'info', description: 'Not ready', animationTime: '2', borderColor: 'orange' })
+
+        // TODO move to backend
+    }
+
+    // delete one ad from DB
+    const deleteItemFromDB = (e, item) => {
+
+        // 1. delete one ad from DB STORAGE with images
+        deleteImagesAndFolderFromDB(item.id)
+
+        // 2. delete one ad from DB FIRESTORE in specyfic folder
+        firestore.collection(item.mainCategory).doc(item.id).delete()
+            .then(() => console.log(`deleted ad from ${item.mainCategory}`))
+
+            // 3. delete one ad from DB FIRESTORE in users folder
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).update({ [item.id]: firebase.firestore.FieldValue.delete() }))
+            .then(() => console.log(`deleted ad from ${USERS}`))
+            .catch(err => console.log(' delete err', err))
+    }
+
+
+    // ----------------------- STOP USER VIEW  --------------------------//
 
 
     // ----------------------- START ADD ITEM --------------------------//
@@ -57,8 +202,8 @@ const User = props => {
     // STATE - set mainCategory
     const [mainCategory, setMainCategory] = useState(mainCategories[0].nameDB)
 
-    // STATE - set documentKey
-    const [documentKey, setDocumentKey] = useState("")
+    // STATE - set ad Id
+    const [id, setId] = useState("")
 
     // STATE - set type
     const [typeChosen, setTypeChosen] = useState("")
@@ -72,8 +217,12 @@ const User = props => {
     // STATE - input Image
     const [image, setImage] = useState([null, null, null, null]) // input image value
     const [imageURL, setImageURL] = useState([null, null, null, null]) // write URL from DB
+    const [smallImageURL, setSmallImageURL] = useState("") // write URL from DB
     const [progress, setProgress] = useState(0) // progress bar
     const [showProgress, setShowProgress] = useState([false, false, false, false]) // set progress visibility
+
+
+
 
     // STATE - input Description
     const [inputDescription, setInputDescription] = useState('') // input value
@@ -135,12 +284,23 @@ const User = props => {
         window.scrollTo(0, 0)
     }, [isAddingItem])
 
+    // show form when click +
+    const showForm = () => {
+        // check if is enought point
+        if (adPoints === 0) { // -1 is no limit
+            setIsAlertSmallShow({ alertIcon: 'info', description: 'Brak środków. Doładuj konto.', animationTime: '3', borderColor: 'orange' })
+            return
+        }
+
+        //show form
+        setIsAddingItem(true)
+    }
 
     // call when click new category
     const mainCategoryHandler = (nameDB) => {
 
         // delete photos from DB STORAGE with images
-        deleteImagesAndFolderFromDB(documentKey)
+        deleteImagesAndFolderFromDB(id)
         setImage(image.map(() => null)) // clear image holder
         setImageURL(imageURL.map(() => null)) // clear image URL holder
 
@@ -160,16 +320,14 @@ const User = props => {
     }
 
 
-
     // clear all data from form, clear photos from storage and close item form
     const cancelForm = () => {
 
         // delete photos from DB STORAGE with images
-        deleteImagesAndFolderFromDB(documentKey)
+        deleteImagesAndFolderFromDB(id)
 
         // clear all data from form and close item form
         clearAllDataFromFormAndClose()
-
     }
 
     // clear all data from form and close item form
@@ -177,7 +335,7 @@ const User = props => {
 
         //all categories
         setMainCategory(mainCategories[0].nameDB)
-        // setDocumentKey("") - NOT clear that - can't be empty - auto generate when main category change
+        // setId("") - NOT clear that - can't be empty - auto generate when main category change
         setTypeChosen("")
         setYearChosen("")
         setAdTitle("")
@@ -208,24 +366,19 @@ const User = props => {
         setIsAddingItem(false)
     }
 
-
-    //unique name of documentKey in DB storage and firestore
+    // generate new unique id of ad
     useEffect(() => {
-
-        // check if is enought point
-        if (adPoints === 0) { // -1 is no limit
-            console.log("Brak środków. Najpierw doładuj konto")
-            return
-        }
-
-        //first part of documentKey is DB name +  data + random string
-        const documentKeyGenerator = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
-
-        setDocumentKey(documentKeyGenerator)
-
-        console.log("documentKey: ", documentKeyGenerator);
-
+        idGenerator()
     }, [mainCategory])
+
+    // generate new unique id of ad
+    const idGenerator = () => {
+
+        //first part of id is DB name +  data + random string
+        const idGenerator = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
+        setId(idGenerator)
+        console.log("id: ", idGenerator);
+    }
 
     // set Regions on Change
     const setRegionChosenChandler = e => {
@@ -257,6 +410,7 @@ const User = props => {
     // add image 0 to DB and show to user
     useEffect(() => {
         addImgToDB(image[0], 0)
+        addImgToDB(image[0], -1, 0.05, 160) //index -1 is for smallImageURL
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image[0]])
 
@@ -279,98 +433,106 @@ const User = props => {
     }, [image[3]])
 
 
-    // add image to DB and show to user
-    const addImgToDB = (image, index) => {
+    // add image to DB and show to user, index -1 is for smallImageURL
+    const addImgToDB = async (image, index, maxSizeMB = 0.5, maxWidthOrHeight = "1280") => {
+
         // if image is empty then return
         if (!image) {
             return
         }
 
-        // set progress bar visibile
-        setShowProgress(prevState => {
-            let helpArray = [...prevState]
-            helpArray[index] = true
-            return helpArray
-        })
+        // set progress bar visibile if index !== -1 => index -1 is for smallImageURL
+        if (index !== -1) {
+            setShowProgress(prevState => {
+                let helpArray = [...prevState]
+                helpArray[index] = true
+                return helpArray
+            })
+        }
 
-        // check image size, if more than 1MB then compress photo and try again
-        if (image.size >= 1048576) {
-            console.log("Plik jest za duży, rozmiar: ", image.size / 1000000, "MB");
-            console.log("image before compress: ", image);
+
+        // check image size, if more than 0.5MB or for smallImageURL then compress photo
+        if (image.size >= 1048576 / 2 || (index === -1)) {
 
             // compression options
             const options = {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 1920,
+                maxSizeMB: maxSizeMB, // in MB
+                maxWidthOrHeight: maxWidthOrHeight, // in px
                 useWebWorker: true
             }
 
             // start compression
-            imageCompression(image, options)
-                .then(compressedFile => {
-                    console.log("after compression: ", compressedFile);
-                    console.log("after compression size: ", compressedFile.size / 1000000, "MB");
+            try {
+                image = await imageCompression(image, options)
 
-                    // compression img save in state and run again function by state change => use effect
-                    setImage(prevState => {
-                        let helpArray = [...prevState]
-                        helpArray[index] = compressedFile
-                        return helpArray
-                    })
+            } catch (error) {
 
-                })
-                .catch(error => {
-                    console.log("compression error message: ", error.message)
-                    setProgress(0)
-                    setShowProgress(prevState => {
-                        let helpArray = [...prevState]
-                        helpArray[index] = false
-                        return helpArray
-                    }) // set progress bar invisibile
-                })
-            return
-        }
-
-
-        // send photo to DB
-        const uploadTask = storage.ref(`images/${localStorage.getItem(IS_AUTH)}/${documentKey}/${image.name}`).put(image)
-        uploadTask.on('state_changed',
-            snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
-            err => { //show if error
-                console.log('upload error: ', err)
+                // set progress bar invisibile
+                console.log("compression error message: ", error.message)
                 setProgress(0)
                 setShowProgress(prevState => {
                     let helpArray = [...prevState]
                     helpArray[index] = false
                     return helpArray
-                }) // set progress bar invisibile
+                })
+
+                // return to not save in DB
+                return
+            }
+        }
+
+        console.log("image.size: ", image.size / 1000 + " kB");
+
+        // send photo to DB
+        const uploadTask = storage.ref(`images/${localStorage.getItem(IS_AUTH)}/${id}/${index}`).put(image)
+        uploadTask.on('state_changed',
+            snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
+            err => { //show if error
+                console.log('upload error: ', err)
+                setProgress(0)
+                // set progress bar invisibile
+                setShowProgress(prevState => {
+                    let helpArray = [...prevState]
+                    helpArray[index] = false
+                    return helpArray
+                })
             },
             () => {
                 storage // get url
-                    .ref(`images/${localStorage.getItem(IS_AUTH)}/${documentKey}`)
-                    .child(image.name)
+                    .ref(`images/${localStorage.getItem(IS_AUTH)}/${id}`)
+                    .child(`${index}`)
                     .getDownloadURL() // get url
                     .then(url => {
-                        setImageURL(prevState => {
-                            let helpArray = [...prevState]
-                            helpArray[index] = url
-                            return helpArray
-                        })
+
+                        // write url in state, index - 1 is for smallImageURL
+                        if (index !== -1) {
+                            setImageURL(prevState => {
+                                let helpArray = [...prevState]
+                                helpArray[index] = url
+                                return helpArray
+                            })
+                        } else {
+                            setSmallImageURL(url)
+                        }
+
                         setProgress(0)
+                        // set progress bar invisibile
                         setShowProgress(prevState => {
                             let helpArray = [...prevState]
                             helpArray[index] = false
                             return helpArray
-                        }) // set progress bar invisibile
-                    }) // write url in state
+                        })
+                    })
+
                     .catch(errStorage => {
                         console.log('storage errStorage', errStorage);
                         setProgress(0)
+                        // set progress bar invisibile
                         setShowProgress(prevState => {
                             let helpArray = [...prevState]
                             helpArray[index] = false
                             return helpArray
-                        }) // set progress bar invisibile
+                        })
                     })
             })
     }
@@ -379,31 +541,35 @@ const User = props => {
     const addItemToDB = () => {
 
 
-        // TODO: validations
+        // TODO: validations - jesli zostanie dodane jakiekolwiek zdjęcie to pierwsze też musi bo pierwsze jest robione jako miniaturka
 
 
-        // filter array imageURL and delete null elements
-        const imageURLFultered = imageURL.filter(item => item != null)
+        // delete null elements from array of URL images
+        const imageURLFiltered = imageURL.filter(item => item != null)
+
+
+        //TODO
+
 
         // object to save in DB
         const corObject = {
 
             // data for all ads
-            id: `${new Date().getTime()} ${Math.random().toString(36).substr(2)}`, // unique ID only to item list because Each child in a list should have a unique "key"
-            userId: localStorage.getItem(IS_AUTH), // user Id
-            mainCategory: mainCategory, // main category of ad
-            documentKey: documentKey, // is always the same as document Key in DB, first part of documentKey is collection name, second is adding date, third is time ,fourts is random
+            id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time ,fourth is random string
             adDate: new Date().getTime(), // date of add or refresh in DB - will be changed after by backend when user want to refresch ad, name in ms from 1970, type in firestore NUMBER
+            mainCategory: mainCategory, // main category of ad
+            userId: localStorage.getItem(IS_AUTH), // user Id
             userPhoto: auth.currentUser.photoURL, // user login photo from login social media
             isPromoted: false, // always false when first add ad, can by change by add promoting by backend
             isApproved: true, // always true when first add ad, can be change by admin only
-            isApprovedReason: "", // always empty when first add ad, will be info why rejected
+            isApprovedReason: "", // always empty when first add ad, write info if isApproved=false why rejected ad
 
             // all ads from form
             typeChosen: typeChosen,
             yearChosen: yearChosen,
             adTitle: adTitle,
-            imageURL: imageURLFultered,
+            imageURL: imageURLFiltered, // all images URL in array
+            smallImageURL: smallImageURL, // small image to show only in list of ads 
             inputDescription: inputDescription,
             techKnowledge: techKnowledge,
             priceOfMeeting: priceOfMeeting,
@@ -436,169 +602,38 @@ const User = props => {
 
 
         // save obj in DB
-        firestore.collection(mainCategory).doc(documentKey).set(corObject) // save obj in firestore
+        firestore.collection(mainCategory).doc(id).set(corObject) // save obj in firestore
             .then(() => console.log("corObject saved in firestore"))
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).set({ [documentKey]: documentKey }, { merge: true })) // save ad ID to current user folder in DB
-            .then(() => console.log("adId saved in firestore"))
+            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).set({ [id]: id }, { merge: true })) // save ad ID to current user folder in DB
+            .then(() => console.log("id saved in firestore"))
             .catch(err => console.log("error saving in firestore: ", err))
 
 
+        // pokazanie informacji o dadaniu ogłoszenia
+        setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie dodane.', animationTime: '2', borderColor: 'green' })
+
         // clear all data from form
         clearAllDataFromFormAndClose()
+
+        // generate new unique id of ad
+        idGenerator()
+
     }
 
     // ----------------------- STOP ADD ITEM --------------------------//
 
 
 
-
-    // ----------------------- START USER VIEW  --------------------------//
-
-
-
-    // STATE - set user ADS
-    const [userAds, setUserAds] = useState([])
-
-    // start/stop listener for user ads
-    useEffect(() => {
-
-        // if user is not sign in then not start listener
-        if (!localStorage.getItem(IS_AUTH)) {
-            return
-        }
-
-        // listener for collection
-        const listener = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).onSnapshot( //have two arguments which are functions
-            resp => {
-
-                //clear ads list before load
-                setUserAds([])
-
-                resp.forEach(doc => {
-
-                    // if no data then stop
-                    if (Object.keys(doc.data()).length === 0) {
-                        return
-                    }
-
-                    // change object to array
-                    const dataArray = Object.values(doc.data())
-
-
-                    dataArray.forEach(item => {
-
-                        //get collection name as main category
-                        const collectionName = item.split(" ")[0]
-
-                        // get ad with itemID from DB and save in State
-                        firestore.collection(collectionName).doc(item).get()
-                            .then(resp => {
-
-                                // if response is not undefined
-                                resp.data() && setUserAds(prevState => [...prevState, resp.data()])
-                            })
-                            .catch(err => console.log('listener err', err))
-                    })
-
-
-                })
-            },
-            err => console.log(err.message))
-
-        return () => {
-            listener() // clean up listener
-        }
-    }, [])
-
-
-    // edit one ad in DB
-    const editItemFromDB = (e, item) => {
-
-        console.log("not ready editItemFromDB")
-
-        // TODO move to backend
-
-    }
-
-    // delete one ad from DB
-    const deleteItemFromDB = (e, item) => {
-
-        // 1. delete one ad from DB STORAGE with images
-        deleteImagesAndFolderFromDB(item.documentKey)
-
-        // 2. delete one ad from DB FIRESTORE in specyfic folder
-        firestore.collection(item.mainCategory).doc(item.documentKey).delete()
-            .then(() => console.log(`deleted ad from ${item.mainCategory}`))
-
-            // 3. delete one ad from DB FIRESTORE in users folder
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).update({ [item.documentKey]: firebase.firestore.FieldValue.delete() }))
-            .then(() => console.log(`deleted ad from ${USERS}`))
-            .catch(err => console.log(' delete err', err))
-    }
-
-    // promote one ad in DB
-    const promoteItemFromDB = (e, item) => {
-
-        console.log("not ready promoteItemFromDB")
-
-        // TODO move to backend
-
-    }
-
-    // promote one ad in DB
-    const refreshItemFromDB = (e, item) => {
-
-        console.log("not ready refreshItemFromDB")
-
-        // TODO move to backend
-
-    }
-
-
-
-
-    //get points from DB
-    const [promotionPoints, setPromotionPoints] = useState("?")
-    const [adPoints, setAdPoints] = useState("?")
-    useEffect(() => {
-
-        // if user is not sign in then return
-        if (!localStorage.getItem(IS_AUTH)) {
-            return
-        }
-
-        // get points from db and set in useState
-        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
-
-            // if document is not created by backend yet then return
-            if (i.data() === undefined) {
-                return
-            }
-
-            // set points in useState
-            setPromotionPoints(i.data().promotion)
-            setAdPoints(i.data().ads) // if ads: -1 then no limits
-        }, err => console.log('err onSnapshot:', err))
-
-        return () => {
-            getUserPointsInfo() // clean up listener
-        }
-
-    }, [])
-
-    const buyPoints = type => {
-        console.log("not ready: ", type)
-    }
-
-
-    // ----------------------- STOP USER VIEW  --------------------------//
-
-
     return (
+
         localStorage.getItem(IS_AUTH)
 
             // user Log In
             ? <section className={style.background}>
+
+                {/* AlertSmall */}
+                {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
+
                 <div className={style.container}>
 
                     {!isAddingItem
@@ -614,7 +649,7 @@ const User = props => {
                                 <p className={style.user__accountDescSmall}>Twój adres e-mail: {auth.currentUser?.email}</p>
 
                                 <div className={style.user__accountDescContainer}>
-                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): {promotionPoints} szt.</p>
+                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): <b>{promotionPoints} szt.</b></p>
                                     <div className={style.user__accountAdSVG} onClick={() => buyPoints("promotion points")}>
                                         <Ad />
                                     </div>
@@ -622,12 +657,12 @@ const User = props => {
 
                                 {adPoints !== -1
                                     ? <div className={style.user__accountDescContainer}>
-                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): {adPoints} szt.</p>
+                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): <b>{adPoints} szt.</b></p>
                                         <div className={style.user__accountAdSVG} onClick={() => buyPoints("ad points")}>
                                             <Ad />
                                         </div>
                                     </div>
-                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: bez limitu</p>
+                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: <b>bez limitu</b></p>
                                 }
                             </div>
 
@@ -639,7 +674,7 @@ const User = props => {
                                         <div key={item.id} className={style.user__item}>
 
                                             <figure className={style.user__itemFigure}>
-                                                <img className={style.user__itemImg} src={item.imageURL[0] || PhotoEmpty} alt="main ad" />
+                                                <img className={style.user__itemImg} src={item.smallImageURL || PhotoEmpty} alt="main ad" />
                                             </figure>
 
                                             <div className={style.user__itemDescContainer}>
@@ -670,7 +705,7 @@ const User = props => {
                                                     : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApprovedReason}`}</p>}
 
                                                 <div className={style.user__itemDescBottom}>
-                                                    <a className={style.user__itemButton} href={`/home/${item.documentKey}`}>zobacz</a>
+                                                    <a className={style.user__itemButton} href={`/home/${item.id}`}>zobacz</a>
                                                     <button className={style.user__itemButton} onClick={e => editItemFromDB(e, item)}>edytuj</button>
                                                     <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
                                                     <button className={style.user__itemButton} onClick={e => promoteItemFromDB(e, item)}>promuj</button>
@@ -682,7 +717,7 @@ const User = props => {
                                     )
                                 })
                                 }
-                                <div className={style.user__itemAdSVG} onClick={() => setIsAddingItem(true)}>
+                                <div className={style.user__itemAdSVG} onClick={showForm}>
                                     <Ad />
                                 </div>
                             </div>

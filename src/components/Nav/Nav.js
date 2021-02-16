@@ -11,8 +11,6 @@ import { auth } from '../../shared/fire'
 import { IS_AUTH } from '../../shared/constans'
 
 
-
-
 const Nav = ({ isLogin }) => {
 
     // show hide log out button and change my account to ad
