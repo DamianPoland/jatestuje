@@ -11,8 +11,5 @@ export const USER_NAME = 'USER_NAME'
 export const USERS = 'users'
 export const ADS = 'ads'
 
-// paiments
-export const PAYMENTS = "payments"
-export const POINTS = "points"
 
 

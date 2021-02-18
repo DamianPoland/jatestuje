@@ -146,14 +146,14 @@ const Home = props => {
                 // main filters
                 // .where("isApproved", "==", true) // only approwed ads
                 .orderBy("adDate", 'desc') // sort in field adDate, 'desc' reverse table and get items from DB from end
-                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : new Date().getTime()) // get ads from last displayed or newest according to field adDate
+                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : (new Date().getTime()) + 86400000 * 30) // get ads from last displayed or newest (month in future 86400000 * 30) according to field adDate
                 .limit(2) // how many items be loaded from DB on one time
                 .get()
 
             query.forEach(doc => {
 
-                // show ONLY ads no older than month (month = 86400000 * 30 milisekund))
-                //if (doc.data().adDate < (new Date().getTime() - 86400000 * 30)) { return }
+                // show ONLY ads valid, not older than today
+                //if (doc.data().adDate <= (new Date().getTime())) { return }
 
                 // save  ad in State
                 setAllAds(prevState => [...prevState, doc.data()])
@@ -161,7 +161,7 @@ const Home = props => {
                 // promoted ad put extra on top, change id because Each child in a list should have a unique "key"
                 if (doc.data().isPromoted === true) {
                     const item = { ...doc.data() }
-                    item.id = ` ${item.id}` // add only space because can't change url in browser to ad
+                    item.id = `${item.id} ` // add only space because can't change url in browser to ad
                     setAllAds(prevState => [item, ...prevState])
                 }
             })
@@ -172,14 +172,13 @@ const Home = props => {
 
 
 
-
-
     return (
         <section className={style.background}>
             <div className={style.container}>
 
                 {/* DESCRIPTION */}
                 <div className={style.description}>
+
                     <p className={style.description__title}>O co chodzi ... ?</p>
                     <div className={style.description__textContainer}>
                         <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>

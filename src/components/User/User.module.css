@@ -28,39 +28,6 @@
     font-weight: bold;
 }
 
-
-.user__accountDesc {
-    font-size: 1.5rem;
-    padding: 1rem 0;
-}
-
-.user__accountContainer {
-    padding: 0 1rem 1rem 1rem;
-}
-
-.user__accountDescContainer {
-    display: flex;
-    align-items: center;
-}
-
-.user__accountDescSmall {
-    font-size: 1.2rem;
-    padding: 1rem 0.2rem 1rem 0;
-}
-
-.user__accountAdSVG {
-    height: 1.5rem;
-    width: 1.5rem;
-    padding: 0.2rem;
-    fill: rgb(var(--accent));
-    border-radius: 50%;
-}
-
-.user__accountAdSVG:active {
-    fill: black;
-}
-
-
 .user__itemsDesc {
     font-size: 1.5rem;
 }
@@ -109,11 +76,12 @@
 
 .user__itemDescMiddleText {
     font-size: 1rem;
-    padding-left: 0.5rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
 }
 
 .user__itemDescBottom {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     font-size: 1rem;
 }

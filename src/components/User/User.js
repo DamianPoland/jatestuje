@@ -19,10 +19,11 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
 import firebase from "firebase/app"
-import { auth, firestore, storage } from '../../shared/fire'
+import { auth, firestore, storage, functions } from '../../shared/fire'
+
 
 // constans
-import { IS_AUTH, USER_NAME, ADS, USERS, PAYMENTS, POINTS } from '../../shared/constans'
+import { IS_AUTH, USER_NAME, ADS, USERS } from '../../shared/constans'
 
 
 
@@ -43,12 +44,26 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
         .catch(error => console.log(error))
 }
 
+
 // set equimpment array
 let equipmentChosen = []
 
 
+//days text converter
+const dayTextConverter = (adDate) => {
+    const dateDifference = Math.floor((adDate - new Date().getTime()) / 86400000)
+    if (dateDifference > 1) { return ` ${dateDifference} dni.` }
+    else if (dateDifference === 1) { return ` jeden dzień.` }
+    else { return ` mniej niż jeden dzień.` }
+}
+
+
 const User = () => {
 
+    // force snapShot update after change data in DB in ad isPromoted
+    const [snapshotUpdate, setSnapshotUpdate] = useState(true)
+
+    // show or hide small alert
     const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
 
 
@@ -107,42 +122,7 @@ const User = () => {
         return () => {
             listener() // clean up listener
         }
-    }, [])
-
-    //get points from DB
-    const [promotionPoints, setPromotionPoints] = useState("?")
-    const [adPoints, setAdPoints] = useState("?")
-
-    useEffect(() => {
-
-        // if user is not sign in then return
-        if (!localStorage.getItem(IS_AUTH)) {
-            return
-        }
-
-        // get points from db and set in useState
-        const getUserPointsInfo = firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(PAYMENTS).doc(POINTS).onSnapshot(i => {
-
-            // if document is not created by backend yet then return
-            if (i.data() === undefined) {
-                return
-            }
-
-            // set points in useState
-            setPromotionPoints(i.data().promotion)
-            setAdPoints(i.data().ads) // if ads: -1 then no limits
-        }, err => console.log('err onSnapshot:', err))
-
-        return () => {
-            getUserPointsInfo() // clean up listener
-        }
-
-    }, [])
-
-    // buy points
-    const buyPoints = type => {
-        console.log("not ready: ", type)
-    }
+    }, [snapshotUpdate])
 
 
     // edit one ad in DB
@@ -158,21 +138,26 @@ const User = () => {
     // refresh one ad in DB
     const refreshItemFromDB = (e, item) => {
 
-        console.log("not ready refreshItemFromDB")
-        setIsAlertSmallShow({ alertIcon: 'info', description: 'Not ready', animationTime: '2', borderColor: 'orange' })
+        // refresh ad - call backend
+        const refreshAd = functions.httpsCallable('refreshAd')
+        refreshAd({ item: item })
+            .then(resp => {
 
-        // TODO move to backend
+                // update snapShot after ad refresh
+                setSnapshotUpdate(prevState => !prevState)
+
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'OK', description: 'Przedłużono ważność ogłoszenia.', animationTime: '2', borderColor: 'green' })
+                console.log("DB response refresh: ", resp.data)
+            })
+            .catch(err => {
+
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                console.log(err)
+            })
     }
 
-
-    // promote one ad in DB
-    const promoteItemFromDB = (e, item) => {
-
-        console.log("not ready promoteItemFromDB")
-        setIsAlertSmallShow({ alertIcon: 'info', description: 'Not ready', animationTime: '2', borderColor: 'orange' })
-
-        // TODO move to backend
-    }
 
     // delete one ad from DB
     const deleteItemFromDB = (e, item) => {
@@ -251,8 +236,12 @@ const User = () => {
     // STATE - input Phone
     const [inputPhone, setInputPhone] = useState('') // input value
 
+    // STATE - input isPromoted
+    const [isPromoted, setIsPromoted] = useState(false) // input value
+
     // STATE - input Agreenent
     const [inputAgreenent, setAgreenent] = useState(false) // input value
+
 
 
     // CATEGORY CAR ONLY
@@ -286,11 +275,6 @@ const User = () => {
 
     // show form when click +
     const showForm = () => {
-        // check if is enought point
-        if (adPoints === 0) { // -1 is no limit
-            setIsAlertSmallShow({ alertIcon: 'info', description: 'Brak środków. Doładuj konto.', animationTime: '3', borderColor: 'orange' })
-            return
-        }
 
         //show form
         setIsAddingItem(true)
@@ -547,22 +531,21 @@ const User = () => {
         // delete null elements from array of URL images
         const imageURLFiltered = imageURL.filter(item => item != null)
 
-
-        //TODO
-
-
         // object to save in DB
         const corObject = {
 
             // data for all ads
             id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time ,fourth is random string
-            adDate: new Date().getTime(), // date of add or refresh in DB - will be changed after by backend when user want to refresch ad, name in ms from 1970, type in firestore NUMBER
             mainCategory: mainCategory, // main category of ad
-            userId: localStorage.getItem(IS_AUTH), // user Id
             userPhoto: auth.currentUser.photoURL, // user login photo from login social media
-            isPromoted: false, // always false when first add ad, can by change by add promoting by backend
+            isPromoted: isPromoted, // user set promoted or not
+
+            /*elements added in backend :
+            userId: localStorage.getItem(IS_AUTH), // user Id
+            adDate: new Date().getTime(), // date of add or refresh in DB - will be changed after by backend when user want to refresch ad, name in ms from 1970, type: NUMBER
             isApproved: true, // always true when first add ad, can be change by admin only
             isApprovedReason: "", // always empty when first add ad, write info if isApproved=false why rejected ad
+            */
 
             // all ads from form
             typeChosen: typeChosen,
@@ -594,23 +577,21 @@ const User = () => {
         }
         console.log(corObject);
 
+        // create obj in DB - call backend
+        const createAd = functions.httpsCallable('createAd')
+        createAd({ item: corObject })
+            .then(resp => {
 
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie dodane.', animationTime: '2', borderColor: 'green' })
+                console.log("DB response: ", resp.data)
+            })
+            .catch(err => {
 
-
-        // TODO move to backend
-
-
-
-        // save obj in DB
-        firestore.collection(mainCategory).doc(id).set(corObject) // save obj in firestore
-            .then(() => console.log("corObject saved in firestore"))
-            .then(() => firestore.collection(USERS).doc(localStorage.getItem(IS_AUTH)).collection(ADS).doc(ADS).set({ [id]: id }, { merge: true })) // save ad ID to current user folder in DB
-            .then(() => console.log("id saved in firestore"))
-            .catch(err => console.log("error saving in firestore: ", err))
-
-
-        // pokazanie informacji o dadaniu ogłoszenia
-        setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie dodane.', animationTime: '2', borderColor: 'green' })
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                console.log(err)
+            })
 
         // clear all data from form
         clearAllDataFromFormAndClose()
@@ -641,31 +622,6 @@ const User = () => {
                         // USER LIST ITEMS
                         ? <div className={style.user}>
                             <p className={style.user__title}>Witaj {localStorage.getItem(USER_NAME)}</p>
-
-                            <p className={style.user__accountDesc}>Twoje konto:</p>
-
-                            <div className={style.user__accountContainer}>
-
-                                <p className={style.user__accountDescSmall}>Twój adres e-mail: {auth.currentUser?.email}</p>
-
-                                <div className={style.user__accountDescContainer}>
-                                    <p className={style.user__accountDescSmall}>Promowanie ogłoszeń (ważne miesiąc): <b>{promotionPoints} szt.</b></p>
-                                    <div className={style.user__accountAdSVG} onClick={() => buyPoints("promotion points")}>
-                                        <Ad />
-                                    </div>
-                                </div>
-
-                                {adPoints !== -1
-                                    ? <div className={style.user__accountDescContainer}>
-                                        <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: (ważne miesiąc): <b>{adPoints} szt.</b></p>
-                                        <div className={style.user__accountAdSVG} onClick={() => buyPoints("ad points")}>
-                                            <Ad />
-                                        </div>
-                                    </div>
-                                    : <p className={style.user__accountDescSmall}>Dodawanie ogłoszeń: <b>bez limitu</b></p>
-                                }
-                            </div>
-
                             <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
                             <div className={style.user__itemsContainer}>
 
@@ -701,15 +657,23 @@ const User = () => {
                                                 </div>
 
                                                 {item.isApproved
-                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zatwierdzone</p>
-                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Usunięte: ${item.isApprovedReason}`}</p>}
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zaakceptowane</p>
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Oczekiwanie na akceptację: ${item.isApprovedReason}`}</p>}
+
+                                                {new Date().getTime() <= item.adDate
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.adDate)} </p>
+
+                                                    : <div className={style.user__itemDescBottom}>
+                                                        <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>Ogłoszenie nieważne</p>
+                                                        <button className={style.user__itemButton} onClick={e => refreshItemFromDB(e, item)}>przedłuż ważność</button>
+                                                    </div>}
+
+                                                {item.isPromoted && <p className={style.user__itemDescMiddleText} style={{ color: "blue" }}>Promowane</p>}
 
                                                 <div className={style.user__itemDescBottom}>
                                                     <a className={style.user__itemButton} href={`/home/${item.id}`}>zobacz</a>
                                                     <button className={style.user__itemButton} onClick={e => editItemFromDB(e, item)}>edytuj</button>
                                                     <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
-                                                    <button className={style.user__itemButton} onClick={e => promoteItemFromDB(e, item)}>promuj</button>
-                                                    <button className={style.user__itemButton} onClick={e => refreshItemFromDB(e, item)}>odśwież</button>
                                                 </div>
                                             </div>
 
@@ -943,6 +907,11 @@ const User = () => {
                                     <div className={style.ad__itemContainer}>
                                         <label className={style.ad__itemDesc}>Numer telefonu (wymagane):</label>
                                         <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.ad__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
+                                    </div>
+
+                                    <div className={style.ad_checkBoxContainer}>
+                                        <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' />
+                                        <label className={style.ad__labelCheckBox}><b>Kup promowanie ogłoszenia. Koszt 1zł.</b></label>
                                     </div>
 
                                     <div className={style.ad_checkBoxContainer}>

@@ -38,7 +38,7 @@ const App = () => {
       // save in local storage
       if (user) {
         localStorage.setItem(IS_AUTH, user.uid)
-        console.log("user: ", user.uid)
+        console.log("user: ", user)
       } else {
         localStorage.removeItem(IS_AUTH)
         console.log(' user Sign Out')

@@ -21,6 +21,15 @@ var firebaseConfig = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 const fire = firebase.initializeApp(firebaseConfig);
+
+
+
+//only for functions emulator
+//firebase.functions().useEmulator("localhost", 5001);
+
+
+
+
 export default fire
 
 export const auth = fire.auth()
@@ -28,6 +37,3 @@ export const firestore = fire.firestore()
 export const functions = fire.functions()
 export const storage = fire.storage()
 // //export const messaging = firebase.messaging.isSupported() ? fire.messaging() : null // FCM nie jest wspierane w Safari więc trzeba zrobić ifa
-
-
-
