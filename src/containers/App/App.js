@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { auth } from '../../shared/fire'
 
 // constans
-import { IS_AUTH } from '../../shared/constans'
+import { UID } from '../../shared/constans'
 
 // aos
 import AOS from 'aos'
@@ -37,17 +37,12 @@ const App = () => {
 
       // save in local storage
       if (user) {
-        localStorage.setItem(IS_AUTH, user.uid)
+        localStorage.setItem(UID, user.uid)
         console.log("user: ", user)
       } else {
-        localStorage.removeItem(IS_AUTH)
+        localStorage.removeItem(UID)
         console.log(' user Sign Out')
       }
-
-      // if (user) {
-      //   user.getIdTokenResult()
-      //     .then(token => console.log("admin: ", token.claims.admin))
-      // }
 
     })
   }, [])
@@ -66,7 +61,7 @@ const App = () => {
       <Switch>
         <Route path='/home' exact component={Home} />
         <Route path='/userads/:key' component={UserAds} />
-        <Route path='/home/:key' component={Ad} />
+        <Route path='/home/:key' render={props => <Ad {...props} isLogin={isLogin} />} />
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
         <Route path='/contact' component={Contact} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />

@@ -220,6 +220,43 @@
 }
 
 
+.admin__itemContainer {
+    min-width: 12rem;
+    padding: 0.5rem;
+}
+
+.admin__itemDesc {
+    display: flex;
+    padding: 1rem 0;
+    font-size: 1rem;
+}
+
+.admin__itemList {
+    background-color: white;
+    color: rgba(var(--accent), 1);
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 0.1rem solid rgba(var(--accent), 0.3);
+    /* box-shadow: 0 0 10px rgba(var(--accent), 0.3); */
+    outline: none;
+}
+
+.admin__itemButton {
+    padding: 0.2rem 0.6rem;
+    margin: 2rem 0;
+    font-size: 1rem;
+    outline: none;
+    border: 0.1rem solid black;
+    background: white;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.admin__itemButton:active {
+    box-shadow: 0 0 20px rgba(var(--accent), 0.5);
+}
 
 
 @media (max-width: 800px) {

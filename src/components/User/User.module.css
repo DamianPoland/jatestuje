@@ -275,6 +275,17 @@
 .ad__labelCheckBox {
     font-size: 1rem;
     padding: 0.5rem;
+    flex: 1;
+}
+
+.ad__labelRadiokBox {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem 0.5rem 0.2rem;
+}
+
+.ad__labelCheckBoxLeftPaddingNull {
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
 }
 
 .ad__itemTextArea {

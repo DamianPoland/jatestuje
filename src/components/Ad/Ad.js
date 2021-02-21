@@ -3,7 +3,7 @@ import style from './Ad.module.css'
 
 
 //firebase
-import { firestore } from '../../shared/fire'
+import { auth, firestore, functions } from '../../shared/fire'
 
 
 //photos images svg
@@ -18,12 +18,15 @@ import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 // data
 import { mainCategories, carEquipment } from '../../shared/data'
 
-
+//components
+import AlertSmall from "../../UI/AlertSmall/AlertSmall"
 
 
 
 const Ad = props => {
 
+    // show or hide small alert
+    const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
 
     // STATE - set one AD
     const [oneAd, setOneAd] = useState()
@@ -38,6 +41,7 @@ const Ad = props => {
             .then(resp => {
                 setOneAd(resp.data())
 
+                console.log("resp.data(): ", resp.data());
                 // set first photo as mine
                 setMainPhoto(resp.data().imageURL[0])
 
@@ -47,9 +51,39 @@ const Ad = props => {
     }, [])
 
 
+    // Admin section
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [removeAdReason, setRemoveAdReason] = useState("")
+
+    // get info if is admin, in props is loged info to auth.currentUser not undefined
+    useEffect(() => {
+        auth.currentUser?.getIdTokenResult()
+            .then(token => setIsAdmin(token.claims.admin))
+    }, [props])
+
+    // delete ad
+    const deleteAd = () => {
+        const adminDeleteAd = functions.httpsCallable('adminDeleteAd')
+        adminDeleteAd({ reason: removeAdReason, item: oneAd })
+            .then(resp => {
+
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'OK', description: 'Usunieto ogłoszenie.', animationTime: '2', borderColor: 'green' })
+            })
+            .catch(err => {
+
+                // show alert
+                setIsAlertSmallShow({ alertIcon: 'error', description: `${err}`, animationTime: '5', borderColor: 'red' })
+                console.log(err)
+            })
+    }
+
 
     return (
         <section className={style.background}>
+
+            {/* AlertSmall */}
+            {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
             {oneAd &&
                 <div className={style.container}>
 
@@ -70,6 +104,7 @@ const Ad = props => {
                                 <div className={style.photos__containerSmall}>
                                     {oneAd.imageURL.map((item, id) => {
                                         return (
+                                            item &&
                                             <figure className={`${style.photos__figureSmall} ${mainPhoto === item && style.photos__figureSmallBorder}`} key={id}>
                                                 <img onClick={() => setMainPhoto(item)} className={style.photos__imgSmall} src={item || PhotoEmpty} alt={`main${id}`} />
                                             </figure>
@@ -184,6 +219,21 @@ const Ad = props => {
                             </a>
                         </div>
                     </div>
+
+                    {/* ADMIN meet section */}
+                    {isAdmin
+                        && <div className={style.desc}>
+                            <p className={style.desc__title}>Administracja:</p>
+                            <div className={style.desc__container}>
+
+                                <div className={style.admin__itemContainer}>
+                                    <label className={style.admin__itemDesc}>Powód usunięcia ogłoszenia:</label>
+                                    <input onChange={event => setRemoveAdReason(event.target.value)} value={removeAdReason} className={style.admin__itemList} type='text' />
+                                    <button className={style.admin__itemButton} onClick={deleteAd}>usuń</button>
+                                </div>
+
+                            </div>
+                        </div>}
 
 
 

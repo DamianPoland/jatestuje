@@ -8,7 +8,7 @@ import { auth } from '../../shared/fire'
 
 
 // constans
-import { IS_AUTH } from '../../shared/constans'
+import { UID } from '../../shared/constans'
 
 
 const Nav = ({ isLogin }) => {
@@ -16,7 +16,7 @@ const Nav = ({ isLogin }) => {
     // show hide log out button and change my account to ad
     const [isLoginFromStorage, setIsLoginFromStorage] = useState(false)
     useEffect(() => {
-        setIsLoginFromStorage(localStorage.getItem(IS_AUTH))
+        setIsLoginFromStorage(localStorage.getItem(UID))
     }, [isLogin])
 
 
