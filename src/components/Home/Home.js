@@ -142,6 +142,7 @@ const Home = () => {
         queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) + 86400000 * 30 : allAds[allAds.length - 1].adDate) // get ads from newest (month in future 86400000 * 30) according to field adDate or last displayed
         queryConstructor = queryConstructor.limit(4) // how many items be loaded from DB on one time
 
+
         try {
             const query = await queryConstructor.get()
 
