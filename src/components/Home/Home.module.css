@@ -167,6 +167,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 2rem;
+}
+
+.btnContainerBottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2rem;
 }
 
 .btn {
@@ -177,7 +185,6 @@
     background: white;
     box-shadow: 0 0 10px rgba(var(--accent), 0.5);
     cursor: pointer;
-    margin-top: 2rem;
     font-weight: bold;
 }
 

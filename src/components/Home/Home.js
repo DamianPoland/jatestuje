@@ -12,7 +12,7 @@ import ListItemAd from '../ListItemAd/ListItemAd'
 
 
 
-const Home = props => {
+const Home = () => {
 
     // ----------------------- START CATEGORIES --------------------------//
 
@@ -86,21 +86,6 @@ const Home = props => {
         setCarModelChosen("") // reset model when Car ID change
     }
 
-
-    // filter ads
-    const filterAds = () => {
-
-
-        // filters arguments list TODO
-
-
-
-
-        const filterArgList = [regionChosen, cityChosen, carIdChosen, carModelChosen, fualChosen, yearFromChosen, yearToChosen, gearboxChosen, typeChosen]
-
-        console.log("filtrowanie, lista: ", filterArgList);
-    }
-
     // ----------------------- STOP FILTERS --------------------------//
 
 
@@ -115,47 +100,57 @@ const Home = props => {
     useEffect(() => {
 
         // start query
-        queryToDB()
+        queryToDB(true)
 
     }, [mainCategory])
 
 
+
+    // get ads with filters
+    const filterAds = () => {
+
+        // clear ads list
+        setAllAds([])
+
+        // query to DB
+        queryToDB(true)
+    }
+
+
     // query to DB for items
-    const queryToDB = async () => {
+    const queryToDB = async (firstLoad = true) => {
 
         //set query constructor
-        const queryConstructor = firestore.collection(mainCategory)
+        let queryConstructor = firestore.collection(mainCategory)
 
+        // filters for car category only
+        // carIdChosen && (queryConstructor = queryConstructor.where("carIdChosen", "==", `${carIdChosen}`))
+        // carModelChosen && (queryConstructor = queryConstructor.where("carModelChosen", "==", `${carModelChosen}`))
+        // fualChosen && (queryConstructor = queryConstructor.where("fualChosen", "==", `${fualChosen}`))
+        // yearFromChosen && (queryConstructor = queryConstructor.where("yearChosen", ">=", `${yearFromChosen}`))
+        // yearToChosen && (queryConstructor = queryConstructor.where("yearChosen", "<=", `${yearToChosen}`))
+        // gearboxChosen && (queryConstructor = queryConstructor.where("gearboxChosen", "==", `${gearboxChosen}`))
 
+        // filters use for all categories
+        regionChosen && !cityChosen && (queryConstructor = queryConstructor.where("regionChosen", "==", `${regionChosen}`)) // region if city is empty
+        cityChosen && (queryConstructor = queryConstructor.where("cityChosen", "==", `${cityChosen}`)) // only city - no region
+        typeChosen && (queryConstructor = queryConstructor.where("typeChosen", "==", `${typeChosen}`))
 
-        console.log(mainCategory);
-
-
-        //  custom filters TODO
-
-
-        // .where("regionChosen", "==", "pomorskie")
-        // .where("carIdChosen", "==", "bmw")
-
-
+        // main filters added always
+        queryConstructor = queryConstructor.where("isApproved", "==", true) // only approwed ads
+        queryConstructor = queryConstructor.orderBy("adDate", 'desc') // sort in field adDate, 'desc' - get from the bigest to smallest
+        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) + 86400000 * 30 : allAds[allAds.length - 1].adDate) // get ads from newest (month in future 86400000 * 30) according to field adDate or last displayed
+        queryConstructor = queryConstructor.limit(4) // how many items be loaded from DB on one time
 
         try {
-
-            const query = await queryConstructor
-
-                // main filters
-                // .where("isApproved", "==", true) // only approwed ads
-                .orderBy("adDate", 'desc') // sort in field adDate, 'desc' reverse table and get items from DB from end
-                .startAfter(allAds.length !== 0 ? allAds[allAds.length - 1].adDate : (new Date().getTime()) + 86400000 * 30) // get ads from last displayed or newest (month in future 86400000 * 30) according to field adDate
-                .limit(2) // how many items be loaded from DB on one time
-                .get()
+            const query = await queryConstructor.get()
 
             query.forEach(doc => {
 
                 // show ONLY ads valid, not older than today
-                //if (doc.data().adDate <= (new Date().getTime())) { return }
+                if (doc.data().adDate <= (new Date().getTime())) { return }
 
-                // save  ad in State
+                // add new ads to State
                 setAllAds(prevState => [...prevState, doc.data()])
 
                 // promoted ad put extra on top, change id because Each child in a list should have a unique "key"
@@ -308,8 +303,9 @@ const Home = props => {
                                 )
                             })
                             }
-
-                            <button onClick={queryToDB}>następne</button>
+                            <div className={style.btnContainerBottom}>
+                                <button className={style.btn} onClick={() => queryToDB(false)}>Następne</button>
+                            </div>
                         </div>
 
                         : <p>brak</p>

@@ -45,18 +45,17 @@ const sendEmail = async (to, subject, text) => {
 
 
 // start automatycally when new user sign up - add data about user to user document => OK
-exports.newUserSignUp = functions.auth.user().onCreate(user => {
+// exports.newUserSignUp = functions.auth.user().onCreate(user => {
 
-    //add all data abou User to DB
-    admin.firestore().collection(USERS).doc(user.uid).collection(USER_DATA).doc(USER_DATA).set({
-        userUI: user.uid,
-        userEmail: user.email,
-        userName: user.displayName,
-        userPhoneNumber: user.phoneNumber,
-        userPhotoUrl: user.photoURL,
-    })
-})
-
+//     //add all data abou User to DB
+//     admin.firestore().collection(USERS).doc(user.uid).collection(USER_DATA).doc(USER_DATA).set({
+//         userUI: user.uid,
+//         userEmail: user.email,
+//         userName: user.displayName,
+//         userPhoneNumber: user.phoneNumber,
+//         userPhotoUrl: user.photoURL,
+//     })
+// })
 
 
 // sent e-mail, in data add json with: name email message => OK
@@ -186,11 +185,11 @@ exports.deleteAd = functions.https.onCall(async (data, context) => {
         //check if ad belong to user
         if (context.auth.uid !== deletedDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
 
-        //delete ad in current user folder
-        await admin.firestore().collection(USERS).doc(context.auth.uid).collection(ADS).doc(ADS).update({ [data.item.id]: admin.firestore.FieldValue.delete() })
-
         // delete ad in main category
         await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).delete()
+
+        //delete ad in current user folder
+        await admin.firestore().collection(USERS).doc(context.auth.uid).collection(ADS).doc(ADS).update({ [data.item.id]: admin.firestore.FieldValue.delete() })
 
         return `Success!` //response jest w return
 

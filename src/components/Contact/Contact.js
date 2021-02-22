@@ -162,29 +162,31 @@ const Contact = () => {
                     </div>
 
                     {/* form */}
-                    <div className={style.formContainer}>
+                    <div className={style.formContainerMain}>
                         <div className={style.contactUs}>
                             <ContactUs />
                         </div>
-                        <form className={`${style.form} ${isFormAnimation && style.formAnim}`}>
-                            {isAlertShow && <Alert click={() => setIsAlertShow(false)} alertName='Przepraszamy' alertDetails='Wiadomości nie udało się wysłać. Proszę skorzystać z innej formy kontaktu' />}
-                            {isSpinnerShow && <Spinner />}
-                            <div className={style.inputContainer}>
-                                <input onChange={event => setInputName(event.target.value)} value={inputName} onFocus={() => setInputNameIsInvalid(false)} className={`${style.input} ${inputNameIsInvalid && style.inputIsInvalid}`} type='text' required />
-                                <label className={style.label}>Twoje imię</label>
+                        <div className={style.formContainer}>
+                            <form className={`${style.form} ${isFormAnimation && style.formAnim}`}>
+                                {isAlertShow && <Alert click={() => setIsAlertShow(false)} alertName='Przepraszamy' alertDetails='Wiadomości nie udało się wysłać. Proszę skorzystać z innej formy kontaktu' />}
+                                {isSpinnerShow && <Spinner />}
+                                <div className={style.inputContainer}>
+                                    <input onChange={event => setInputName(event.target.value)} value={inputName} onFocus={() => setInputNameIsInvalid(false)} className={`${style.input} ${inputNameIsInvalid && style.inputIsInvalid}`} type='text' required />
+                                    <label className={style.label}>Twoje imię</label>
+                                </div>
+                                <div className={style.inputContainer}>
+                                    <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} onFocus={() => setInputEmailIsInvalid(false)} className={`${style.input} ${inputEmailIsInvalid && style.inputIsInvalid}`} type='text' required />
+                                    <label className={style.label}>Twój e-mail</label>
+                                </div>
+                                <div className={style.inputContainer}>
+                                    <textarea onChange={event => setInputMessage(event.target.value)} value={inputMessage} onFocus={() => setInputMessageIsInvalid(false)} className={`${style.input} ${inputMessageIsInvalid && style.inputIsInvalid}`} type='textarea' rows='5' required />
+                                    <label className={style.label}>Wiadomość</label>
+                                </div>
+                                <button onClick={sendMessage} className={style.btn}>Wyślij</button>
+                            </form>
+                            <div className={`${style.envelope} ${isFormAnimation && style.envelopeAnim}`}>
+                                <Envelope />
                             </div>
-                            <div className={style.inputContainer}>
-                                <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} onFocus={() => setInputEmailIsInvalid(false)} className={`${style.input} ${inputEmailIsInvalid && style.inputIsInvalid}`} type='text' required />
-                                <label className={style.label}>Twój e-mail</label>
-                            </div>
-                            <div className={style.inputContainer}>
-                                <textarea onChange={event => setInputMessage(event.target.value)} value={inputMessage} onFocus={() => setInputMessageIsInvalid(false)} className={`${style.input} ${inputMessageIsInvalid && style.inputIsInvalid}`} type='textarea' rows='5' required />
-                                <label className={style.label}>Wiadomość</label>
-                            </div>
-                            <button onClick={sendMessage} className={style.btn}>Wyślij</button>
-                        </form>
-                        <div className={`${style.envelope} ${isFormAnimation && style.envelopeAnim}`}>
-                            <Envelope />
                         </div>
                     </div>
 

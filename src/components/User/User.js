@@ -18,7 +18,6 @@ import Photo from '../../assets/photo.png'
 import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
-import firebase from "firebase/app"
 import { auth, firestore, storage, functions } from '../../shared/fire'
 
 
@@ -45,17 +44,16 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
 }
 
 
-// set equimpment array
-let equipmentChosen = []
-
-
 //days text converter
 const dayTextConverter = (adDate) => {
-    const dateDifference = Math.floor((adDate - new Date().getTime()) / 86400000)
+    const dateDifference = Math.ceil((adDate - new Date().getTime()) / 86400000)
     if (dateDifference > 1) { return ` ${dateDifference} dni.` }
-    else if (dateDifference === 1) { return ` jeden dzień.` }
-    else { return ` mniej niż jeden dzień.` }
+    else if (dateDifference === 1) { return ` 1 dzień.` }
+    //else { return ` mniej niż jeden dzień.` }
 }
+
+// equipment array
+let equipmentChosen = []
 
 
 const User = () => {
@@ -92,12 +90,10 @@ const User = () => {
             .then(resp => {
 
                 // if no data then stop
-                if (Object.keys(resp.data()).length === 0) { return }
+                if (!resp.data()) { return }
 
                 // change object to array
-                const dataArray = Object.values(resp.data())
-
-                let helpArrayWithAds = []
+                const dataArray = Object.values(resp.data()).sort()
 
                 // get ads from collections
                 dataArray.forEach(item => {
@@ -237,7 +233,6 @@ const User = () => {
 
     // push or pull equipment item, auto fire when some equipment is add/remove
     const equipmentOnChangeHandler = (item, isChecked) => {
-        console.log("equipmentChosen: ", equipmentChosen);
         isChecked ? equipmentChosen.push(item) : equipmentChosen.splice(equipmentChosen.findIndex(i => i === item), 1)
     }
 
@@ -383,8 +378,8 @@ const User = () => {
     // generate new unique id of ad
     const idGenerator = (mainCategory) => {
 
-        //first part of id is DB name +  data + random string
-        const idGenerator = mainCategory + ' ' + new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds() + ':' + new Date().getMilliseconds() + ' ' + Math.random().toString(36).substr(2)
+        //generate id: DB name +  data(year-month-day) + data(from1970 in ms) + random string
+        const idGenerator = `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`
         setId(idGenerator)
         console.log("id: ", idGenerator);
     }
@@ -405,7 +400,7 @@ const User = () => {
         //set new category
         setMainCategory(nameDB)
 
-        //clear only item data form data
+        //clear only item data form
         setTypeChosen("")
         setCarIdChosen("")
         setCarModelChosen("")
@@ -513,7 +508,7 @@ const User = () => {
             */
 
             // data for all ads
-            id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time ,fourth is random string
+            id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time 1970 ,fourth is random string
             mainCategory: mainCategory, // main category of ad
             userPhoto: auth.currentUser.photoURL, // user login photo from login social media
 
@@ -552,6 +547,51 @@ const User = () => {
     }
 
 
+    // get FAKE data 
+    const getFAKEDataFromForm = () => {
+        const formObject = {
+            id: `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`,
+            mainCategory: mainCategory,
+            userPhoto: auth.currentUser.photoURL,
+
+            // all ads from form
+            typeChosen: "Hatchback",
+            yearChosen: "2006",
+            adTitle: "50 znaków Lorem ipsum dolor sit amet consec adipis",
+
+            imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F0?alt=media&token=8f410574-bf07-4875-baa9-d5dc265d573e", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F1?alt=media&token=3f69dadf-bd6b-46d2-9501-f3997e53e1a9", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F2?alt=media&token=12a3d3ff-d804-4f4e-b30c-85dd297edddf", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F3?alt=media&token=26918590-ed57-4fe2-931a-cf95d950f5e7"],
+
+            smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F-1?alt=media&token=f4cd0a9a-5686-4e53-a985-6f7ee68fe388",
+            techKnowledge: "Dobra",
+            priceOfMeeting: "150",
+            timeOfDay: "codziennie",
+            regionChosen: "pomorskie",
+            cityChosen: "Gdynia",
+            inputName: "Janek",
+            inputEmail: "janek@janek.com",
+            inputPhone: "100-200-300",
+            inputTimeValidation: 30,
+            isPromoted: false, // user set promoted or not
+            inputAgreenent: true,
+
+            // only car category from form
+            carIdChosen: "bmw",
+            carModelChosen: "M3",
+            fuelChosen: "Diesel",
+            gearboxChosen: "Manualna",
+            mileageChosen: "0-50",
+            capacityChosen: "2800",
+            powerChosen: "150",
+            equipmentChosen: ["electricWindows", "airConditioning", "multifunctionWheel", "xenonLights"]
+
+        }
+        console.log(formObject)
+
+        sendAddItemToDB(formObject)
+    }
+
+
+
     // call when cancel form
     const cancelForm = () => {
 
@@ -576,6 +616,8 @@ const User = () => {
             case REFRESH_AD:
                 sendRefreshItemToDB()
                 break;
+            default:
+                break;
         }
     }
 
@@ -592,10 +634,11 @@ const User = () => {
     }
 
     // send ad to DB
-    const sendAddItemToDB = () => {
+    const sendAddItemToDB = (formObject = getDataFromForm()) => {
+
 
         // get data from form
-        const formObject = getDataFromForm()
+        //const formObject = getDataFromForm()
 
         // create obj in DB - call backend
         const createAd = functions.httpsCallable('createAd')
@@ -792,7 +835,7 @@ const User = () => {
 
                                                 {item.isApproved
                                                     ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zaakceptowane</p>
-                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Oczekiwanie na akceptację: ${item.isApprovedReason}`}</p>}
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Brak akceptacji: ${item.isApprovedReason}`}</p>}
 
                                                 {new Date().getTime() <= item.adDate
                                                     ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.adDate)} </p>
@@ -817,6 +860,7 @@ const User = () => {
                                 }
                                 <div className={style.user__itemAdSVG} onClick={prepareAddItemFromDB}>
                                     <Ad />
+                                    <button onClick={getFAKEDataFromForm}>Dodaj fejkowe ogłoszenie</button>
                                 </div>
                             </div>
                         </div>
@@ -925,8 +969,9 @@ const User = () => {
                                                 {carEquipment.map(item => {
                                                     return (
                                                         <div key={item.id} className={style.ad_checkBoxContainerEquipment}>
-                                                            <input name={item.id} onChange={event => equipmentOnChangeHandler((event.target.name), (event.target.checked ? true : false))} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
+                                                            <input defaultChecked={equipmentChosen.some(i => i === item.id)} name={item.id} onChange={event => equipmentOnChangeHandler((event.target.name), (event.target.checked ? true : false))} className={style.ad__inputCheckBoxEquipment} type='checkbox' />
                                                             <label className={style.ad__labelCheckBoxEquipment}>{item.name}</label>
+
                                                         </div>
                                                     )
                                                 })}
@@ -970,6 +1015,7 @@ const User = () => {
                                                                 <div className={style.ad__progressContainer}>
                                                                     <progress className={style.ad__progressBar} value={progress} max='100' />
                                                                 </div>}
+                                                            {(index === 0 && !imageURL[0]) && <p className={style.ad__itemFirstPhotDesc}>Zdjęcie główne</p>}
                                                         </div>
                                                     )
                                                 })}
@@ -1059,19 +1105,19 @@ const User = () => {
                                         <div className={style.ad_checkBoxContainer}>
                                             <p className={style.ad__labelCheckBoxLeftPaddingNull}>Ważność ogłoszenia: </p>
 
-                                            <input checked={1 === inputTimeValidation} name="timeValidation" value="1" onChange={event => setInputTimeValidation(1)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={1 === inputTimeValidation} name="timeValidation" value="1" onChange={() => setInputTimeValidation(1)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>1 dzień</label>
 
-                                            <input checked={14 === inputTimeValidation} name="timeValidation" value="14" onChange={event => setInputTimeValidation(14)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={14 === inputTimeValidation} name="timeValidation" value="14" onChange={() => setInputTimeValidation(14)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>14 dni</label>
 
-                                            <input checked={30 === inputTimeValidation} name="timeValidation" value="30" onChange={event => setInputTimeValidation(30)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={30 === inputTimeValidation} name="timeValidation" value="30" onChange={() => setInputTimeValidation(30)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>30 dni</label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
                                             <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' />
-                                            <label className={style.ad__labelCheckBox}><b>Kup promowanie ogłoszenia. Koszt 1zł.</b></label>
+                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${inputTimeValidation === 30 ? 2 : 1}zł.`}</b></label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>

@@ -325,6 +325,15 @@
     height: 1rem;
 }
 
+.ad__itemFirstPhotDesc {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
 
 .btnContainer {
     display: flex;

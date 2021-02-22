@@ -134,10 +134,14 @@
 
 /* START of form */
 
-.formContainer {
+.formContainerMain {
     padding: 1.5rem;
     width: 100%;
     flex: 1;
+    position: relative;
+}
+
+.formContainer {
     position: relative;
 }
 
@@ -313,6 +317,10 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 @keyframes envelopeSvgOkIdAnimation {
+    0% {
+        opacity: 0;
+    }
+
     25% {
         opacity: 0;
     }
