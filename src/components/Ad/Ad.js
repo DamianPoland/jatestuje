@@ -128,7 +128,7 @@ const Ad = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Dane:</p>
                         <div className={style.desc__container}>
-                            {oneAd.carIdChosen && <p className={style.desc__text}>Marka: <b>{mainCategories[0].carBrands.find(i => i.id === oneAd.carIdChosen).name}</b></p>}
+                            {oneAd.carIdChosen && <p className={style.desc__text}>Marka: <b>{mainCategories[0].brand.find(i => i.id === oneAd.carIdChosen).name}</b></p>}
                             {oneAd.carModelChosen && <p className={style.desc__text}>Model: <b>{oneAd.carModelChosen}</b></p>}
                             {oneAd.yearChosen && <p className={style.desc__text}>Rok produkcji: <b>{oneAd.yearChosen}</b></p>}
                             {oneAd.fuelChosen && <p className={style.desc__text}>Paliwo: <b>{oneAd.fuelChosen}</b></p>}
@@ -184,7 +184,7 @@ const Ad = props => {
                         <div className={style.desc__container}>
                             <div className={style.desc__containerUser}>
                                 <figure className={style.desc__containerfigure}>
-                                    <img className={style.desc__containerimg} src={oneAd.userPhoto} onError={(e) => { e.target.onerror = null; e.target.src = User }} alt="main" />
+                                    <img className={style.desc__containerimg} src={oneAd.userPhoto || User} onError={(e) => { e.target.onerror = null; e.target.src = User }} alt="main" />
                                 </figure>
                                 <p className={style.desc__textName}>{oneAd.inputName}</p>
                             </div>

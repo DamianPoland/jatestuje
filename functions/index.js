@@ -9,7 +9,7 @@ admin.initializeApp()
 // // contains
 const USERS = "users"
 const ADS = "ads"
-const USER_DATA = "user_data"
+//const USER_DATA = "user_data"
 
 
 
@@ -78,7 +78,7 @@ exports.createAd = functions.https.onCall(async (data, context) => {
     try {
 
         // TODO  do payment => isPromoted 
-        // TODO  do payment => inputTimeValidation
+        // TODO  do payment => timeValidation
 
 
         const isPromoted = data.item.isPromoted // check isPromoted
@@ -87,10 +87,11 @@ exports.createAd = functions.https.onCall(async (data, context) => {
         const userId = context.auth.uid // get user ID
         const isApproved = true // always true when first add ad, can be change by admin only, in the future meaby will be false and wait for payment
         const isApprovedReason = "" // always empty when first add ad, write info if isApproved=false why rejected ad
-        const adDate = new Date().getTime() + 86400000 * data.item.inputTimeValidation// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const createDate = new Date().getTime()// when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidation // how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
 
         //final object with ad
-        const adObject = { ...data.item, isPromoted: isPromoted, userId: userId, isApproved: isApproved, isApprovedReason: isApprovedReason, adDate: adDate }
+        const adObject = { ...data.item, isPromoted: isPromoted, userId: userId, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, timeValidationDate: timeValidationDate }
 
         //save in current user folder
         await admin.firestore().collection(USERS).doc(userId).collection(ADS).doc(ADS).set({ [data.item.id]: data.item.id }, { merge: true })
@@ -122,11 +123,13 @@ exports.editAd = functions.https.onCall(async (data, context) => {
         // elements taken from ad before edit
         const isApproved = editDocData.isApproved // only admin can change
         const isApprovedReason = editDocData.isApprovedReason // only admin can change
-        const adDate = editDocData.adDate  // how long is valid - only after payment can change
+        const createDate = editDocData.createDate  // when ad is added to DB - only after refresh can change
         const isPromoted = editDocData.isPromoted // only after payment can change
+        const timeValidation = editDocData.timeValidation // only after payment can change
+        const timeValidationDate = editDocData.timeValidationDate // only after payment can change
 
         //final object with ad
-        const adObject = { ...data.item, isApproved: isApproved, isApprovedReason: isApprovedReason, adDate: adDate, isPromoted: isPromoted, }
+        const adObject = { ...data.item, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, isPromoted: isPromoted, timeValidation: timeValidation, timeValidationDate: timeValidationDate }
 
         // save in main category
         await admin.firestore().collection(editDocData.mainCategory).doc(data.item.id).update(adObject)
@@ -147,7 +150,7 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
     try {
 
         // TODO  do payment => isPromoted 
-        // TODO  do payment => inputTimeValidation
+        // TODO  do payment => timeValidation
 
 
         // get edited document from DB
@@ -158,11 +161,12 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
         if (context.auth.uid !== refreshDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
 
         // elements refreshed in ad:
-        const adDate = new Date().getTime() + 86400000 * data.item.inputTimeValidation// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const createDate = new Date().getTime() // when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidation// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
         const isPromoted = data.item.isPromoted // check isPromoted
 
         // refresh ad and add new date now, change isPromoted na false
-        await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).update({ isPromoted: isPromoted, adDate: adDate })
+        await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).update({ isPromoted: isPromoted, timeValidationDate: timeValidationDate, createDate: createDate })
 
         return `Success!` //response jest w return
 

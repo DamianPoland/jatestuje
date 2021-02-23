@@ -45,8 +45,8 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
 
 
 //days text converter
-const dayTextConverter = (adDate) => {
-    const dateDifference = Math.ceil((adDate - new Date().getTime()) / 86400000)
+const dayTextConverter = (timeValidationDate) => {
+    const dateDifference = Math.ceil((timeValidationDate - new Date().getTime()) / 86400000)
     if (dateDifference > 1) { return ` ${dateDifference} dni.` }
     else if (dateDifference === 1) { return ` 1 dzień.` }
     //else { return ` mniej niż jeden dzień.` }
@@ -93,7 +93,7 @@ const User = () => {
                 if (!resp.data()) { return }
 
                 // change object to array
-                const dataArray = Object.values(resp.data()).sort()
+                const dataArray = Object.values(resp.data()).sort().reverse()
 
                 // get ads from collections
                 dataArray.forEach(item => {
@@ -179,7 +179,7 @@ const User = () => {
     const [inputPhone, setInputPhone] = useState('') // input value
 
     // STATE - input time ad validation
-    const [inputTimeValidation, setInputTimeValidation] = useState(30) // input value
+    const [timeValidation, setTimeValidation] = useState(30) // input value
 
     // STATE - input isPromoted
     const [isPromoted, setIsPromoted] = useState(false) // input value
@@ -434,7 +434,7 @@ const User = () => {
         setInputName("")
         setInputEmail("")
         setInputPhone("")
-        setInputTimeValidation(30)
+        setTimeValidation(30)
         setIsPromoted(false)
         setAgreenent(false)
 
@@ -452,7 +452,7 @@ const User = () => {
         setIsAddingItem(false)
     }
 
-    // add all data to form eg. when editing or refresh ad => OK
+    // add all data to form  => OK
     const setDataToForm = item => {
 
         // data for all ads
@@ -474,7 +474,7 @@ const User = () => {
         setInputName(item.inputName)
         setInputEmail(item.inputEmail)
         setInputPhone(item.inputPhone)
-        setInputTimeValidation(item.inputTimeValidation)
+        setTimeValidation(item.timeValidation)
         setIsPromoted(false) // false - user need to chose
         setAgreenent(false) // false - user need to chose
 
@@ -504,7 +504,8 @@ const User = () => {
             userId
             isApproved
             isApprovedReason
-            adDate
+            createDate
+            timeValidationDate - number days change from timeValidation
             */
 
             // data for all ads
@@ -524,10 +525,12 @@ const User = () => {
             timeOfDay: timeOfDay,
             regionChosen: regionChosen,
             cityChosen: cityChosen,
+            cityChosenLat: cities.find(i => i.city === cityChosen).lat, // city latitude for query range
+            cityChosenLng: cities.find(i => i.city === cityChosen).lng, // city longitude for query range
             inputName: inputName,
             inputEmail: inputEmail,
             inputPhone: inputPhone,
-            inputTimeValidation: inputTimeValidation,
+            timeValidation: timeValidation,
             isPromoted: isPromoted, // user set promoted or not
             inputAgreenent: inputAgreenent,
 
@@ -559,18 +562,23 @@ const User = () => {
             yearChosen: "2006",
             adTitle: "50 znaków Lorem ipsum dolor sit amet consec adipis",
 
-            imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F0?alt=media&token=8f410574-bf07-4875-baa9-d5dc265d573e", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F1?alt=media&token=3f69dadf-bd6b-46d2-9501-f3997e53e1a9", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F2?alt=media&token=12a3d3ff-d804-4f4e-b30c-85dd297edddf", "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F3?alt=media&token=26918590-ed57-4fe2-931a-cf95d950f5e7"],
+            imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-23%201614092038509%20kl4bu92wsb%2F0?alt=media&token=825ad235-2964-4524-9153-6956a297339a"],
 
-            smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-22%201614024193480%204z3vbvteuft%2F-1?alt=media&token=f4cd0a9a-5686-4e53-a985-6f7ee68fe388",
+            smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-23%201614092038509%20kl4bu92wsb%2F-1?alt=media&token=7292042e-7791-45f2-8b4b-400c14b30f39",
+
+            inputDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta deserunt eveniet sed officiis velit accusantium illo vitae in sunt reiciendis repellendus officia minima itaque, asperiores nobis voluptates odit quae impedit. Maiores unde quis inventore optio officia? Assumenda pariatur est, excepturi provident aliquam recusandae nisi incidunt et praesentium.Obcaecati, porro maxime.",
+
             techKnowledge: "Dobra",
             priceOfMeeting: "150",
             timeOfDay: "codziennie",
             regionChosen: "pomorskie",
-            cityChosen: "Gdynia",
+            cityChosen: "Gdańsk",
+            cityChosenLat: cities.find(i => i.city === "Gdańsk").lat, // city latitude for query range
+            cityChosenLng: cities.find(i => i.city === "Gdańsk").lng, // city longitude for query range
             inputName: "Janek",
             inputEmail: "janek@janek.com",
             inputPhone: "100-200-300",
-            inputTimeValidation: 30,
+            timeValidation: 30,
             isPromoted: false, // user set promoted or not
             inputAgreenent: true,
 
@@ -807,7 +815,7 @@ const User = () => {
                                         <div key={item.id} className={style.user__item}>
 
                                             <figure className={style.user__itemFigure}>
-                                                <img className={style.user__itemImg} src={item.smallImageURL || PhotoEmpty} alt="main ad" />
+                                                <img className={style.user__itemImg} src={item.smallImageURL || PhotoEmpty} alt="main ad" onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} />
                                             </figure>
 
                                             <div className={style.user__itemDescContainer}>
@@ -821,7 +829,7 @@ const User = () => {
 
                                                         {item.carIdChosen
                                                             ? <div className={style.flexRow}>
-                                                                <p className={style.user__itemText}>{mainCategories[0].carBrands.find(i => i.id === item.carIdChosen).name}</p>
+                                                                <p className={style.user__itemText}>{mainCategories[0].brand.find(i => i.id === item.carIdChosen).name}</p>
                                                                 <p className={style.user__itemText}>{item.carModelChosen}</p>
                                                             </div>
                                                             : <p className={style.user__itemText}>{item.typeChosen}</p>
@@ -837,8 +845,8 @@ const User = () => {
                                                     ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zaakceptowane</p>
                                                     : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Brak akceptacji: ${item.isApprovedReason}`}</p>}
 
-                                                {new Date().getTime() <= item.adDate
-                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.adDate)} </p>
+                                                {new Date().getTime() <= item.timeValidationDate
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.timeValidationDate)} </p>
 
                                                     : <div className={style.user__itemDescBottom}>
                                                         <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>Ogłoszenie nieważne</p>
@@ -898,15 +906,15 @@ const User = () => {
                                             && <div className={style.ad__itemContainer}>
                                                 <p className={style.ad__itemDesc}>Marka:</p>
                                                 <select className={style.ad__itemList} onChange={setCarIdChosenChandler} value={carIdChosen}>
-                                                    {mainCategories[0].carBrands.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                                    {mainCategories[0].brand.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                                                 </select>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
                                             && <div className={style.ad__itemContainer}>
                                                 <p className={style.ad__itemDesc}>Model:</p>
-                                                <select className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)} value={carModelChosen}>
-                                                    {mainCategories[0].carBrands.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
+                                                <select disabled={!carIdChosen} className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)} value={carModelChosen}>
+                                                    {mainCategories[0].brand.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
                                                 </select>
                                             </div>}
 
@@ -1074,7 +1082,7 @@ const User = () => {
 
                                         <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Miasto:</p>
-                                            <select className={style.ad__itemList} onChange={e => setCityChosen(e.target.value)} value={cityChosen}>
+                                            <select disabled={!regionChosen} className={style.ad__itemList} onChange={e => setCityChosen(e.target.value)} value={cityChosen}>
                                                 {cities.filter(item => item.region === regionChosen).map(item => <option key={item.city} value={item.city}> {item.city} </option>)}
                                             </select>
                                         </div>
@@ -1105,19 +1113,19 @@ const User = () => {
                                         <div className={style.ad_checkBoxContainer}>
                                             <p className={style.ad__labelCheckBoxLeftPaddingNull}>Ważność ogłoszenia: </p>
 
-                                            <input checked={1 === inputTimeValidation} name="timeValidation" value="1" onChange={() => setInputTimeValidation(1)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={1 === timeValidation} name="timeValidation" value="1" onChange={() => setTimeValidation(1)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>1 dzień</label>
 
-                                            <input checked={14 === inputTimeValidation} name="timeValidation" value="14" onChange={() => setInputTimeValidation(14)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={14 === timeValidation} name="timeValidation" value="14" onChange={() => setTimeValidation(14)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>14 dni</label>
 
-                                            <input checked={30 === inputTimeValidation} name="timeValidation" value="30" onChange={() => setInputTimeValidation(30)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={30 === timeValidation} name="timeValidation" value="30" onChange={() => setTimeValidation(30)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>30 dni</label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
                                             <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' />
-                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${inputTimeValidation === 30 ? 2 : 1}zł.`}</b></label>
+                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidation === 30 ? 2 : 1}zł.`}</b></label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>

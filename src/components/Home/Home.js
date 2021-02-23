@@ -3,7 +3,7 @@ import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
 // data
-import { mainCategories, fuel, yearFrom, yearTo, gearbox, regions, cities } from '../../shared/data'
+import { mainCategories, yearFrom, yearTo, regions, cities } from '../../shared/data'
 
 //component
 import ListItemAd from '../ListItemAd/ListItemAd'
@@ -33,10 +33,8 @@ const Home = () => {
         //clear all states\
         setCarIdChosen("")
         setCarModelChosen("")
-        setFuelChosen("")
         setYearFromChosen("")
         setYearToChosen("")
-        setGearboxChosen("")
         setTypeChosen("")
     }
 
@@ -57,17 +55,11 @@ const Home = () => {
     // STATE - set car model
     const [carModelChosen, setCarModelChosen] = useState("")
 
-    // STATE - set fuel
-    const [fualChosen, setFuelChosen] = useState("")
-
     // STATE - set year from
     const [yearFromChosen, setYearFromChosen] = useState("")
 
     // STATE - set year to
     const [yearToChosen, setYearToChosen] = useState("")
-
-    // STATE - set gearbox
-    const [gearboxChosen, setGearboxChosen] = useState("")
 
     // STATE - set type
     const [typeChosen, setTypeChosen] = useState("")
@@ -123,24 +115,24 @@ const Home = () => {
         //set query constructor
         let queryConstructor = firestore.collection(mainCategory)
 
+
         // filters for car category only
         // carIdChosen && (queryConstructor = queryConstructor.where("carIdChosen", "==", `${carIdChosen}`))
         // carModelChosen && (queryConstructor = queryConstructor.where("carModelChosen", "==", `${carModelChosen}`))
-        // fualChosen && (queryConstructor = queryConstructor.where("fualChosen", "==", `${fualChosen}`))
         // yearFromChosen && (queryConstructor = queryConstructor.where("yearChosen", ">=", `${yearFromChosen}`))
         // yearToChosen && (queryConstructor = queryConstructor.where("yearChosen", "<=", `${yearToChosen}`))
-        // gearboxChosen && (queryConstructor = queryConstructor.where("gearboxChosen", "==", `${gearboxChosen}`))
+
 
         // filters use for all categories
         regionChosen && !cityChosen && (queryConstructor = queryConstructor.where("regionChosen", "==", `${regionChosen}`)) // region if city is empty
-        cityChosen && (queryConstructor = queryConstructor.where("cityChosen", "==", `${cityChosen}`)) // only city - no region
+        cityChosen && (queryConstructor = queryConstructor.where("cityChosen", "==", cityChosen)) // only city - no region
         typeChosen && (queryConstructor = queryConstructor.where("typeChosen", "==", `${typeChosen}`))
 
         // main filters added always
         queryConstructor = queryConstructor.where("isApproved", "==", true) // only approwed ads
-        queryConstructor = queryConstructor.orderBy("adDate", 'desc') // sort in field adDate, 'desc' - get from the bigest to smallest
-        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) + 86400000 * 30 : allAds[allAds.length - 1].adDate) // get ads from newest (month in future 86400000 * 30) according to field adDate or last displayed
-        queryConstructor = queryConstructor.limit(4) // how many items be loaded from DB on one time
+        queryConstructor = queryConstructor.orderBy("createDate", 'desc') // sort in field createDate, 'desc' - get from the newest to oldest
+        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : allAds[allAds.length - 1].createDate) // get ads from newest or last displayed (month in future 86400000 * 30) according to field createDate 
+        queryConstructor = queryConstructor.limit(5) // how many items be loaded from DB on one time
 
 
         try {
@@ -149,7 +141,7 @@ const Home = () => {
             query.forEach(doc => {
 
                 // show ONLY ads valid, not older than today
-                if (doc.data().adDate <= (new Date().getTime())) { return }
+                if (doc.data().timeValidationDate <= (new Date().getTime())) { return }
 
                 // add new ads to State
                 setAllAds(prevState => [...prevState, doc.data()])
@@ -217,7 +209,7 @@ const Home = () => {
                             {/* Filter city */}
                             <div className={style.filter__itemContainerSmall}>
                                 <p className={style.filter__itemDesc}>Miasto:</p>
-                                <select className={style.filter__itemList} onChange={e => setCityChosen(e.target.value)}>
+                                <select disabled={!regionChosen} className={style.filter__itemList} onChange={e => setCityChosen(e.target.value)}>
                                     {cities.filter(item => item.region === regionChosen).map(item => <option key={item.city} value={item.city}> {item.city} </option>)}
                                 </select>
                             </div>
@@ -233,23 +225,15 @@ const Home = () => {
                                     <div className={style.filter__itemContainerSmall}>
                                         <p className={style.filter__itemDesc}>Marka:</p>
                                         <select className={style.filter__itemList} onChange={setCarIdChosenChandler}>
-                                            {mainCategories[0].carBrands.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                            {mainCategories[0].brand.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                                         </select>
                                     </div>
 
                                     {/* Filter cars model */}
                                     <div className={style.filter__itemContainerSmall}>
                                         <p className={style.filter__itemDesc}>Model:</p>
-                                        <select className={style.filter__itemList} onChange={e => setCarModelChosen(e.target.value)}>
-                                            {mainCategories[0].carBrands.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
-                                    </div>
-
-                                    {/* Filter fuel */}
-                                    <div className={style.filter__itemContainerSmall}>
-                                        <p className={style.filter__itemDesc}>Paliwo:</p>
-                                        <select className={style.filter__itemList} onChange={e => setFuelChosen(e.target.value)}>
-                                            {fuel.map(item => <option key={item} value={item}>{item}</option>)}
+                                        <select disabled={!carIdChosen} className={style.filter__itemList} onChange={e => setCarModelChosen(e.target.value)}>
+                                            {mainCategories[0].brand.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
                                         </select>
                                     </div>
 
@@ -264,14 +248,6 @@ const Home = () => {
                                                 {yearTo.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
                                         </div>
-                                    </div>
-
-                                    {/* Filter gearbox */}
-                                    <div className={style.filter__itemContainerSmall}>
-                                        <p className={style.filter__itemDesc}>Skrzynia biegów:</p>
-                                        <select className={style.filter__itemList} onChange={e => setGearboxChosen(e.target.value)}>
-                                            {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
                                     </div>
                                 </div>
                             }
@@ -309,7 +285,7 @@ const Home = () => {
                             </div>
                         </div>
 
-                        : <p>brak</p>
+                        : <p>Nie znaleziono.</p>
                     }
 
                 </div>

@@ -159,6 +159,10 @@
     outline: none;
 }
 
+.filter__itemList:disabled {
+    background-color: rgb(245, 245, 245);
+}
+
 .filter__itemContainerItems {
     display: flex;
 }

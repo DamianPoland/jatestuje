@@ -229,6 +229,11 @@
     outline: none;
 }
 
+.ad__itemList:disabled {
+    background-color: rgb(245, 245, 245);
+
+}
+
 .ad__containerEquipment {
     margin: 0.5rem;
     display: flex;
