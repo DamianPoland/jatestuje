@@ -117,6 +117,10 @@ const Ad = props => {
                     {/* photos section */}
                     <div className={style.photos__section}>
 
+                        <div className={style.btnContainer}>
+                            <button className={style.btn} onClick={() => window.history.back()}>{"< Wróć"}</button>
+                        </div>
+
                         <div className={style.photos__itemDescTopContainer}>
                             <p className={style.photos__itemTextTitle}>{oneAd.adTitle}</p>
                         </div>

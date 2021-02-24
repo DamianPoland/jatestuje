@@ -13,6 +13,33 @@
     padding: 2rem 1rem;
 }
 
+.btnContainer {
+    display: flex;
+    padding: 1rem 0 2rem 0;
+}
+
+.btn {
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    outline: none;
+    border: 0.1rem solid rgba(var(--accent), 1);
+    background: white;
+    box-shadow: 0 0 10px rgba(var(--accent), 0.5);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn:hover {
+    box-shadow: 0 0 20px rgba(var(--accent), 0.5);
+}
+
+.btn:active {
+    box-shadow: none;
+    background: rgba(var(--accent), 1);
+    color: white;
+}
+
+
 
 /* PHOTOS SECTION */
 

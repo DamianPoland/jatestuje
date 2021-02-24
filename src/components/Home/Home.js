@@ -84,9 +84,6 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
     // query to DB for items
     const queryToDB = async (firstLoad) => {
 
-        // show main spinner
-        setIsMainSpinnerShow(true)
-
         // production years - get range of years, can't be more than 10 items in array because firebase can't handle that
         let prodYears = yearsProdBasic
         if (yearFromChosen > yearToChosen && yearToChosen) {
@@ -95,7 +92,10 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
         }
         yearFromChosen && (prodYears = prodYears.filter(i => i >= yearFromChosen))
         yearToChosen && (prodYears = prodYears.filter(i => i <= yearToChosen))
-        console.log(prodYears);
+        console.log(prodYears)
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
 
         // clear ads list if first load or filter
         firstLoad && setAllAds([])

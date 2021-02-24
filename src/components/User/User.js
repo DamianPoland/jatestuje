@@ -173,12 +173,15 @@ const User = ({ userAds, setUserAds }) => {
 
     // STATE - set type
     const [typeChosen, setTypeChosen] = useState("")
+    const [typeChosenValidation, setTypeChosenValidation] = useState("")
 
     // STATE - set year from
     const [yearChosen, setYearChosen] = useState("")
+    const [yearChosenValidation, setYearChosenValidation] = useState("")
 
     // STATE - input Title
     const [adTitle, setAdTitle] = useState('') // input value
+    const [adTitleValidation, setAdTitleValidation] = useState(0) // input value
 
     // STATE - input Image
     const [image, setImage] = useState([null, null, null, null]) // input image value
@@ -189,63 +192,79 @@ const User = ({ userAds, setUserAds }) => {
 
     // STATE - input Description
     const [inputDescription, setInputDescription] = useState('') // input value
+    const [inputDescriptionValidation, setInputDescriptionValidation] = useState(0) // input value
 
     // STATE - set technical knowlage
     const [techKnowledge, setTechKnowledge] = useState("")
+    const [techKnowledgeValidation, setTechKnowledgeValidation] = useState("")
 
     // STATE - set price of meeting
     const [priceOfMeeting, setPriceOfMeeting] = useState("")
+    const [priceOfMeetingValidation, setPriceOfMeetingValidation] = useState("")
 
     // STATE - set day time to meeting
     const [timeOfDay, setTimeOfDay] = useState("")
+    const [timeOfDayValidation, setTimeOfDayValidation] = useState("")
 
     // STATE - set region
     const [regionChosen, setRegionChosen] = useState("")
+    const [regionChosenValidation, setRegionChosenValidation] = useState("")
 
     // STATE - set city
     const [cityChosen, setCityChosen] = useState("")
+    const [cityChosenValidation, setCityChosenValidation] = useState("")
 
     // STATE - input Name
-    const [inputName, setInputName] = useState('') // input value
+    const [inputName, setInputName] = useState('')
+    const [inputNameValidation, setInputNameValidation] = useState('')
 
     // STATE - input Email
-    const [inputEmail, setInputEmail] = useState('') // input value
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputEmailValidation, setInputEmailValidation] = useState('')
 
     // STATE - input Phone
-    const [inputPhone, setInputPhone] = useState('') // input value
+    const [inputPhone, setInputPhone] = useState('')
 
     // STATE - input time ad validation
-    const [timeValidation, setTimeValidation] = useState(30) // input value
+    const [timeValidation, setTimeValidation] = useState(30)
 
     // STATE - input isPromoted
     const [isPromoted, setIsPromoted] = useState(false) // input value
 
     // STATE - input Agreenent
-    const [inputAgreenent, setAgreenent] = useState(false) // input value
+    const [inputAgreenent, setInputAgreenent] = useState(false) // input value
+    const [inputAgreenentValidation, setAgreenentValidation] = useState(false) // input value
 
 
     // CAR DATA:
 
     // STATE - set car id (name)
     const [carIdChosen, setCarIdChosen] = useState("")
+    const [carIdChosenValidation, setCarIdChosenValidation] = useState("")
 
     // STATE - set car model
     const [carModelChosen, setCarModelChosen] = useState("")
+    const [carModelChosenValidation, setCarModelChosenValidation] = useState("")
 
     // STATE - set fuel
     const [fuelChosen, setFuelChosen] = useState("")
+    const [fuelChosenValidation, setFuelChosenValidation] = useState("")
 
     // STATE - set gearbox
     const [gearboxChosen, setGearboxChosen] = useState("")
+    const [gearboxChosenValidation, setGearboxChosenValidation] = useState("")
 
     // STATE - set mileage
     const [mileageChosen, setMileageChosen] = useState("")
+    const [mileageChosenValidation, setMileageChosenValidation] = useState("")
 
     // STATE - set capacity
     const [capacityChosen, setCapacityChosen] = useState("")
+    const [capacityChosenValidation, setCapacityChosenValidation] = useState("")
 
     // STATE - set power
     const [powerChosen, setPowerChosen] = useState("")
+    const [powerChosenValidation, setPowerChosenValidation] = useState("")
 
 
 
@@ -270,6 +289,18 @@ const User = ({ userAds, setUserAds }) => {
     // push or pull equipment item, auto fire when some equipment is add/remove
     const equipmentOnChangeHandler = (item, isChecked) => {
         isChecked ? equipmentChosen.push(item) : equipmentChosen.splice(equipmentChosen.findIndex(i => i === item), 1)
+    }
+
+    // input title Handler
+    const setAdTitleHandler = (value) => {
+        setAdTitle(value)
+        setAdTitleValidation(value.length)
+    }
+
+    // inpud description Handler
+    const setInputDescriptionHandler = (value) => {
+        setInputDescription(value)
+        setInputDescriptionValidation(value.length)
     }
 
     // get photo from file/camera
@@ -311,9 +342,10 @@ const User = ({ userAds, setUserAds }) => {
     const addImgToDB = async (image, index, maxSizeMB = 0.5, maxWidthOrHeight = "1280") => {
 
         // if image is empty then return
-        if (!image) {
-            return
-        }
+        if (!image) { return }
+
+        // if file is not image then return
+        if (image.type.split("/")[0] !== 'image') { return }
 
         // set progress bar visibile if index !== -1 => index -1 is for smallImageURL
         if (index !== -1) {
@@ -323,7 +355,6 @@ const User = ({ userAds, setUserAds }) => {
                 return helpArray
             })
         }
-
 
         // check image size, if more than 0.5MB or for smallImageURL then compress photo
         if (image.size >= 1048576 / 2 || (index === -1)) {
@@ -475,7 +506,7 @@ const User = ({ userAds, setUserAds }) => {
         setInputPhone("")
         setTimeValidation(30)
         setIsPromoted(false)
-        setAgreenent(false)
+        setInputAgreenent(false)
 
         // only car category
         setCarIdChosen("")
@@ -514,8 +545,8 @@ const User = ({ userAds, setUserAds }) => {
         setInputEmail(item.inputEmail)
         setInputPhone(item.inputPhone)
         setTimeValidation(item.timeValidation)
-        setIsPromoted(false) // false - user need to chose
-        setAgreenent(false) // false - user need to chose
+        setIsPromoted(item.isPromoted) // when edit mut be the same
+        setInputAgreenent(item.inputAgreenent) // when edit must be the same
 
         // only car category
         setCarIdChosen(item.carIdChosen)
@@ -529,12 +560,126 @@ const User = ({ userAds, setUserAds }) => {
     }
 
 
-    // get data from form and validate
+    // validate data from form, return true if valid and false if not
+    const checkFormValidation = () => {
+
+        let allValidations = true
+
+        //constans
+        const NIE_WYBRANO = "Nie wybrano"
+        const NIE_WPROWADZONO = "Brak informacji"
+        const NIEPOPRAWNA_WARTOSC = "Niepoprawna wartość"
+        const NIEPOPRAWNE_IMIE = "Niepoprawne imię"
+        const NIEPOPRAWNY_ADRES_EMAIL = "Niepoprawny adres e-mail"
+
+        //only car
+        if (mainCategory === mainCategories[0].nameDB) {
+
+            if (!carIdChosen) {
+                setCarIdChosenValidation(NIE_WYBRANO)
+                allValidations = false
+            } else { setCarIdChosenValidation("") }
+
+            if (!carModelChosen) {
+                setCarModelChosenValidation(NIE_WYBRANO)
+                allValidations = false
+            } else { setCarModelChosenValidation("") }
+
+            if (!fuelChosen) {
+                setFuelChosenValidation(NIE_WYBRANO)
+                allValidations = false
+            } else { setFuelChosenValidation("") }
+
+            if (!gearboxChosen) {
+                setGearboxChosenValidation(NIE_WYBRANO)
+                allValidations = false
+            } else { setGearboxChosenValidation("") }
+
+            if (!mileageChosen) {
+                setMileageChosenValidation(NIE_WYBRANO)
+                allValidations = false
+            } else { setMileageChosenValidation("") }
+
+            if (!capacityChosen || capacityChosen.length > 4) {
+                setCapacityChosenValidation(NIEPOPRAWNA_WARTOSC)
+                allValidations = false
+            } else { setCapacityChosenValidation("") }
+
+            if (!powerChosen || powerChosen.length > 3) {
+                setPowerChosenValidation(NIEPOPRAWNA_WARTOSC)
+                allValidations = false
+            } else { setPowerChosenValidation("") }
+        }
+
+
+
+        //rest all
+
+        if (!typeChosen) {
+            setTypeChosenValidation(NIE_WYBRANO)
+            allValidations = false
+        } else { setTypeChosenValidation("") }
+
+        if (!yearChosen) {
+            setYearChosenValidation(NIE_WYBRANO)
+            allValidations = false
+        } else { setYearChosenValidation("") }
+
+        if (adTitle.length < 10 || adTitle.length > 50) {
+            allValidations = false
+        }
+
+        if (inputDescription.length < 50 || inputDescription.length > 500) {
+            allValidations = false
+        }
+
+        if (!techKnowledge) {
+            setTechKnowledgeValidation(NIE_WYBRANO)
+            allValidations = false
+        } else { setTechKnowledgeValidation("") }
+
+        if (!priceOfMeeting || priceOfMeeting.length > 3) {
+            setPriceOfMeetingValidation(NIEPOPRAWNA_WARTOSC)
+            allValidations = false
+        } else { setPriceOfMeetingValidation("") }
+
+        if (!timeOfDay) {
+            setTimeOfDayValidation(NIE_WPROWADZONO)
+            allValidations = false
+        } else { setTimeOfDayValidation("") }
+
+        if (!regionChosen) {
+            setRegionChosenValidation(NIE_WYBRANO)
+            allValidations = false
+        } else { setRegionChosenValidation("") }
+
+        if (!cityChosen) {
+            setCityChosenValidation(NIE_WYBRANO)
+            allValidations = false
+        } else { setCityChosenValidation("") }
+
+        if (inputName.length < 3) {
+            setInputNameValidation(NIEPOPRAWNE_IMIE)
+            allValidations = false
+        } else { setInputNameValidation("") }
+
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!re.test(String(inputEmail).toLowerCase())) {
+            setInputEmailValidation(NIEPOPRAWNY_ADRES_EMAIL)
+            allValidations = false
+        } else { setInputEmailValidation("") }
+
+        if (!inputAgreenent) {
+            setAgreenentValidation(true)
+            allValidations = false
+        } else { setAgreenentValidation(false) }
+
+        return allValidations
+    }
+
+
+    // get data from form
     const getDataFromForm = () => {
-
-
-        // TODO: validations
-
 
         // object to save in DB => OK
         const formObject = {
@@ -683,6 +828,9 @@ const User = ({ userAds, setUserAds }) => {
     // send ad to DB
     const sendAddItemToDB = (formObject = getDataFromForm()) => {
 
+        //check if data in form is valid
+        if (!checkFormValidation()) { return }
+
         //clear ads list before load
         setUserAds([])
 
@@ -691,9 +839,6 @@ const User = ({ userAds, setUserAds }) => {
 
         // clear all data from form and close
         clearAllDataFromFormAndClose()
-
-        // get data from form
-        //const formObject = getDataFromForm()
 
         // create obj in DB - call backend
         const createAd = functions.httpsCallable('createAd')
@@ -733,6 +878,9 @@ const User = ({ userAds, setUserAds }) => {
 
     // send edited ad to DB
     const sendEditItemToDB = () => {
+
+        //check if data in form is valid
+        if (!checkFormValidation()) { return }
 
         //clear ads list before load
         setUserAds([])
@@ -785,6 +933,9 @@ const User = ({ userAds, setUserAds }) => {
 
     // send refreshed ad to DB
     const sendRefreshItemToDB = () => {
+
+        //check if data in form is valid
+        if (!checkFormValidation()) { return }
 
         //clear ads list before load
         setUserAds([])
@@ -984,6 +1135,7 @@ const User = ({ userAds, setUserAds }) => {
                                                 <select className={style.ad__itemList} onChange={setCarIdChosenChandler} value={carIdChosen}>
                                                     {mainCategories[0].brand.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                                                 </select>
+                                                <p className={style.ad__itemDescValidation}>{carIdChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
@@ -992,6 +1144,7 @@ const User = ({ userAds, setUserAds }) => {
                                                 <select disabled={!carIdChosen} className={style.ad__itemList} onChange={e => setCarModelChosen(e.target.value)} value={carModelChosen}>
                                                     {mainCategories[0].brand.find(item => item.id === carIdChosen).models.map(item => <option key={item} value={item}>{item}</option>)}
                                                 </select>
+                                                <p className={style.ad__itemDescValidation}>{carModelChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
@@ -1000,6 +1153,7 @@ const User = ({ userAds, setUserAds }) => {
                                                 <select className={style.ad__itemList} onChange={e => setFuelChosen(e.target.value)} value={fuelChosen}>
                                                     {fuel.map(item => <option key={item} value={item}>{item}</option>)}
                                                 </select>
+                                                <p className={style.ad__itemDescValidation}>{fuelChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
@@ -1008,6 +1162,7 @@ const User = ({ userAds, setUserAds }) => {
                                                 <select className={style.ad__itemList} onChange={e => setGearboxChosen(e.target.value)} value={gearboxChosen}>
                                                     {gearbox.map(item => <option key={item} value={item}>{item}</option>)}
                                                 </select>
+                                                <p className={style.ad__itemDescValidation}>{gearboxChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
@@ -1016,18 +1171,21 @@ const User = ({ userAds, setUserAds }) => {
                                                 <select className={style.ad__itemList} onChange={e => setMileageChosen(e.target.value)} value={mileageChosen}>
                                                     {mileage.map(item => <option key={item} value={item}>{item}</option>)}
                                                 </select>
+                                                <p className={style.ad__itemDescValidation}>{mileageChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
                                             && <div className={style.ad__itemContainer}>
                                                 <label className={style.ad__itemDesc}>Pojemność (cm3):</label>
                                                 <input onChange={event => setCapacityChosen(event.target.value)} value={capacityChosen} className={style.ad__itemList} type='number' />
+                                                <p className={style.ad__itemDescValidation}>{capacityChosenValidation}</p>
                                             </div>}
 
                                         {(mainCategory === mainCategories[0].nameDB)
                                             && <div className={style.ad__itemContainer}>
                                                 <label className={style.ad__itemDesc}>Moc (KM):</label>
                                                 <input onChange={event => setPowerChosen(event.target.value)} value={powerChosen} className={style.ad__itemList} type='number' />
+                                                <p className={style.ad__itemDescValidation}>{powerChosenValidation}</p>
                                             </div>}
 
                                         <div className={style.ad__itemContainer}>
@@ -1035,6 +1193,7 @@ const User = ({ userAds, setUserAds }) => {
                                             <select className={style.ad__itemList} onChange={e => setTypeChosen(e.target.value)} value={typeChosen}>
                                                 {mainCategories.find(i => mainCategory === i.nameDB).type.map(item => <option key={item} value={item}>{item}</option>)}
                                             </select>
+                                            <p className={style.ad__itemDescValidation}>{typeChosenValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
@@ -1042,6 +1201,7 @@ const User = ({ userAds, setUserAds }) => {
                                             <select className={style.ad__itemList} onChange={e => setYearChosen(e.target.value)} value={yearChosen}>
                                                 {yearsWithEmptyEl.map(item => <option key={item} value={item}>{item !== "0" ? item : "pozostałe"}</option>)}
                                             </select>
+                                            <p className={style.ad__itemDescValidation}>{yearChosenValidation}</p>
                                         </div>
                                     </div>
 
@@ -1074,7 +1234,8 @@ const User = ({ userAds, setUserAds }) => {
 
                                         <div className={`${style.ad__itemContainer} ${style.ad__itemContainerWide}`}>
                                             <label className={style.ad__itemDesc}>Tytuł ogłoszenia (10-50 znaków):</label>
-                                            <input onChange={event => setAdTitle(event.target.value)} value={adTitle} className={style.ad__itemList} type='text' />
+                                            <input onChange={event => setAdTitleHandler(event.target.value)} value={adTitle} className={style.ad__itemList} type='text' maxLength="50" />
+                                            <p className={style.ad__itemDescValidation} style={adTitleValidation >= 10 ? { color: "green" } : null}>{adTitleValidation}</p>
                                         </div>
 
 
@@ -1109,7 +1270,8 @@ const User = ({ userAds, setUserAds }) => {
 
                                         <div className={`${style.ad__itemContainer} ${style.ad__itemTextArea}`}>
                                             <label className={style.ad__itemDesc}>Opis (50-500 znaków):</label>
-                                            <textarea onChange={event => setInputDescription(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej przedmiot, chcesz zaprezentować." />
+                                            <textarea onChange={event => setInputDescriptionHandler(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej przedmiot, chcesz zaprezentować." maxLength="500" />
+                                            <p className={style.ad__itemDescValidation} style={inputDescriptionValidation >= 50 ? { color: "green" } : null}>{inputDescriptionValidation}</p>
                                         </div>
 
                                     </div>
@@ -1127,16 +1289,19 @@ const User = ({ userAds, setUserAds }) => {
                                             <select className={style.ad__itemList} onChange={e => setTechKnowledge(e.target.value)} value={techKnowledge}>
                                                 {knowledge.map(item => <option key={item} value={item}> {item} </option>)}
                                             </select>
+                                            <p className={style.ad__itemDescValidation}>{techKnowledgeValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Jaka jest cena za godzinne spotkanie?</label>
                                             <input onChange={event => setPriceOfMeeting(event.target.value)} value={priceOfMeeting} className={style.ad__itemList} type='number' placeholder="np. 150" />
+                                            <p className={style.ad__itemDescValidation}>{priceOfMeetingValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Opisz preferowaną pore spotkania:</label>
-                                            <input onChange={event => setTimeOfDay(event.target.value)} value={timeOfDay} className={style.ad__itemList} type='text' placeholder="np. każda sobota i niedziela" />
+                                            <input onChange={event => setTimeOfDay(event.target.value)} value={timeOfDay} className={style.ad__itemList} type='text' placeholder="np. każda sobota i niedziela" maxLength="100" />
+                                            <p className={style.ad__itemDescValidation}>{timeOfDayValidation}</p>
                                         </div>
 
                                     </div>
@@ -1154,6 +1319,7 @@ const User = ({ userAds, setUserAds }) => {
                                             <select className={style.ad__itemList} onChange={setRegionChosenChandler} value={regionChosen}>
                                                 {regions.map(item => <option key={item} value={item}> {item} </option>)}
                                             </select>
+                                            <p className={style.ad__itemDescValidation}>{regionChosenValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
@@ -1161,20 +1327,23 @@ const User = ({ userAds, setUserAds }) => {
                                             <select disabled={!regionChosen} className={style.ad__itemList} onChange={e => setCityChosen(e.target.value)} value={cityChosen}>
                                                 {cities.filter(item => item.region === regionChosen).map(item => <option key={item.city} value={item.city}> {item.city} </option>)}
                                             </select>
+                                            <p className={style.ad__itemDescValidation}>{cityChosenValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Imię:</label>
-                                            <input onChange={event => setInputName(event.target.value)} value={inputName} className={style.ad__itemList} type='text' placeholder="np. Jan" />
+                                            <input onChange={event => setInputName(event.target.value)} value={inputName} className={style.ad__itemList} type='text' placeholder="np. Jan" maxLength="10" />
+                                            <p className={style.ad__itemDescValidation}>{inputNameValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
-                                            <label className={style.ad__itemDesc}>Adres e-mail (opcjonalnie):</label>
-                                            <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} className={style.ad__itemList} type='text' placeholder="np. jan@gmail.com" />
+                                            <label className={style.ad__itemDesc}>Adres e-mail (wymagane):</label>
+                                            <input onChange={event => setInputEmail(event.target.value)} value={inputEmail} className={style.ad__itemList} type='text' placeholder="np. jan@gmail.com" maxLength="50" />
+                                            <p className={style.ad__itemDescValidation}>{inputEmailValidation}</p>
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
-                                            <label className={style.ad__itemDesc}>Numer telefonu (wymagane):</label>
+                                            <label className={style.ad__itemDesc}>Numer telefonu (opcjonalnie):</label>
                                             <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.ad__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
                                         </div>
                                     </div>
@@ -1205,8 +1374,9 @@ const User = ({ userAds, setUserAds }) => {
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
-                                            <input onChange={event => setAgreenent(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' />
+                                            <input onChange={event => setInputAgreenent(event.target.checked ? true : false)} className={`${style.ad__inputCheckBox} ${inputAgreenentValidation && style.ad__inputCheckBoxValidation}`} type='checkbox' />
                                             <label className={style.ad__labelCheckBox}>Zapoznałem się i akceptuję <a href="/privacy-policy">regulamin serwisu</a> oraz <a href="/privacy-policy">politykę prywatności</a>.</label>
+                                            <p className={style.ad__itemDescValidation}>{inputAgreenentValidation}</p>
                                         </div>
 
                                     </div>

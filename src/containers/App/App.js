@@ -42,17 +42,11 @@ const App = () => {
   useEffect(() => {
     auth.onAuthStateChanged(user => {
 
+      // save in state
       user ? setIsLogin(true) : setIsLogin(false)
 
       // save in local storage
-      if (user) {
-        localStorage.setItem(UID, user.uid)
-        console.log("user: ", user)
-      } else {
-        localStorage.removeItem(UID)
-        console.log(' user Sign Out')
-      }
-
+      user ? localStorage.setItem(UID, user.uid) : localStorage.removeItem(UID)
     })
   }, [])
 
