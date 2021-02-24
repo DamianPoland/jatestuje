@@ -7,11 +7,18 @@ import { ADS, USERS } from '../../shared/constans'
 
 //component
 import ListItemAd from '../ListItemAd/ListItemAd'
+import AlertSmall from "../../UI/AlertSmall/AlertSmall"
+import Spinner from '../../UI/Spinner/Spinner'
 
 
 
 const UserAds = props => {
 
+    // show or hide small alert
+    const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
+
+    // Spinner
+    const [isMainSpinnerShow, setIsMainSpinnerShow] = useState(false)
 
     // STATE - set ALL ADS
     const [allAds, setAllAds] = useState([])
@@ -21,6 +28,9 @@ const UserAds = props => {
 
         //clear ads list before load
         setAllAds([])
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
 
         // load ads from DB
         const loadAdsFromDB = async () => {
@@ -39,11 +49,34 @@ const UserAds = props => {
                             const firestoreGetUserAds = await firestore.collection(doc.split(" ")[0]).doc(doc).get()
                             // eslint-disable-next-line no-unused-vars
                             const ex = firestoreGetUserAds.data().isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
-                        } catch (err) { console.log('err get ads: ', err) }
+
+                        } catch (err) {
+
+                            // show alert Error
+                            setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                            console.log('err get ads: ', err)
+
+                        } finally {
+
+                            // when is last item then turn of spinner
+                            if (doc === getUserAdsArray[getUserAdsArray.length - 1]) {
+
+                                // hide main spinner
+                                setIsMainSpinnerShow(false)
+                            }
+                        }
                     }
                     firebaseGetEveryUserAd()
                 })
-            } catch (err) { console.log('err get ads', err) }
+            } catch (err) {
+
+                // show alert Error
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                console.log('err get ads', err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
+            }
 
         }
         loadAdsFromDB()
@@ -55,6 +88,11 @@ const UserAds = props => {
     return (
 
         <section className={style.background}>
+            {isMainSpinnerShow && <Spinner />}
+
+            {/* AlertSmall */}
+            {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
+
             <div className={style.container}>
 
 

@@ -4,6 +4,7 @@
     margin-top: 4rem;
     background: var(--backgroundCustom);
     min-height: calc(100vh - 15rem);
+    position: relative;
 
 }
 
@@ -205,4 +206,36 @@
 .ads {
     margin: 0 0.5rem;
     padding: 2rem 0.5rem 0 0.5rem;
+    position: relative;
+}
+
+.ads__emptyContainer {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    padding: 2rem 0;
+}
+
+.ads__emptyContainerOpacity {
+    opacity: 0;
+}
+
+.ads__emptyContainerDesc {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.ads__emptyDescTop {
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.ads__emptyDescBottom {
+    font-size: 1rem;
+}
+
+.ads__emptySVG {
+    width: 100%;
+    height: 100%;
 }

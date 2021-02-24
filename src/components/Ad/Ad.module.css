@@ -2,6 +2,8 @@
     margin-top: 4rem;
     background: var(--backgroundCustom);
     min-height: calc(100vh - 15rem);
+    position: relative;
+
 
 }
 
@@ -15,11 +17,11 @@
 /* PHOTOS SECTION */
 
 .photos__section {
-
     padding: 2rem;
-
     background-color: white;
     margin-bottom: 2rem;
+    position: relative;
+
 }
 
 .photos {

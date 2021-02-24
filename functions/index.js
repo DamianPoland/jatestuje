@@ -174,7 +174,7 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
 })
 
 
-// delete Ad from DB, in data add object with ad => OK
+// delete Ad from DB, delete ONLY firestore data - images delete from RFONT!, in data add object with ad => OK
 exports.deleteAd = functions.https.onCall(async (data, context) => {
 
     // check if user is logged

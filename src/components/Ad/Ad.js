@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import style from './Ad.module.css'
+import { Link } from 'react-router-dom'
 
 
 //firebase
@@ -20,13 +21,23 @@ import { mainCategories, carEquipment } from '../../shared/data'
 
 //components
 import AlertSmall from "../../UI/AlertSmall/AlertSmall"
+import Spinner from '../../UI/Spinner/Spinner'
+
 
 
 
 const Ad = props => {
 
+    // scroll to top when componene render
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     // show or hide small alert
     const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
+
+    // Spinner
+    const [isMainSpinnerShow, setIsMainSpinnerShow] = useState(false)
 
     // STATE - set one AD
     const [oneAd, setOneAd] = useState()
@@ -36,20 +47,28 @@ const Ad = props => {
 
     useEffect(() => {
 
+        // show main spinner
+        setIsMainSpinnerShow(true)
+
         // get ad with itemID from DB and save in State
         firestore.collection(props.match.params.key.split(" ")[0]).doc(props.match.params.key).get()
             .then(resp => {
                 setOneAd(resp.data())
 
-                console.log("resp.data(): ", resp.data());
                 // set first photo as mine
                 setMainPhoto(resp.data().imageURL[0])
-
             })
-            .catch(err => console.log('listener err', err))
+            .catch(err => {
+                console.log('listener err', err)
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+            })
+            .finally(() => {
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
+            })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
 
     // Admin section
     const [isAdmin, setIsAdmin] = useState(false)
@@ -63,6 +82,11 @@ const Ad = props => {
 
     // delete ad
     const deleteAd = () => {
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
+
+        // call delete to backend
         const adminDeleteAd = functions.httpsCallable('adminDeleteAd')
         adminDeleteAd({ reason: removeAdReason, item: oneAd })
             .then(resp => {
@@ -71,16 +95,19 @@ const Ad = props => {
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Usunieto ogłoszenie.', animationTime: '2', borderColor: 'green' })
             })
             .catch(err => {
-
-                // show alert
                 setIsAlertSmallShow({ alertIcon: 'error', description: `${err}`, animationTime: '5', borderColor: 'red' })
                 console.log(err)
+            })
+            .finally(() => {
+                // hide main spinner
+                setIsMainSpinnerShow(false)
             })
     }
 
 
     return (
         <section className={style.background}>
+            {isMainSpinnerShow && <Spinner />}
 
             {/* AlertSmall */}
             {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
@@ -211,12 +238,12 @@ const Ad = props => {
                                 <p className={style.desc__textContact}>tel: {oneAd.inputPhone}</p>
                             </a>
 
-                            <a className={style.desc__containerContact} href={`/userads/${oneAd.userId}`} >
+                            <Link to={`/userads/${oneAd.userId}`} className={style.desc__containerContact} >
                                 <div className={style.desc__svg}>
                                     <Cubes />
                                 </div>
                                 <p className={style.desc__textContact}>Zobacz inne ogłoszenia uzytkownika</p>
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

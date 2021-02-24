@@ -10,9 +10,10 @@ import imageCompression from 'browser-image-compression';
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
 import { ReactComponent as Ad } from '../../assets/ad.svg'
 import AlertSmall from "../../UI/AlertSmall/AlertSmall"
+import Spinner from '../../UI/Spinner/Spinner'
 
 //data 
-import { mainCategories, fuel, years, gearbox, carEquipment, mileage, regions, cities, knowledge } from '../../shared/data'
+import { mainCategories, fuel, yearsWithEmptyEl, gearbox, carEquipment, mileage, regions, cities, knowledge } from '../../shared/data'
 
 //photos
 import Photo from '../../assets/photo.png'
@@ -57,24 +58,29 @@ const dayTextConverter = (timeValidationDate) => {
 let equipmentChosen = []
 
 
-const User = props => {
+const User = ({ userAds, setUserAds }) => {
 
 
     // show or hide small alert
     const [isAlertSmallShow, setIsAlertSmallShow] = useState(false)
 
-
+    // Spinner
+    const [isMainSpinnerShow, setIsMainSpinnerShow] = useState(false)
 
 
     // ----------------------- START USER VIEW  --------------------------//
 
 
-    // STATE - set user ADS
-    const [userAds, setUserAds] = useState([])
-
     // get user ads when start comopnent
     useEffect(() => {
-        getUserAds()
+
+        // start query if userAds is empty
+        if (userAds.length === 0) {
+
+            // get user ads and show main spinner
+            getUserAds()
+            setIsMainSpinnerShow(true)
+        }
     }, [])
 
     // get user ads
@@ -83,15 +89,18 @@ const User = props => {
         // if user is not sign in then not get user ads
         if (!localStorage.getItem(UID)) { return }
 
-        //clear ads list before load
-        setUserAds([])
-
         // get document with user ads
         firestore.collection(USERS).doc(localStorage.getItem(UID)).collection(ADS).doc(ADS).get()
             .then(resp => {
 
                 // if no data then stop
-                if (!resp.data()) { return }
+                if (!resp.data()) {
+
+                    // hide main spinner
+                    setIsMainSpinnerShow(false)
+
+                    return
+                }
 
                 // change object to array
                 const dataArray = Object.values(resp.data()).sort().reverse()
@@ -111,11 +120,37 @@ const User = props => {
                             // if response is not undefined
                             resp.data() && setUserAds(prevState => [...prevState, resp.data()])
                         })
-                        .catch(err => console.log('get ad err', err))
-                })
+                        .catch(err => {
 
+                            // show alert Error
+                            setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                            console.log('get ad err', err)
+
+                            // hide main spinner
+                            setIsMainSpinnerShow(false)
+                        })
+                        .finally(() => {
+
+                            // when is last item then turn of spinner
+                            if (item === dataArray[dataArray.length - 1]) {
+
+                                // hide main spinner
+                                setIsMainSpinnerShow(false)
+                            }
+                        })
+                })
             })
-            .catch(err => console.log("get document err: ", err))
+            .catch(err => {
+
+                // show alert Error
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
+                console.log("get document err: ", err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
+            })
+
+
     }
 
     // ----------------------- STOP USER VIEW  --------------------------//
@@ -308,6 +343,7 @@ const User = props => {
 
                 // set progress bar invisibile
                 console.log("compression error message: ", error.message)
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Kompresja nie powiodła się. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 setProgress(0)
                 setShowProgress(prevState => {
                     let helpArray = [...prevState]
@@ -328,6 +364,7 @@ const User = props => {
             snapshot => { setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)) },//progress bar
             err => { //show if error
                 console.log('upload error: ', err)
+                setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 setProgress(0)
                 // set progress bar invisibile
                 setShowProgress(prevState => {
@@ -364,7 +401,8 @@ const User = props => {
                     })
 
                     .catch(errStorage => {
-                        console.log('storage errStorage', errStorage);
+                        console.log('storage errStorage', errStorage)
+                        setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                         setProgress(0)
                         // set progress bar invisibile
                         setShowProgress(prevState => {
@@ -512,38 +550,38 @@ const User = props => {
             // data for all ads
             id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time 1970 ,fourth is random string
             mainCategory: mainCategory, // main category of ad
-            userPhoto: auth.currentUser.photoURL, // user login photo from login social media
+            userPhoto: auth.currentUser.photoURL, // user login photo from login social media  // index excluded in cars collection
 
             // all ads from form
             typeChosen: typeChosen,
             yearChosen: yearChosen,
-            adTitle: adTitle,
-            imageURL: imageURL, // all images URL in array
-            smallImageURL: smallImageURL, // small image to show only in list of ads 
-            inputDescription: inputDescription,
-            techKnowledge: techKnowledge,
-            priceOfMeeting: priceOfMeeting,
-            timeOfDay: timeOfDay,
+            adTitle: adTitle,  // index excluded in cars collection
+            imageURL: imageURL, // all images URL in array // index excluded
+            smallImageURL: smallImageURL, // small image to show only in list of ads  // index excluded
+            inputDescription: inputDescription, // index excluded in cars collection
+            techKnowledge: techKnowledge, // index excluded in cars collection
+            priceOfMeeting: priceOfMeeting, // index excluded in cars collection
+            timeOfDay: timeOfDay, // index excluded in cars collection
             regionChosen: regionChosen,
             cityChosen: cityChosen,
             cityChosenLat: cities.find(i => i.city === cityChosen).lat, // city latitude for query range
             cityChosenLng: cities.find(i => i.city === cityChosen).lng, // city longitude for query range
-            inputName: inputName,
-            inputEmail: inputEmail,
-            inputPhone: inputPhone,
+            inputName: inputName, // index excluded in cars collection
+            inputEmail: inputEmail, // index excluded in cars collection
+            inputPhone: inputPhone, // index excluded in cars collection
             timeValidation: timeValidation,
             isPromoted: isPromoted, // user set promoted or not
-            inputAgreenent: inputAgreenent,
+            inputAgreenent: inputAgreenent, // index excluded in cars collection
 
             // only car category from form
             carIdChosen: carIdChosen,
             carModelChosen: carModelChosen,
-            fuelChosen: fuelChosen,
-            gearboxChosen: gearboxChosen,
-            mileageChosen: mileageChosen,
-            capacityChosen: capacityChosen,
-            powerChosen: powerChosen,
-            equipmentChosen: equipmentChosen,
+            fuelChosen: fuelChosen, // index excluded in cars collection
+            gearboxChosen: gearboxChosen, // index excluded in cars collection
+            mileageChosen: mileageChosen, // index excluded in cars collection
+            capacityChosen: capacityChosen, // index excluded in cars collection
+            powerChosen: powerChosen, // index excluded in cars collection
+            equipmentChosen: equipmentChosen, // index excluded in cars collection
 
         }
         console.log(formObject)
@@ -560,7 +598,7 @@ const User = props => {
 
             // all ads from form
             typeChosen: "Hatchback",
-            yearChosen: "2006",
+            yearChosen: "2016",
             adTitle: "50 znaków Lorem ipsum dolor sit amet consec adipis",
 
             imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-23%201614092038509%20kl4bu92wsb%2F0?alt=media&token=825ad235-2964-4524-9153-6956a297339a"],
@@ -645,6 +683,14 @@ const User = props => {
     // send ad to DB
     const sendAddItemToDB = (formObject = getDataFromForm()) => {
 
+        //clear ads list before load
+        setUserAds([])
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
+
+        // clear all data from form and close
+        clearAllDataFromFormAndClose()
 
         // get data from form
         //const formObject = getDataFromForm()
@@ -657,9 +703,6 @@ const User = props => {
                 // update view after refresh ad
                 getUserAds()
 
-                // clear all data from form
-                clearAllDataFromFormAndClose()
-
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie dodane.', animationTime: '2', borderColor: 'green' })
                 console.log("DB response: ", resp.data)
@@ -667,9 +710,12 @@ const User = props => {
             })
             .catch(err => {
 
-                // show alert
+                // show alert Error
                 setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 console.log(err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
             })
     }
 
@@ -688,6 +734,15 @@ const User = props => {
     // send edited ad to DB
     const sendEditItemToDB = () => {
 
+        //clear ads list before load
+        setUserAds([])
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
+
+        // clear all data from form and close
+        clearAllDataFromFormAndClose()
+
         // get data from form
         const formObject = getDataFromForm()
 
@@ -699,9 +754,6 @@ const User = props => {
                 // update view after refresh ad
                 getUserAds()
 
-                // clear all data from form
-                clearAllDataFromFormAndClose()
-
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie zmienione.', animationTime: '2', borderColor: 'green' })
                 console.log("DB response: ", resp.data)
@@ -709,9 +761,12 @@ const User = props => {
             })
             .catch(err => {
 
-                // show alert
+                // show alert Error
                 setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 console.log(err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
             })
     }
 
@@ -731,6 +786,15 @@ const User = props => {
     // send refreshed ad to DB
     const sendRefreshItemToDB = () => {
 
+        //clear ads list before load
+        setUserAds([])
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
+
+        // clear all data from form and close
+        clearAllDataFromFormAndClose()
+
         // get data from form
         const formObject = getDataFromForm()
 
@@ -742,24 +806,30 @@ const User = props => {
                 // update view after refresh ad
                 getUserAds()
 
-                // clear all data from form
-                clearAllDataFromFormAndClose()
-
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Przedłużono ważność ogłoszenia.', animationTime: '2', borderColor: 'green' })
                 console.log("DB response refresh: ", resp.data)
             })
             .catch(err => {
 
-                // show alert
+                // show alert Error
                 setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 console.log(err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
             })
     }
 
 
     // delete one ad from DB
     const deleteItemFromDB = (e, item) => {
+
+        //clear ads list before load
+        setUserAds([])
+
+        // show main spinner
+        setIsMainSpinnerShow(true)
 
         // delete ad - call backend + frontend for photos
         const deleteAd = functions.httpsCallable('deleteAd')
@@ -778,9 +848,12 @@ const User = props => {
             })
             .catch(err => {
 
-                // show alert
+                // show alert Error
                 setIsAlertSmallShow({ alertIcon: 'error', description: 'Błąd. Spróbuj ponownie później.', animationTime: '2', borderColor: 'red' })
                 console.log(err)
+
+                // hide main spinner
+                setIsMainSpinnerShow(false)
             })
     }
 
@@ -810,6 +883,8 @@ const User = props => {
                             <p className={style.user__title}>Witaj {auth.currentUser?.displayName}</p>
                             <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
                             <div className={style.user__itemsContainer}>
+
+                                {isMainSpinnerShow && <Spinner />}
 
                                 {userAds.map(item => {
                                     return (
@@ -965,7 +1040,7 @@ const User = props => {
                                         <div className={style.ad__itemContainer}>
                                             <p className={style.ad__itemDesc}>Rok produkcji:</p>
                                             <select className={style.ad__itemList} onChange={e => setYearChosen(e.target.value)} value={yearChosen}>
-                                                {years.map(item => <option key={item} value={item}>{item}</option>)}
+                                                {yearsWithEmptyEl.map(item => <option key={item} value={item}>{item !== "0" ? item : "pozostałe"}</option>)}
                                             </select>
                                         </div>
                                     </div>
