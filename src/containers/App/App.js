@@ -20,7 +20,7 @@ import Contact from '../../components/Contact/Contact'
 import PrivacyPolicy from '../../components/PrivacyPolicy/PrivacyPolicy'
 import Regulations from '../../components/Regulations/Regulations'
 import AlertPrivacy from '../../UI/AlertPrivacy/AlertPrivacy'
-import Footer from "../../components/Footer/Footer";
+import Footer from "../../components/Footer/Footer"
 
 
 
@@ -54,14 +54,21 @@ const App = () => {
     AOS.init({ duration: 1000 });
   }, [])
 
+  // STATE - set ALL ADS
+  const [allAds, setAllAds] = useState([])
+
+  const setAllAdsChandler = i => {
+    setAllAds(i)
+  }
+
 
   return (
     <BrowserRouter>
       <Nav isLogin={isLogin} />
       <Switch>
-        <Route path='/home' exact component={Home} />
+        <Route path='/home' render={props => <Home {...props} allAds={allAds} setAllAds={setAllAdsChandler} />} />
+        <Route path='/offer/:key' render={props => <Ad {...props} />} />
         <Route path='/userads/:key' component={UserAds} />
-        <Route path='/home/:key' render={props => <Ad {...props} isLogin={isLogin} />} />
         <Route path='/user' render={props => <User {...props} isLogin={isLogin} />} />
         <Route path='/contact' component={Contact} />
         <Route path='/privacy-policy' component={PrivacyPolicy} />
@@ -71,7 +78,7 @@ const App = () => {
       <AlertPrivacy />
       <Footer />
     </BrowserRouter >
-  );
+  )
 }
 
 export default App;

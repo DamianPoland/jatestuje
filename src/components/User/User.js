@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import style from './User.module.css'
+import { Link } from 'react-router-dom'
 
 // image compression library
 import imageCompression from 'browser-image-compression';
@@ -56,7 +57,7 @@ const dayTextConverter = (timeValidationDate) => {
 let equipmentChosen = []
 
 
-const User = () => {
+const User = props => {
 
 
     // show or hide small alert
@@ -856,7 +857,7 @@ const User = () => {
                                                 {item.isPromoted && <p className={style.user__itemDescMiddleText} style={{ color: "blue" }}>Promowane</p>}
 
                                                 <div className={style.user__itemDescBottom}>
-                                                    <a className={style.user__itemButton} href={`/home/${item.id}`}>zobacz</a>
+                                                    <Link className={style.user__itemButton} to={`/offer/${item.id}`}>zobacz</Link>
                                                     <button className={style.user__itemButton} onClick={e => prepareEditItemFromDB(e, item)}>edytuj</button>
                                                     <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
                                                 </div>

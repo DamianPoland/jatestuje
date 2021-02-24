@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import style from './ListItemAd.module.css'
 
 //photos
@@ -8,7 +9,7 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 
 const ListItemAd = ({ item }) => {
     return (
-        <a href={`/home/${item.id}`} className={style.ads__item} >
+        <Link to={`/offer/${item.id}`} className={style.ads__item} >
 
             <div className={style.ads__itemContainer}>
                 <figure className={style.ads__itemFigure}>
@@ -32,7 +33,7 @@ const ListItemAd = ({ item }) => {
             <div className={style.ads__itemDescRight} >
                 <p className={style.ads__itemText}>{item.priceOfMeeting} zł/h</p>
             </div>
-        </a>
+        </Link>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
@@ -11,8 +11,7 @@ import ListItemAd from '../ListItemAd/ListItemAd'
 
 
 
-
-const Home = () => {
+const Home = props => {
 
     // ----------------------- START CATEGORIES --------------------------//
 
@@ -25,7 +24,7 @@ const Home = () => {
     const mainCategoryHandler = (nameDB) => {
 
         // reset array
-        setAllAds([])
+        props.setAllAds([])
 
         //set new category
         setMainCategory(nameDB)
@@ -85,32 +84,25 @@ const Home = () => {
 
     // ----------------------- START ADS  --------------------------//
 
-    // STATE - set ALL ADS
-    const [allAds, setAllAds] = useState([])
+
+
+
 
     // load ads from DB first time
     useEffect(() => {
 
         // start query
-        queryToDB(true)
+        props.allAds.length === 0 && queryToDB(true)
 
     }, [mainCategory])
 
 
-
-    // get ads with filters
-    const filterAds = () => {
+    // query to DB for items
+    const queryToDB = async (firstLoad) => {
 
         // clear ads list
-        setAllAds([])
+        //props.setAllAds([])
 
-        // query to DB
-        queryToDB(true)
-    }
-
-
-    // query to DB for items
-    const queryToDB = async (firstLoad = true) => {
 
         //set query constructor
         let queryConstructor = firestore.collection(mainCategory)
@@ -131,7 +123,7 @@ const Home = () => {
         // main filters added always
         queryConstructor = queryConstructor.where("isApproved", "==", true) // only approwed ads
         queryConstructor = queryConstructor.orderBy("createDate", 'desc') // sort in field createDate, 'desc' - get from the newest to oldest
-        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : allAds[allAds.length - 1].createDate) // get ads from newest or last displayed (month in future 86400000 * 30) according to field createDate 
+        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : props.allAds[props.allAds.length - 1]?.createDate) // get ads from newest or last displayed
         queryConstructor = queryConstructor.limit(5) // how many items be loaded from DB on one time
 
 
@@ -144,13 +136,13 @@ const Home = () => {
                 if (doc.data().timeValidationDate <= (new Date().getTime())) { return }
 
                 // add new ads to State
-                setAllAds(prevState => [...prevState, doc.data()])
+                props.setAllAds(prevState => [...prevState, doc.data()])
 
                 // promoted ad put extra on top, change id because Each child in a list should have a unique "key"
                 if (doc.data().isPromoted === true) {
                     const item = { ...doc.data() }
                     item.id = `${item.id} ` // add only space because can't change url in browser to ad
-                    setAllAds(prevState => [item, ...prevState])
+                    props.setAllAds(prevState => [item, ...prevState])
                 }
             })
         } catch (err) { console.log('err get ads', err) }
@@ -262,7 +254,7 @@ const Home = () => {
                         </div>
 
                         <div className={style.btnContainer}>
-                            <button className={style.btn} onClick={filterAds}>Filtruj</button>
+                            <button className={style.btn} onClick={() => queryToDB(true)}>Filtruj</button>
                         </div>
                     </div>
                 </div>
@@ -272,11 +264,11 @@ const Home = () => {
                 <div className={style.ads}>
                     <p className={style.title}>Ogłoszenia</p>
 
-                    {allAds.length !== 0
+                    {props.allAds.length !== 0
                         ? <div>
-                            {allAds.map((item) => {
+                            {props.allAds.map((item) => {
                                 return (
-                                    <ListItemAd key={item.id} item={item} />
+                                    <ListItemAd key={item.id} {...props} item={item} />
                                 )
                             })
                             }
@@ -284,10 +276,8 @@ const Home = () => {
                                 <button className={style.btn} onClick={() => queryToDB(false)}>Następne</button>
                             </div>
                         </div>
-
                         : <p>Nie znaleziono.</p>
                     }
-
                 </div>
             </div>
 
