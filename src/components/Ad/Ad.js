@@ -235,12 +235,12 @@ const Ad = props => {
                                 <p className={style.desc__textContact}>e-mail: {oneAd.inputEmail}</p>
                             </a>
 
-                            <a className={style.desc__containerContact} href={`tel:${oneAd.inputPhone}`}>
+                            {oneAd.inputPhone && <a className={style.desc__containerContact} href={`tel:${oneAd.inputPhone}`}>
                                 <div className={style.desc__svg}>
                                     <Phone />
                                 </div>
                                 <p className={style.desc__textContact}>tel: {oneAd.inputPhone}</p>
-                            </a>
+                            </a>}
 
                             <Link to={`/userads/${oneAd.userId}`} className={style.desc__containerContact} >
                                 <div className={style.desc__svg}>

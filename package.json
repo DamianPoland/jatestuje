@@ -9,6 +9,7 @@
     "aos": "^2.3.4",
     "browser-image-compression": "^1.0.14",
     "firebase": "^8.2.4",
+    "geofirestore": "^4.4.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-firebaseui-localized": "^1.0.8",

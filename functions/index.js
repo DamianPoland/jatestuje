@@ -78,7 +78,7 @@ exports.createAd = functions.https.onCall(async (data, context) => {
     try {
 
         // TODO  do payment => isPromoted 
-        // TODO  do payment => timeValidation
+        // TODO  do payment => timeValidationAdDayCount
 
 
         const isPromoted = data.item.isPromoted // check isPromoted
@@ -88,7 +88,7 @@ exports.createAd = functions.https.onCall(async (data, context) => {
         const isApproved = true // always true when first add ad, can be change by admin only, in the future meaby will be false and wait for payment
         const isApprovedReason = "" // always empty when first add ad, write info if isApproved=false why rejected ad
         const createDate = new Date().getTime()// when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
-        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidation // how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidationAdDayCount // how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
 
         //final object with ad
         const adObject = { ...data.item, isPromoted: isPromoted, userId: userId, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, timeValidationDate: timeValidationDate }
@@ -121,15 +121,15 @@ exports.editAd = functions.https.onCall(async (data, context) => {
         if (context.auth.uid !== editDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
 
         // elements taken from ad before edit
-        const isApproved = editDocData.isApproved // only admin can change
-        const isApprovedReason = editDocData.isApprovedReason // only admin can change
+        const isApproved = true //always true after edition (second option => editDocData.isApproved // only admin can change)
+        const isApprovedReason = ""// always "" after edition (second option => editDocData.isApprovedReason // only admin can change)
         const createDate = editDocData.createDate  // when ad is added to DB - only after refresh can change
         const isPromoted = editDocData.isPromoted // only after payment can change
-        const timeValidation = editDocData.timeValidation // only after payment can change
+        const timeValidationAdDayCount = editDocData.timeValidationAdDayCount // only after payment can change
         const timeValidationDate = editDocData.timeValidationDate // only after payment can change
 
         //final object with ad
-        const adObject = { ...data.item, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, isPromoted: isPromoted, timeValidation: timeValidation, timeValidationDate: timeValidationDate }
+        const adObject = { ...data.item, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, isPromoted: isPromoted, timeValidationAdDayCount: timeValidationAdDayCount, timeValidationDate: timeValidationDate }
 
         // save in main category
         await admin.firestore().collection(editDocData.mainCategory).doc(data.item.id).update(adObject)
@@ -150,7 +150,7 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
     try {
 
         // TODO  do payment => isPromoted 
-        // TODO  do payment => timeValidation
+        // TODO  do payment => timeValidationAdDayCount
 
 
         // get edited document from DB
@@ -162,7 +162,7 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
 
         // elements refreshed in ad:
         const createDate = new Date().getTime() // when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
-        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidation// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidationAdDayCount// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
         const isPromoted = data.item.isPromoted // check isPromoted
 
         // refresh ad and add new date now, change isPromoted na false
@@ -222,7 +222,7 @@ exports.adminDeleteAd = functions.https.onCall(async (data, context) => {
         const user = await admin.auth().getUser(data.item.userId)
 
         //sent email to user
-        return await sendEmail(user.email, 'Wiadomość od jaTestuje.pl', `Drogi użytkowniku. \n\nZ przykrością informujemy, że Twoje ogłoszenie "${data.item.adTitle}" zostało usunięte. \nPowód: ${data.reason}. \n\nZaloguj się na  https://jaTestuje.pl/user i ponownie dodaj ogłoszenie. \nPrzepraszamy za utrudnienia. \n\nPozdrawiamy. \nZespół jaTestuje.pl`)
+        return await sendEmail(user.email, 'Wiadomość od jaTestuje.pl', `Drogi użytkowniku. \n\nZ przykrością informujemy, że Twoje ogłoszenie "${data.item.adTitle}" zostało usunięte. \nPowód: ${data.reason}. \n\nWejdź na  https://jaTestuje.pl/user i edytuj ogłoszenie. \n\nPrzepraszamy za utrudnienia. \n\nPozdrawiamy. \nZespół jaTestuje.pl`)
 
     } catch (err) { throw new functions.https.HttpsError('aborted', err) } // throw error - in front add .catch 
 })

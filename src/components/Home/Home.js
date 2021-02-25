@@ -92,7 +92,6 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
         }
         yearFromChosen && (prodYears = prodYears.filter(i => i >= yearFromChosen))
         yearToChosen && (prodYears = prodYears.filter(i => i <= yearToChosen))
-        console.log(prodYears)
 
         // show main spinner
         setIsMainSpinnerShow(true)

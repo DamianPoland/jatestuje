@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react'
 import style from './User.module.css'
 import { Link } from 'react-router-dom'
 
+// geo location
+import * as geofirestore from 'geofirestore'
+import firebase from "firebase/app";
+
+
 // image compression library
 import imageCompression from 'browser-image-compression';
-
 
 //components
 import LoginRegisterFirebaseUI from './LoginRegisterFirebaseUI/LoginRegisterFirebaseUI'
@@ -21,7 +25,6 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 
 //firebase
 import { auth, firestore, storage, functions } from '../../shared/fire'
-
 
 // constans
 import { UID, ADS, USERS, ADD_AD, EDIT_AD, REFRESH_AD } from '../../shared/constans'
@@ -74,6 +77,36 @@ const User = ({ userAds, setUserAds }) => {
     // get user ads when start comopnent
     useEffect(() => {
 
+
+        // Create a GeoFirestore reference
+        const GeoFirestore = geofirestore.initializeApp(firestore);
+
+        // Create a GeoCollection reference
+        const geocollection = GeoFirestore.collection('restaurants');
+
+        // Add a GeoDocument to a GeoCollection
+        geocollection.add({
+            name: 'Geofirestore',
+            score: 100,
+            // The coordinates field must be a GeoPoint!
+            coordinates: new firebase.firestore.GeoPoint(40.7589, 73.9851)
+        })
+
+        // Create a GeoQuery based on a location
+        const query = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, 73.9851), radius: 1000 });
+
+
+        // Get query (as Promise)
+        query
+            // .orderBy("score", 'desc')
+            .limit(3)
+            .get().then((value) => {
+                // All GeoDocument returned by GeoQuery, like the GeoDocument added above
+                console.log(value.docs);
+            });
+
+
+
         // start query if userAds is empty
         if (userAds.length === 0) {
 
@@ -93,17 +126,22 @@ const User = ({ userAds, setUserAds }) => {
         firestore.collection(USERS).doc(localStorage.getItem(UID)).collection(ADS).doc(ADS).get()
             .then(resp => {
 
+                console.log("resp____________before", resp.data());
+
                 // if no data then stop
                 if (!resp.data()) {
-
-                    // hide main spinner
                     setIsMainSpinnerShow(false)
-
                     return
                 }
 
                 // change object to array
                 const dataArray = Object.values(resp.data()).sort().reverse()
+
+                // if empty data then stop
+                if (dataArray.length === 0) {
+                    setIsMainSpinnerShow(false)
+                    return
+                }
 
                 // get ads from collections
                 dataArray.forEach(item => {
@@ -226,7 +264,7 @@ const User = ({ userAds, setUserAds }) => {
     const [inputPhone, setInputPhone] = useState('')
 
     // STATE - input time ad validation
-    const [timeValidation, setTimeValidation] = useState(30)
+    const [timeValidationAdDayCount, setTimeValidationAdDayCount] = useState(30)
 
     // STATE - input isPromoted
     const [isPromoted, setIsPromoted] = useState(false) // input value
@@ -289,6 +327,7 @@ const User = ({ userAds, setUserAds }) => {
     // push or pull equipment item, auto fire when some equipment is add/remove
     const equipmentOnChangeHandler = (item, isChecked) => {
         isChecked ? equipmentChosen.push(item) : equipmentChosen.splice(equipmentChosen.findIndex(i => i === item), 1)
+        console.log("equipmentChosen: ", equipmentChosen);
     }
 
     // input title Handler
@@ -345,7 +384,10 @@ const User = ({ userAds, setUserAds }) => {
         if (!image) { return }
 
         // if file is not image then return
-        if (image.type.split("/")[0] !== 'image') { return }
+        if (image.type.split("/")[0] !== 'image') {
+            setIsAlertSmallShow({ alertIcon: 'info', description: 'To nie jest zdjęcie.', animationTime: '2', borderColor: 'orange' })
+            return
+        }
 
         // set progress bar visibile if index !== -1 => index -1 is for smallImageURL
         if (index !== -1) {
@@ -490,32 +532,51 @@ const User = ({ userAds, setUserAds }) => {
         setId("")
         setMainCategory(mainCategories[0].nameDB)
         setTypeChosen("")
+        setTypeChosenValidation("")
         setYearChosen("")
+        setYearChosenValidation("")
         setAdTitle("")
+        setAdTitleValidation(0)
         setImage(image.map(() => null)) // clear image holder
         setImageURL(imageURL.map(() => null)) // clear image URL holder
         setSmallImageURL("") // clear small image URL holder
         setInputDescription("")
+        setInputDescriptionValidation(0)
         setTechKnowledge("")
+        setTechKnowledgeValidation("")
         setPriceOfMeeting("")
+        setPriceOfMeetingValidation("")
         setTimeOfDay("")
+        setTimeOfDayValidation("")
         setRegionChosen("")
+        setRegionChosenValidation("")
         setCityChosen("")
+        setCityChosenValidation("")
         setInputName("")
+        setInputNameValidation("")
         setInputEmail("")
+        setInputEmailValidation("")
         setInputPhone("")
-        setTimeValidation(30)
+        setTimeValidationAdDayCount(30)
         setIsPromoted(false)
         setInputAgreenent(false)
+        setAgreenentValidation(false)
 
         // only car category
         setCarIdChosen("")
+        setCarIdChosenValidation("")
         setCarModelChosen("")
+        setCarModelChosenValidation("")
         setFuelChosen("")
+        setFuelChosenValidation("")
         setGearboxChosen("")
+        setGearboxChosenValidation("")
         setMileageChosen("")
+        setMileageChosenValidation("")
         setCapacityChosen("")
+        setCapacityChosenValidation("")
         setPowerChosen("")
+        setPowerChosenValidation("")
         equipmentChosen = []
 
         // close item form
@@ -533,9 +594,11 @@ const User = ({ userAds, setUserAds }) => {
         setTypeChosen(item.typeChosen)
         setYearChosen(item.yearChosen)
         setAdTitle(item.adTitle)
+        setAdTitleValidation(item.adTitle.length)
         setImageURL(item.imageURL) // all images URL in array
         setSmallImageURL(item.smallImageURL) // small image to show only in list of ads
         setInputDescription(item.inputDescription)
+        setInputDescriptionValidation(item.inputDescription.length)
         setTechKnowledge(item.techKnowledge)
         setPriceOfMeeting(item.priceOfMeeting)
         setTimeOfDay(item.timeOfDay)
@@ -544,7 +607,7 @@ const User = ({ userAds, setUserAds }) => {
         setInputName(item.inputName)
         setInputEmail(item.inputEmail)
         setInputPhone(item.inputPhone)
-        setTimeValidation(item.timeValidation)
+        setTimeValidationAdDayCount(item.timeValidationAdDayCount)
         setIsPromoted(item.isPromoted) // when edit mut be the same
         setInputAgreenent(item.inputAgreenent) // when edit must be the same
 
@@ -612,9 +675,7 @@ const User = ({ userAds, setUserAds }) => {
         }
 
 
-
         //rest all
-
         if (!typeChosen) {
             setTypeChosenValidation(NIE_WYBRANO)
             allValidations = false
@@ -681,6 +742,12 @@ const User = ({ userAds, setUserAds }) => {
     // get data from form
     const getDataFromForm = () => {
 
+        // take lat and lng 
+        const cityChosenLat = cities.find(i => i.city === cityChosen).lat // city latitude for query range
+        const cityChosenLng = cities.find(i => i.city === cityChosen).lng // city longitude for query range
+        console.log("v: ", cityChosenLat);
+        //console.log("geofire: ", geofire);
+
         // object to save in DB => OK
         const formObject = {
 
@@ -689,7 +756,7 @@ const User = ({ userAds, setUserAds }) => {
             isApproved
             isApprovedReason
             createDate
-            timeValidationDate - number days change from timeValidation
+            timeValidationDate - number days change from timeValidationAdDayCount
             */
 
             // data for all ads
@@ -709,12 +776,13 @@ const User = ({ userAds, setUserAds }) => {
             timeOfDay: timeOfDay, // index excluded in cars collection
             regionChosen: regionChosen,
             cityChosen: cityChosen,
-            cityChosenLat: cities.find(i => i.city === cityChosen).lat, // city latitude for query range
-            cityChosenLng: cities.find(i => i.city === cityChosen).lng, // city longitude for query range
+            cityChosenLat: cityChosenLat, // city latitude for query range
+            cityChosenLng: cityChosenLng, // city longitude for query range
+            //cityGeohash: geofire.geohashForLocation([cityChosenLat, cityChosenLng]), // geohash for city filters (filters not ready but added for future)
             inputName: inputName, // index excluded in cars collection
             inputEmail: inputEmail, // index excluded in cars collection
             inputPhone: inputPhone, // index excluded in cars collection
-            timeValidation: timeValidation,
+            timeValidationAdDayCount: timeValidationAdDayCount,
             isPromoted: isPromoted, // user set promoted or not
             inputAgreenent: inputAgreenent, // index excluded in cars collection
 
@@ -762,7 +830,7 @@ const User = ({ userAds, setUserAds }) => {
             inputName: "Janek",
             inputEmail: "janek@janek.com",
             inputPhone: "100-200-300",
-            timeValidation: 30,
+            timeValidationAdDayCount: 30,
             isPromoted: false, // user set promoted or not
             inputAgreenent: true,
 
@@ -831,6 +899,9 @@ const User = ({ userAds, setUserAds }) => {
         //check if data in form is valid
         if (!checkFormValidation()) { return }
 
+        // get object with all data - usunąć parametr z funkcji i to włączyć
+        //const formObject = getDataFromForm()
+
         //clear ads list before load
         setUserAds([])
 
@@ -888,11 +959,11 @@ const User = ({ userAds, setUserAds }) => {
         // show main spinner
         setIsMainSpinnerShow(true)
 
-        // clear all data from form and close
-        clearAllDataFromFormAndClose()
-
         // get data from form
         const formObject = getDataFromForm()
+
+        // clear all data from form and close
+        clearAllDataFromFormAndClose()
 
         // create obj in DB - call backend
         const editAd = functions.httpsCallable('editAd')
@@ -1358,23 +1429,23 @@ const User = ({ userAds, setUserAds }) => {
                                         <div className={style.ad_checkBoxContainer}>
                                             <p className={style.ad__labelCheckBoxLeftPaddingNull}>Ważność ogłoszenia: </p>
 
-                                            <input checked={1 === timeValidation} name="timeValidation" value="1" onChange={() => setTimeValidation(1)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={1 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="1" onChange={() => setTimeValidationAdDayCount(1)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>1 dzień</label>
 
-                                            <input checked={14 === timeValidation} name="timeValidation" value="14" onChange={() => setTimeValidation(14)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={14 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="14" onChange={() => setTimeValidationAdDayCount(14)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>14 dni</label>
 
-                                            <input checked={30 === timeValidation} name="timeValidation" value="30" onChange={() => setTimeValidation(30)} className={style.ad__inputCheckBox} type='radio' />
+                                            <input checked={30 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="30" onChange={() => setTimeValidationAdDayCount(30)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>30 dni</label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
-                                            <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' />
-                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidation === 30 ? 2 : 1}zł.`}</b></label>
+                                            <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' checked={isPromoted} />
+                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidationAdDayCount === 30 ? 2 : 1}zł.`}</b></label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
-                                            <input onChange={event => setInputAgreenent(event.target.checked ? true : false)} className={`${style.ad__inputCheckBox} ${inputAgreenentValidation && style.ad__inputCheckBoxValidation}`} type='checkbox' />
+                                            <input onChange={event => setInputAgreenent(event.target.checked ? true : false)} className={`${style.ad__inputCheckBox} ${inputAgreenentValidation && style.ad__inputCheckBoxValidation}`} type='checkbox' checked={inputAgreenent} />
                                             <label className={style.ad__labelCheckBox}>Zapoznałem się i akceptuję <a href="/privacy-policy">regulamin serwisu</a> oraz <a href="/privacy-policy">politykę prywatności</a>.</label>
                                             <p className={style.ad__itemDescValidation}>{inputAgreenentValidation}</p>
                                         </div>
