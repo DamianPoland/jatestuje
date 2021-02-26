@@ -41,12 +41,12 @@ const Nav = ({ isLogin }) => {
                     {/* ad or user acount */}
                     {isLoginFromStorage
                         ? <li className={style.listItem}><NavLink to='/user' activeClassName={style.activeLink} className={style.listItemAnchor}>Moje konto</NavLink></li>
-                        : <li className={style.listItem}><NavLink to='/user' className={style.listItemAnchorAd}>Dodaj ogłoszenie</NavLink></li>
-                    }
+                        : <li className={style.listItem}><NavLink to='/user' className={style.listItemAnchorAd}>Dodaj ogłoszenie</NavLink></li>}
 
                     {/* sign out button*/}
                     {isLoginFromStorage
-                        && <li className={style.listItem}><NavLink to='/home' onClick={() => auth.signOut()} className={style.listItemAnchor}>Wyloguj</NavLink></li>}
+                        ? <li className={style.listItem}><NavLink to='/home' onClick={() => auth.signOut()} className={style.listItemAnchor}>Wyloguj</NavLink></li>
+                        : <li className={style.listItem}><NavLink to='/user' className={style.listItemAnchor}>Zaloguj</NavLink></li>}
                 </ul>
                 <div onClick={() => setIsOpenMobileMenu(!isOpenMobileMenu)} className={`${style.burgerMenu} ${styleMobileButtonBurger}`}>
                     <div className={style.burgerBtn}></div>

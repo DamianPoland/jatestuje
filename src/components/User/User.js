@@ -77,22 +77,16 @@ const User = ({ userAds, setUserAds }) => {
     // get user ads when start comopnent
     useEffect(() => {
 
-
-        // Create a GeoFirestore reference
-        const GeoFirestore = geofirestore.initializeApp(firestore);
-
-        // Create a GeoCollection reference
-        const geocollection = GeoFirestore.collection('restaurants');
-
-        // Add a GeoDocument to a GeoCollection
-        geocollection.add({
-            name: 'Geofirestore',
-            score: 100,
-            // The coordinates field must be a GeoPoint!
-            coordinates: new firebase.firestore.GeoPoint(40.7589, 73.9851)
+        // stworzenie geopunktu idodanie do kolekcji
+        const GeoFirestore = geofirestore.initializeApp(firestore) // Tworzy referencję GeoFirestore do bazy danych firestore
+        const geocollection = GeoFirestore.collection('restaurants') // Tworzy referencję GeoFirestore do kolecji w firestore
+        geocollection.add({ // dodaje nowy dokument z moimi danymi i danymi geofire do kolekcji, key dokumenu jest automatyczny
+            name: 'Geofirestore', // jakieś dane moje
+            score: 100, // jakieś dane moje
+            coordinates: new firebase.firestore.GeoPoint(40.7589, 73.9851) // Automatycznie tworzy dane GeoPoint czyli lat, lng i geohash
         })
 
-        // Create a GeoQuery based on a location
+        // stworzenie GeoQuery
         const query = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, 73.9851), radius: 1000 });
 
 
@@ -114,6 +108,7 @@ const User = ({ userAds, setUserAds }) => {
             getUserAds()
             setIsMainSpinnerShow(true)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get user ads
@@ -125,8 +120,6 @@ const User = ({ userAds, setUserAds }) => {
         // get document with user ads
         firestore.collection(USERS).doc(localStorage.getItem(UID)).collection(ADS).doc(ADS).get()
             .then(resp => {
-
-                console.log("resp____________before", resp.data());
 
                 // if no data then stop
                 if (!resp.data()) {
@@ -146,8 +139,6 @@ const User = ({ userAds, setUserAds }) => {
                 // get ads from collections
                 dataArray.forEach(item => {
 
-                    console.log("item: ", item)
-
                     //get collection name as main category
                     const collectionName = item.split(" ")[0]
 
@@ -157,6 +148,8 @@ const User = ({ userAds, setUserAds }) => {
 
                             // if response is not undefined
                             resp.data() && setUserAds(prevState => [...prevState, resp.data()])
+
+                            //item.adData.mainCategory
                         })
                         .catch(err => {
 
@@ -587,39 +580,39 @@ const User = ({ userAds, setUserAds }) => {
     const setDataToForm = item => {
 
         // data for all ads
-        setId(item.id)// unique ID is always the same as document Key in DB, 
-        setMainCategory(item.mainCategory) // main category of ad
+        setId(item.adData.id)// unique ID is always the same as document Key in DB, 
+        setMainCategory(item.adData.mainCategory) // main category of ad
 
         // all ads from form
-        setTypeChosen(item.typeChosen)
-        setYearChosen(item.yearChosen)
-        setAdTitle(item.adTitle)
-        setAdTitleValidation(item.adTitle.length)
-        setImageURL(item.imageURL) // all images URL in array
-        setSmallImageURL(item.smallImageURL) // small image to show only in list of ads
-        setInputDescription(item.inputDescription)
-        setInputDescriptionValidation(item.inputDescription.length)
-        setTechKnowledge(item.techKnowledge)
-        setPriceOfMeeting(item.priceOfMeeting)
-        setTimeOfDay(item.timeOfDay)
-        setRegionChosen(item.regionChosen)
-        setCityChosen(item.cityChosen)
-        setInputName(item.inputName)
-        setInputEmail(item.inputEmail)
-        setInputPhone(item.inputPhone)
-        setTimeValidationAdDayCount(item.timeValidationAdDayCount)
-        setIsPromoted(item.isPromoted) // when edit mut be the same
-        setInputAgreenent(item.inputAgreenent) // when edit must be the same
+        setTypeChosen(item.itemData.typeChosen)
+        setYearChosen(item.itemData.yearChosen)
+        setAdTitle(item.itemDescription.adTitle)
+        setAdTitleValidation(item.itemDescription.adTitle.length)
+        setImageURL(item.itemDescription.imageURL) // all images URL in array
+        setSmallImageURL(item.itemDescription.smallImageURL) // small image to show only in list of ads
+        setInputDescription(item.itemDescription.inputDescription)
+        setInputDescriptionValidation(item.itemDescription.inputDescription.length)
+        setTechKnowledge(item.meetingDescription.techKnowledge)
+        setPriceOfMeeting(item.meetingDescription.priceOfMeeting)
+        setTimeOfDay(item.meetingDescription.timeOfDay)
+        setRegionChosen(item.userData.regionChosen)
+        setCityChosen(item.userData.cityChosen)
+        setInputName(item.userData.inputName)
+        setInputEmail(item.userData.inputEmail)
+        setInputPhone(item.userData.inputPhone)
+        setTimeValidationAdDayCount(item.adData.timeValidationAdDayCount)
+        setIsPromoted(item.adData.isPromoted) // when edit mut be the same
+        setInputAgreenent(item.adData.inputAgreenent) // when edit must be the same
 
         // only car category
-        setCarIdChosen(item.carIdChosen)
-        setCarModelChosen(item.carModelChosen)
-        setFuelChosen(item.fuelChosen)
-        setGearboxChosen(item.gearboxChosen)
-        setMileageChosen(item.mileageChosen)
-        setCapacityChosen(item.capacityChosen)
-        setPowerChosen(item.powerChosen)
-        equipmentChosen = item.equipmentChosen
+        setCarIdChosen(item.itemData.carIdChosen)
+        setCarModelChosen(item.itemData.carModelChosen)
+        setFuelChosen(item.itemData.fuelChosen)
+        setGearboxChosen(item.itemData.gearboxChosen)
+        setMileageChosen(item.itemData.mileageChosen)
+        setCapacityChosen(item.itemData.capacityChosen)
+        setPowerChosen(item.itemData.powerChosen)
+        equipmentChosen = item.itemData.equipmentChosen
     }
 
 
@@ -742,59 +735,64 @@ const User = ({ userAds, setUserAds }) => {
     // get data from form
     const getDataFromForm = () => {
 
-        // take lat and lng 
-        const cityChosenLat = cities.find(i => i.city === cityChosen).lat // city latitude for query range
-        const cityChosenLng = cities.find(i => i.city === cityChosen).lng // city longitude for query range
-        console.log("v: ", cityChosenLat);
-        //console.log("geofire: ", geofire);
-
         // object to save in DB => OK
         const formObject = {
 
             /*elements added in backend :
-            userId
-            isApproved
-            isApprovedReason
-            createDate
-            timeValidationDate - number days change from timeValidationAdDayCount
+            userData: {userId}
+            adData: { isApproved, isApprovedReason, createDate, timeValidationDate (number days change from timeValidationAdDayCount)}
             */
 
             // data for all ads
-            id: id, // unique ID is always the same as document Key in DB, first part of id is collection name, second is adding date, third is time 1970 ,fourth is random string
-            mainCategory: mainCategory, // main category of ad
-            userPhoto: auth.currentUser.photoURL, // user login photo from login social media  // index excluded in cars collection
 
-            // all ads from form
-            typeChosen: typeChosen,
-            yearChosen: yearChosen,
-            adTitle: adTitle,  // index excluded in cars collection
-            imageURL: imageURL, // all images URL in array // index excluded
-            smallImageURL: smallImageURL, // small image to show only in list of ads  // index excluded
-            inputDescription: inputDescription, // index excluded in cars collection
-            techKnowledge: techKnowledge, // index excluded in cars collection
-            priceOfMeeting: priceOfMeeting, // index excluded in cars collection
-            timeOfDay: timeOfDay, // index excluded in cars collection
-            regionChosen: regionChosen,
-            cityChosen: cityChosen,
-            cityChosenLat: cityChosenLat, // city latitude for query range
-            cityChosenLng: cityChosenLng, // city longitude for query range
-            //cityGeohash: geofire.geohashForLocation([cityChosenLat, cityChosenLng]), // geohash for city filters (filters not ready but added for future)
-            inputName: inputName, // index excluded in cars collection
-            inputEmail: inputEmail, // index excluded in cars collection
-            inputPhone: inputPhone, // index excluded in cars collection
-            timeValidationAdDayCount: timeValidationAdDayCount,
-            isPromoted: isPromoted, // user set promoted or not
-            inputAgreenent: inputAgreenent, // index excluded in cars collection
+            itemData: { // index excluded in cars collection
 
-            // only car category from form
-            carIdChosen: carIdChosen,
-            carModelChosen: carModelChosen,
-            fuelChosen: fuelChosen, // index excluded in cars collection
-            gearboxChosen: gearboxChosen, // index excluded in cars collection
-            mileageChosen: mileageChosen, // index excluded in cars collection
-            capacityChosen: capacityChosen, // index excluded in cars collection
-            powerChosen: powerChosen, // index excluded in cars collection
-            equipmentChosen: equipmentChosen, // index excluded in cars collection
+                // all ads from form
+                typeChosen: typeChosen,
+                yearChosen: yearChosen,
+
+                // only car category from form
+                carIdChosen: carIdChosen,
+                carModelChosen: carModelChosen,
+                fuelChosen: fuelChosen,
+                gearboxChosen: gearboxChosen,
+                mileageChosen: mileageChosen,
+                capacityChosen: capacityChosen,
+                powerChosen: powerChosen,
+                equipmentChosen: equipmentChosen,
+            },
+
+
+            itemDescription: { // index excluded in cars collection
+                adTitle: adTitle,
+                imageURL: imageURL, // all images URL in array // index excluded
+                smallImageURL: smallImageURL, // small image to show only in list of ads
+                inputDescription: inputDescription,
+            },
+
+            meetingDescription: { // index excluded in cars collection
+                techKnowledge: techKnowledge,
+                priceOfMeeting: priceOfMeeting,
+                timeOfDay: timeOfDay,
+            },
+
+            userData: { // index excluded in cars collection
+                userPhoto: auth.currentUser.photoURL, // user login photo from login social media
+                regionChosen: regionChosen,
+                cityChosen: cityChosen,
+                inputName: inputName,
+                inputEmail: inputEmail,
+                inputPhone: inputPhone,
+            },
+
+            adData: { // index excluded in cars collection
+                id: id, // unique ID is always the same as document Key in DB, Contains => 1. collection name, 2. adding date, 3. time 1970 ,4. random string
+                mainCategory: mainCategory, // main category of ad
+                timeValidationAdDayCount: timeValidationAdDayCount,
+                isPromoted: isPromoted, // user set promoted or not
+                inputAgreenent: inputAgreenent,
+            },
+
 
         }
         console.log(formObject)
@@ -805,45 +803,54 @@ const User = ({ userAds, setUserAds }) => {
     // get FAKE data 
     const getFAKEDataFromForm = () => {
         const formObject = {
-            id: `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`,
-            mainCategory: mainCategory,
-            userPhoto: auth.currentUser.photoURL,
 
-            // all ads from form
-            typeChosen: "Hatchback",
-            yearChosen: "2016",
-            adTitle: "50 znaków Lorem ipsum dolor sit amet consec adipis",
+            itemData: {
 
-            imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-23%201614092038509%20kl4bu92wsb%2F0?alt=media&token=825ad235-2964-4524-9153-6956a297339a"],
+                // all ads from form
+                typeChosen: "Hatchback",
+                yearChosen: "2020",
 
-            smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FrbtRE6xzkYX6iXv27Fp6xRxlFep1%2Fcars%202021-2-23%201614092038509%20kl4bu92wsb%2F-1?alt=media&token=7292042e-7791-45f2-8b4b-400c14b30f39",
+                // only car category from form
+                carIdChosen: "bmw",
+                carModelChosen: "Seria 3",
+                fuelChosen: "Diesel", // index excluded in cars collection
+                gearboxChosen: "Manualna", // index excluded in cars collection
+                mileageChosen: "50-100", // index excluded in cars collection
+                capacityChosen: "2700", // index excluded in cars collection
+                powerChosen: "90", // index excluded in cars collection
+                equipmentChosen: ["onBoardComputer"], // index excluded in cars collection
+            },
 
-            inputDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta deserunt eveniet sed officiis velit accusantium illo vitae in sunt reiciendis repellendus officia minima itaque, asperiores nobis voluptates odit quae impedit. Maiores unde quis inventore optio officia? Assumenda pariatur est, excepturi provident aliquam recusandae nisi incidunt et praesentium.Obcaecati, porro maxime.",
 
-            techKnowledge: "Dobra",
-            priceOfMeeting: "150",
-            timeOfDay: "codziennie",
-            regionChosen: "pomorskie",
-            cityChosen: "Gdańsk",
-            cityChosenLat: cities.find(i => i.city === "Gdańsk").lat, // city latitude for query range
-            cityChosenLng: cities.find(i => i.city === "Gdańsk").lng, // city longitude for query range
-            inputName: "Janek",
-            inputEmail: "janek@janek.com",
-            inputPhone: "100-200-300",
-            timeValidationAdDayCount: 30,
-            isPromoted: false, // user set promoted or not
-            inputAgreenent: true,
+            itemDescription: {
+                adTitle: "OSOBOWE 50 znaków Lorem ipsum dolor sit aec adipis",  // index excluded in cars collection
+                imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FO3vuzsnjybMrpWQEt5UhiO4uPek1%2Fcars%202021-2-26%201614369647630%20r75kfl9mj%2F0?alt=media&token=c59d35ff-458e-46d1-89b8-343707c6efe2"], // all images URL in array // index excluded
+                smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FO3vuzsnjybMrpWQEt5UhiO4uPek1%2Fcars%202021-2-26%201614369647630%20r75kfl9mj%2F-1?alt=media&token=bf31f084-c475-421d-817d-b0a9085ac4ed", // small image to show only in list of ads  // index excluded
+                inputDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta deserunt eveniet sed officiis velit accusantium illo vitae in sunt reiciendis repellendus officia minima itaque, asperiores nobis voluptates odit quae impedit. Maiores unde quis inventore optio officia? Assumenda pariatur est, excepturi provident aliquam recusandae nisi incidunt et praesentium. Obcaecati, porro maxime.", // index excluded in cars collection
+            },
 
-            // only car category from form
-            carIdChosen: "bmw",
-            carModelChosen: "M3",
-            fuelChosen: "Diesel",
-            gearboxChosen: "Manualna",
-            mileageChosen: "0-50",
-            capacityChosen: "2800",
-            powerChosen: "150",
-            equipmentChosen: ["electricWindows", "airConditioning", "multifunctionWheel", "xenonLights"]
+            meetingDescription: {
+                techKnowledge: "Dobra", // index excluded in cars collection
+                priceOfMeeting: "150", // index excluded in cars collection
+                timeOfDay: "zawsze", // index excluded in cars collection
+            },
 
+            userData: {
+                userPhoto: "https://lh5.googleusercontent.com/-EzRg2MRmQ7U/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclO9YakK8o2F7vB4MTNVchsIiYDxg/s96-c/photo.jpg", // user login photo from login social media  // index excluded in cars collection
+                regionChosen: "pomorskie",
+                cityChosen: "Gdynia",
+                inputName: "Jan", // index excluded in cars collection
+                inputEmail: "jan@jan.com", // index excluded in cars collection
+                inputPhone: "100-220-300", // index excluded in cars collection
+            },
+
+            adData: {
+                id: `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`,
+                mainCategory: 'cars', // main category of ad
+                timeValidationAdDayCount: 30,
+                isPromoted: false, // user set promoted or not
+                inputAgreenent: true, // index excluded in cars collection
+            },
         }
         console.log(formObject)
 
@@ -897,7 +904,7 @@ const User = ({ userAds, setUserAds }) => {
     const sendAddItemToDB = (formObject = getDataFromForm()) => {
 
         //check if data in form is valid
-        if (!checkFormValidation()) { return }
+        //if (!checkFormValidation()) { return }
 
         // get object with all data - usunąć parametr z funkcji i to włączyć
         //const formObject = getDataFromForm()
@@ -910,6 +917,8 @@ const User = ({ userAds, setUserAds }) => {
 
         // clear all data from form and close
         clearAllDataFromFormAndClose()
+
+        console.log("item: ", formObject)
 
         // create obj in DB - call backend
         const createAd = functions.httpsCallable('createAd')
@@ -1110,51 +1119,51 @@ const User = ({ userAds, setUserAds }) => {
 
                                 {userAds.map(item => {
                                     return (
-                                        <div key={item.id} className={style.user__item}>
+                                        <div key={item.adData.id} className={style.user__item}>
 
                                             <figure className={style.user__itemFigure}>
-                                                <img className={style.user__itemImg} src={item.smallImageURL || PhotoEmpty} alt="main ad" onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} />
+                                                <img className={style.user__itemImg} src={item.itemDescription.smallImageURL || PhotoEmpty} alt="main ad" onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} />
                                             </figure>
 
                                             <div className={style.user__itemDescContainer}>
                                                 <div className={style.user__itemDescTop}>
-                                                    <p className={style.user__itemText}>{item.adTitle}</p>
+                                                    <p className={style.user__itemText}>{item.itemDescription.adTitle}</p>
                                                 </div>
 
                                                 <div className={style.user__itemDescTop}>
                                                     <div className={style.user__itemDescTopLeft}>
-                                                        <p className={style.user__itemText}>{mainCategories.find(i => i.nameDB === item.mainCategory).name}:</p>
+                                                        <p className={style.user__itemText}>{mainCategories.find(i => i.nameDB === item.adData.mainCategory).name}:</p>
 
                                                         {item.carIdChosen
                                                             ? <div className={style.flexRow}>
-                                                                <p className={style.user__itemText}>{mainCategories[0].brand.find(i => i.id === item.carIdChosen).name}</p>
-                                                                <p className={style.user__itemText}>{item.carModelChosen}</p>
+                                                                <p className={style.user__itemText}>{mainCategories[0].brand.find(i => i.id === item.itemData.carIdChosen).name}</p>
+                                                                <p className={style.user__itemText}>{item.itemData.carModelChosen}</p>
                                                             </div>
-                                                            : <p className={style.user__itemText}>{item.typeChosen}</p>
+                                                            : <p className={style.user__itemText}>{item.itemData.typeChosen}</p>
                                                         }
 
                                                     </div>
                                                     <div className={style.user__itemDescTopRight} >
-                                                        <p className={style.user__itemText}>{item.priceOfMeeting} zł/h</p>
+                                                        <p className={style.user__itemText}>{item.meetingDescription.priceOfMeeting} zł/h</p>
                                                     </div>
                                                 </div>
 
-                                                {item.isApproved
+                                                {item.adData.isApproved
                                                     ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Zaakceptowane</p>
-                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Brak akceptacji: ${item.isApprovedReason}`}</p>}
+                                                    : <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>{`Brak akceptacji: ${item.adData.isApprovedReason}`}</p>}
 
-                                                {new Date().getTime() <= item.timeValidationDate
-                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.timeValidationDate)} </p>
+                                                {new Date().getTime() <= item.adData.timeValidationDate
+                                                    ? <p className={style.user__itemDescMiddleText} style={{ color: "green" }}>Ważność ogłoszenia: {dayTextConverter(item.adData.timeValidationDate)} </p>
 
                                                     : <div className={style.user__itemDescBottom}>
                                                         <p className={style.user__itemDescMiddleText} style={{ color: "red" }}>Ogłoszenie nieważne</p>
                                                         <button className={style.user__itemButton} onClick={e => prepareRefreshItemFromDB(e, item)}>przedłuż ważność</button>
                                                     </div>}
 
-                                                {item.isPromoted && <p className={style.user__itemDescMiddleText} style={{ color: "blue" }}>Promowane</p>}
+                                                {item.adData.isPromoted && <p className={style.user__itemDescMiddleText} style={{ color: "blue" }}>Promowane</p>}
 
                                                 <div className={style.user__itemDescBottom}>
-                                                    <Link className={style.user__itemButton} to={`/offer/${item.id}`}>zobacz</Link>
+                                                    <Link className={style.user__itemButton} to={`/offer/${item.adData.id}`}>zobacz</Link>
                                                     <button className={style.user__itemButton} onClick={e => prepareEditItemFromDB(e, item)}>edytuj</button>
                                                     <button className={style.user__itemButton} onClick={e => deleteItemFromDB(e, item)}>usuń</button>
                                                 </div>

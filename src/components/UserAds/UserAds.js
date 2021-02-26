@@ -46,9 +46,10 @@ const UserAds = props => {
                 getUserAdsArray.forEach(doc => {
                     const firebaseGetEveryUserAd = async () => {
                         try {
+
                             const firestoreGetUserAds = await firestore.collection(doc.split(" ")[0]).doc(doc).get()
                             // eslint-disable-next-line no-unused-vars
-                            const ex = firestoreGetUserAds.data().isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
+                            const ex = firestoreGetUserAds.data().adData.isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
 
                         } catch (err) {
 
@@ -101,7 +102,7 @@ const UserAds = props => {
                     <p className={style.title}>Wszystkie ogłoszenia użytkownika</p>
                     {allAds.map(item => { // show only approved ads
                         return (
-                            <ListItemAd key={item.id} item={item} />
+                            <ListItemAd key={item.adData.id} item={item} />
                         )
                     })
                     }

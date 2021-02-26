@@ -24,6 +24,9 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
     // Spinner
     const [isMainSpinnerShow, setIsMainSpinnerShow] = useState(false)
 
+    // Spinner
+    const [isNextButtonShow, setIsNextButtonShow] = useState(true)
+
 
     // ----------------------- START CATEGORIES --------------------------//
 
@@ -45,6 +48,9 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
         setYearToChosen("")
         setTypeChosen("")
         setTypeChosen("")
+
+        // show next button when no more ads
+        setIsNextButtonShow(true)
     }
 
     // ----------------------- STOP CATEGORIES --------------------------//
@@ -77,12 +83,15 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
     useEffect(() => {
         // start query if allAds is empty
         allAds.length === 0 && queryToDB(true)
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mainCategory])
 
 
     // query to DB for items
     const queryToDB = async (firstLoad) => {
+
+        // limit ads on one load
+        const limitLoadAds = 5
 
         // production years - get range of years, can't be more than 10 items in array because firebase can't handle that
         let prodYears = yearsProdBasic
@@ -103,20 +112,27 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
         let queryConstructor = firestore.collection(mainCategory)
 
         // filters for car category only
-        carIdChosen && (queryConstructor = queryConstructor.where("carIdChosen", "==", `${carIdChosen}`))
-        carModelChosen && (queryConstructor = queryConstructor.where("carModelChosen", "==", `${carModelChosen}`))
+        carIdChosen && (queryConstructor = queryConstructor.where("itemData.carIdChosen", "==", `${carIdChosen}`))
+        carModelChosen && (queryConstructor = queryConstructor.where("itemData.carModelChosen", "==", `${carModelChosen}`))
 
         // filters use for all categories
-        regionChosen && !cityChosen && (queryConstructor = queryConstructor.where("regionChosen", "==", `${regionChosen}`)) // region if city is empty
-        cityChosen && (queryConstructor = queryConstructor.where("cityChosen", "==", cityChosen)) // only city - no region
-        typeChosen && (queryConstructor = queryConstructor.where("typeChosen", "==", `${typeChosen}`))
+        regionChosen && !cityChosen && (queryConstructor = queryConstructor.where("userData.regionChosen", "==", `${regionChosen}`)) // region if city is empty
+        cityChosen && (queryConstructor = queryConstructor.where("userData.cityChosen", "==", cityChosen)) // only city - no region
+        typeChosen && (queryConstructor = queryConstructor.where("itemData.typeChosen", "==", `${typeChosen}`))
 
         // main filters added always
-        queryConstructor = queryConstructor.where("yearChosen", "in", prodYears) // production years array - not more then 10 items
-        queryConstructor = queryConstructor.where("isApproved", "==", true) // only approwed ads
-        queryConstructor = queryConstructor.orderBy("createDate", 'desc') // sort in field createDate, 'desc' - get from the newest to oldest
-        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : allAds[allAds.length - 1]?.createDate) // get ads from newest or last displayed
-        queryConstructor = queryConstructor.limit(5) // how many items be loaded from DB on one time
+        queryConstructor = queryConstructor.where("itemData.yearChosen", "in", prodYears) // production years array - not more then 10 items
+        queryConstructor = queryConstructor.where("adData.isApproved", "==", true) // only approwed ads
+        queryConstructor = queryConstructor.orderBy("adData.createDate", 'desc') // sort in field createDate, 'desc' - get from the newest to oldest
+        queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : allAds[allAds.length - 1]?.adData.createDate) // get ads from newest or last displayed
+        queryConstructor = queryConstructor.limit(limitLoadAds) // how many items be loaded from DB on one time
+
+        // show next button when no more ads
+        setIsNextButtonShow(true)
+
+        // ads count for button next to load ads
+        let adsCount = 0
+
 
         try {
             const query = await queryConstructor.get()
@@ -124,20 +140,23 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
             query.forEach(doc => {
 
                 // show ONLY ads valid, not older than today and tyrn off button
-                if (doc.data().timeValidationDate <= (new Date().getTime())) {
+                if (doc.data().adData.timeValidationDate <= (new Date().getTime())) {
 
                     // TODO turn off button nastęne
 
                     return
                 }
 
+                // increse ads count in this query
+                adsCount += 1
+
                 // add new ads to State
                 setAllAds(prevState => [...prevState, doc.data()])
 
                 // promoted ad put extra on top, change id because Each child in a list should have a unique "key", in list key = id + createDate
-                if (doc.data().isPromoted === true) {
+                if (doc.data().adData.isPromoted === true) {
                     const item = { ...doc.data() }
-                    item.createDate = `${item.createDate}1` // add only space because can't change url in browser to ad
+                    item.adData.createDate = `${item.adData.createDate}1` // add only space because can't change url in browser to ad
                     setAllAds(prevState => [item, ...prevState])
                 }
             })
@@ -150,6 +169,10 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
 
             // hide main spinner
             setIsMainSpinnerShow(false)
+
+            // hide next button when no more ads
+            adsCount < limitLoadAds && setIsNextButtonShow(false)
+
         }
     }
 
@@ -278,13 +301,14 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
                         ? <div>
                             {allAds.map((item) => {
                                 return (
-                                    <ListItemAd key={`${item.id}${item.createDate}`} item={item} />
+                                    <ListItemAd key={`${item.adData.id}${item.adData.createDate}`} item={item} />
                                 )
                             })
                             }
-                            <div className={style.btnContainerBottom}>
-                                <button className={style.btn} onClick={() => queryToDB(false)}>Następne</button>
-                            </div>
+                            {isNextButtonShow
+                                && <div className={style.btnContainerBottom}>
+                                    <button className={style.btn} onClick={() => queryToDB(false)}>Następne</button>
+                                </div>}
                         </div>
                         : <div className={`${style.ads__emptyContainer} ${isMainSpinnerShow && style.ads__emptyContainerOpacity}`}>
 

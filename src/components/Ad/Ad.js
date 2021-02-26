@@ -56,7 +56,7 @@ const Ad = props => {
                 setOneAd(resp.data())
 
                 // set first photo as mine
-                setMainPhoto(resp.data().imageURL[0])
+                setMainPhoto(resp.data().itemDescription.imageURL[0])
             })
             .catch(err => {
                 console.log('listener err', err)
@@ -133,7 +133,7 @@ const Ad = props => {
                                 </figure>
 
                                 <div className={style.photos__containerSmall}>
-                                    {oneAd.imageURL.map((item, id) => {
+                                    {oneAd.itemDescription.imageURL.map((item, id) => {
                                         return (
                                             item &&
                                             <figure className={`${style.photos__figureSmall} ${mainPhoto === item && style.photos__figureSmallBorder}`} key={id}>
@@ -145,10 +145,10 @@ const Ad = props => {
                             </div>
 
                             <div className={style.photos__descRight}>
-                                <p className={style.photos__itemTextPrice}>{oneAd.priceOfMeeting} zł/h</p>
+                                <p className={style.photos__itemTextPrice}>{oneAd.meetingDescription.priceOfMeeting} zł/h</p>
                                 <div className={style.photos__itemDescRightContainerRegion}>
-                                    <p className={style.photos__itemTextRegion}>woj. {oneAd.regionChosen},</p>
-                                    <p className={style.photos__itemTextRegion}>Miasto: {oneAd.cityChosen}</p>
+                                    <p className={style.photos__itemTextRegion}>woj. {oneAd.userData.regionChosen},</p>
+                                    <p className={style.photos__itemTextRegion}>Miasto: {oneAd.userData.cityChosen}</p>
                                 </div>
                             </div>
                         </div>
@@ -159,20 +159,20 @@ const Ad = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Dane:</p>
                         <div className={style.desc__container}>
-                            {oneAd.carIdChosen && <p className={style.desc__text}>Marka: <b>{mainCategories[0].brand.find(i => i.id === oneAd.carIdChosen).name}</b></p>}
-                            {oneAd.carModelChosen && <p className={style.desc__text}>Model: <b>{oneAd.carModelChosen}</b></p>}
-                            {oneAd.yearChosen && <p className={style.desc__text}>Rok produkcji: <b>{oneAd.yearChosen}</b></p>}
-                            {oneAd.fuelChosen && <p className={style.desc__text}>Paliwo: <b>{oneAd.fuelChosen}</b></p>}
-                            {oneAd.gearboxChosen && <p className={style.desc__text}>Skrzynia biegów: <b>{oneAd.gearboxChosen}</b></p>}
-                            {oneAd.mileageChosen && <p className={style.desc__text}>Przebieg: <b>{oneAd.mileageChosen} tyś. km.</b></p>}
-                            {oneAd.typeChosen && <p className={style.desc__text}>Typ: <b>{oneAd.typeChosen}</b></p>}
+                            {oneAd.itemData.carIdChosen && <p className={style.desc__text}>Marka: <b>{mainCategories[0].brand.find(i => i.id === oneAd.itemData.carIdChosen).name}</b></p>}
+                            {oneAd.itemData.carModelChosen && <p className={style.desc__text}>Model: <b>{oneAd.itemData.carModelChosen}</b></p>}
+                            {oneAd.itemData.yearChosen && <p className={style.desc__text}>Rok produkcji: <b>{oneAd.itemData.yearChosen !== "0" ? oneAd.itemData.yearChosen : "starsze niż 2014"}</b></p>}
+                            {oneAd.itemData.fuelChosen && <p className={style.desc__text}>Paliwo: <b>{oneAd.itemData.fuelChosen}</b></p>}
+                            {oneAd.itemData.gearboxChosen && <p className={style.desc__text}>Skrzynia biegów: <b>{oneAd.itemData.gearboxChosen}</b></p>}
+                            {oneAd.itemData.mileageChosen && <p className={style.desc__text}>Przebieg: <b>{oneAd.itemData.mileageChosen} tyś. km.</b></p>}
+                            {oneAd.itemData.typeChosen && <p className={style.desc__text}>Typ: <b>{oneAd.itemData.typeChosen}</b></p>}
 
-                            {oneAd.equipmentChosen.length !== 0
+                            {oneAd.itemData.equipmentChosen.length !== 0
                                 && <div className={style.ad__container}>
                                     <fieldset className={style.ad__containerEquipment}>
                                         <legend className={style.ad__legendEquipment}>Wyposarzenie: </legend>
 
-                                        {oneAd.equipmentChosen.map(item => {
+                                        {oneAd.itemData.equipmentChosen.map(item => {
                                             return (
                                                 <div key={item} className={style.ad_itemContainerEquipment}>
                                                     <div className={style.ad_svgContainerEquipment}>
@@ -195,7 +195,7 @@ const Ad = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Opis użytkownika:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>{oneAd.inputDescription}</p>
+                            <p className={style.desc__text}>{oneAd.itemDescription.inputDescription}</p>
                         </div>
                     </div>
 
@@ -203,9 +203,9 @@ const Ad = props => {
                     <div className={style.desc}>
                         <p className={style.desc__title}>Spotkanie:</p>
                         <div className={style.desc__container}>
-                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną?: <b>{oneAd.techKnowledge}</b></p>
-                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie: <b>{oneAd.priceOfMeeting} zł/h</b></p>
-                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAd.timeOfDay}</b></p>
+                            <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną?: <b>{oneAd.meetingDescription.techKnowledge}</b></p>
+                            <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie: <b>{oneAd.meetingDescription.priceOfMeeting} zł/h</b></p>
+                            <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAd.meetingDescription.timeOfDay}</b></p>
                         </div>
                     </div>
 
@@ -215,34 +215,34 @@ const Ad = props => {
                         <div className={style.desc__container}>
                             <div className={style.desc__containerUser}>
                                 <figure className={style.desc__containerfigure}>
-                                    <img className={style.desc__containerimg} src={oneAd.userPhoto || User} onError={(e) => { e.target.onerror = null; e.target.src = User }} alt="main" />
+                                    <img className={style.desc__containerimg} src={oneAd.userData.userPhoto || User} onError={(e) => { e.target.onerror = null; e.target.src = User }} alt="main" />
                                 </figure>
-                                <p className={style.desc__textName}>{oneAd.inputName}</p>
+                                <p className={style.desc__textName}>{oneAd.userData.inputName}</p>
                             </div>
 
-                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAd.cityChosen}`} target='blank' >
+                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAd.userData.cityChosen}`} target='blank' >
                                 <div className={style.desc__svg}>
                                     <Location />
                                 </div>
-                                <p className={style.desc__textContact}>{oneAd.cityChosen}&nbsp;</p>
-                                <p className={style.desc__textContact}>(woj. {oneAd.regionChosen})</p>
+                                <p className={style.desc__textContact}>{oneAd.userData.cityChosen}&nbsp;</p>
+                                <p className={style.desc__textContact}>(woj. {oneAd.userData.regionChosen})</p>
                             </a>
 
-                            <a className={style.desc__containerContact} href={`mailto:${oneAd.inputEmail}?subject=Ogłoszenie z portalu jaTestuje.pl`}>
+                            <a className={style.desc__containerContact} href={`mailto:${oneAd.userData.inputEmail}?subject=Ogłoszenie z portalu jaTestuje.pl`}>
                                 <div className={style.desc__svg}>
                                     <Email />
                                 </div>
-                                <p className={style.desc__textContact}>e-mail: {oneAd.inputEmail}</p>
+                                <p className={style.desc__textContact}>e-mail: {oneAd.userData.inputEmail}</p>
                             </a>
 
-                            {oneAd.inputPhone && <a className={style.desc__containerContact} href={`tel:${oneAd.inputPhone}`}>
+                            {oneAd.userData.inputPhone && <a className={style.desc__containerContact} href={`tel:${oneAd.userData.inputPhone}`}>
                                 <div className={style.desc__svg}>
                                     <Phone />
                                 </div>
-                                <p className={style.desc__textContact}>tel: {oneAd.inputPhone}</p>
+                                <p className={style.desc__textContact}>tel: {oneAd.userData.inputPhone}</p>
                             </a>}
 
-                            <Link to={`/userads/${oneAd.userId}`} className={style.desc__containerContact} >
+                            <Link to={`/userads/${oneAd.userData.userId}`} className={style.desc__containerContact} >
                                 <div className={style.desc__svg}>
                                     <Cubes />
                                 </div>

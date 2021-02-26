@@ -81,23 +81,23 @@ exports.createAd = functions.https.onCall(async (data, context) => {
         // TODO  do payment => timeValidationAdDayCount
 
 
-        const isPromoted = data.item.isPromoted // check isPromoted
+        const isPromoted = data.item.adData.isPromoted // check isPromoted
 
         // elements added in backend to object with ad :
         const userId = context.auth.uid // get user ID
         const isApproved = true // always true when first add ad, can be change by admin only, in the future meaby will be false and wait for payment
         const isApprovedReason = "" // always empty when first add ad, write info if isApproved=false why rejected ad
         const createDate = new Date().getTime()// when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
-        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidationAdDayCount // how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.adData.timeValidationAdDayCount // how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
 
         //final object with ad
-        const adObject = { ...data.item, isPromoted: isPromoted, userId: userId, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, timeValidationDate: timeValidationDate }
+        const adObject = { ...data.item, userData: { ...data.item.userData, userId: userId }, adData: { ...data.item.adData, isPromoted: isPromoted, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, timeValidationDate: timeValidationDate, } }
 
         //save in current user folder
-        await admin.firestore().collection(USERS).doc(userId).collection(ADS).doc(ADS).set({ [data.item.id]: data.item.id }, { merge: true })
+        await admin.firestore().collection(USERS).doc(userId).collection(ADS).doc(ADS).set({ [data.item.adData.id]: data.item.adData.id }, { merge: true })
 
         // save in main category
-        await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).set(adObject)
+        await admin.firestore().collection(data.item.adData.mainCategory).doc(data.item.adData.id).set(adObject)
 
         return `Success!` //response jest w return
 
@@ -114,25 +114,25 @@ exports.editAd = functions.https.onCall(async (data, context) => {
     try {
 
         // get edited document from DB
-        const editDoc = await admin.firestore().collection(data.item.id.split(" ")[0]).doc(data.item.id).get() // dostęp do firestore 
+        const editDoc = await admin.firestore().collection(data.item.adData.id.split(" ")[0]).doc(data.item.adData.id).get() // dostęp do firestore 
         const editDocData = editDoc.data()
 
         //check if ad belong to user
-        if (context.auth.uid !== editDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
+        if (context.auth.uid !== editDocData.userData.userId) { throw new functions.https.HttpsError('aborted', `Not user Ad!`) } // throw error - in front add .catch
 
         // elements taken from ad before edit
         const isApproved = true //always true after edition (second option => editDocData.isApproved // only admin can change)
         const isApprovedReason = ""// always "" after edition (second option => editDocData.isApprovedReason // only admin can change)
-        const createDate = editDocData.createDate  // when ad is added to DB - only after refresh can change
-        const isPromoted = editDocData.isPromoted // only after payment can change
-        const timeValidationAdDayCount = editDocData.timeValidationAdDayCount // only after payment can change
-        const timeValidationDate = editDocData.timeValidationDate // only after payment can change
+        const createDate = editDocData.adData.createDate  // when ad is added to DB - only after refresh can change
+        const isPromoted = editDocData.adData.isPromoted // only after payment can change
+        const timeValidationAdDayCount = editDocData.adData.timeValidationAdDayCount // only after payment can change
+        const timeValidationDate = editDocData.adData.timeValidationDate // only after payment can change
 
         //final object with ad
-        const adObject = { ...data.item, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, isPromoted: isPromoted, timeValidationAdDayCount: timeValidationAdDayCount, timeValidationDate: timeValidationDate }
+        const adObject = { ...data.item, userData: { ...data.item.userData, userId: editDocData.userData.userId }, adData: { ...editDocData.adData, isApproved: isApproved, isApprovedReason: isApprovedReason, createDate: createDate, isPromoted: isPromoted, timeValidationAdDayCount: timeValidationAdDayCount, timeValidationDate: timeValidationDate, } }
 
         // save in main category
-        await admin.firestore().collection(editDocData.mainCategory).doc(data.item.id).update(adObject)
+        await admin.firestore().collection(editDocData.adData.mainCategory).doc(data.item.adData.id).update(adObject)
 
         return `Success!` //response jest w return
 
@@ -154,19 +154,19 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
 
 
         // get edited document from DB
-        const refreshDoc = await admin.firestore().collection(data.item.id.split(" ")[0]).doc(data.item.id).get() // dostęp do firestore 
+        const refreshDoc = await admin.firestore().collection(data.item.adData.id.split(" ")[0]).doc(data.item.adData.id).get() // dostęp do firestore 
         const refreshDocData = refreshDoc.data()
 
         //check if ad belong to user
-        if (context.auth.uid !== refreshDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
+        if (context.auth.uid !== refreshDocData.userData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
 
         // elements refreshed in ad:
         const createDate = new Date().getTime() // when ad is added to DB, name in ms from 1970, type: NUMBER, only for sort from newset ads
-        const timeValidationDate = new Date().getTime() + 86400000 * data.item.timeValidationAdDayCount// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
-        const isPromoted = data.item.isPromoted // check isPromoted
+        const timeValidationDate = new Date().getTime() + 86400000 * data.item.adData.timeValidationAdDayCount// how lond ad is valid, name in ms from 1970, type: NUMBER, 1day = 86400000
+        const isPromoted = data.item.adData.isPromoted // check isPromoted
 
         // refresh ad and add new date now, change isPromoted na false
-        await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).update({ isPromoted: isPromoted, timeValidationDate: timeValidationDate, createDate: createDate })
+        await admin.firestore().collection(data.item.adData.mainCategory).doc(data.item.adData.id).update({ adData: { ...refreshDocData.adData, isPromoted: isPromoted, timeValidationDate: timeValidationDate, createDate: createDate } })
 
         return `Success!` //response jest w return
 
@@ -182,18 +182,18 @@ exports.deleteAd = functions.https.onCall(async (data, context) => {
 
     try {
 
-        // get edited document from DB
-        const deletedDoc = await admin.firestore().collection(data.item.id.split(" ")[0]).doc(data.item.id).get() // dostęp do firestore 
+        // get deleted document from DB
+        const deletedDoc = await admin.firestore().collection(data.item.adData.id.split(" ")[0]).doc(data.item.adData.id).get() // dostęp do firestore 
         const deletedDocData = deletedDoc.data()
 
         //check if ad belong to user
-        if (context.auth.uid !== deletedDocData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
+        if (context.auth.uid !== deletedDocData.userData.userId) { throw new functions.https.HttpsError('aborted', 'Not user Ad!') } // throw error - in front add .catch
 
         // delete ad in main category
-        await admin.firestore().collection(data.item.mainCategory).doc(data.item.id).delete()
+        await admin.firestore().collection(data.item.adData.mainCategory).doc(data.item.adData.id).delete()
 
         //delete ad in current user folder
-        await admin.firestore().collection(USERS).doc(context.auth.uid).collection(ADS).doc(ADS).update({ [data.item.id]: admin.firestore.FieldValue.delete() })
+        await admin.firestore().collection(USERS).doc(context.auth.uid).collection(ADS).doc(ADS).update({ [data.item.adData.id]: admin.firestore.FieldValue.delete() })
 
         return `Success!` //response jest w return
 
@@ -216,13 +216,13 @@ exports.adminDeleteAd = functions.https.onCall(async (data, context) => {
     try {
 
         // update add - delete
-        await admin.firestore().collection(data.item.id.split(" ")[0]).doc(data.item.id).update({ isApproved: isApproved, isApprovedReason: isApprovedReason })
+        await admin.firestore().collection(data.item.adData.id.split(" ")[0]).doc(data.item.adData.id).update({ adData: { ...data.item.adData, isApproved: isApproved, isApprovedReason: isApprovedReason } })
 
         //get user
-        const user = await admin.auth().getUser(data.item.userId)
+        const user = await admin.auth().getUser(data.item.userData.userId)
 
         //sent email to user
-        return await sendEmail(user.email, 'Wiadomość od jaTestuje.pl', `Drogi użytkowniku. \n\nZ przykrością informujemy, że Twoje ogłoszenie "${data.item.adTitle}" zostało usunięte. \nPowód: ${data.reason}. \n\nWejdź na  https://jaTestuje.pl/user i edytuj ogłoszenie. \n\nPrzepraszamy za utrudnienia. \n\nPozdrawiamy. \nZespół jaTestuje.pl`)
+        return await sendEmail(user.email, 'Wiadomość od jaTestuje.pl', `Drogi użytkowniku. \n\nZ przykrością informujemy, że Twoje ogłoszenie "${data.item.itemDescription.adTitle}" zostało usunięte. \nPowód: ${data.reason}. \n\nWejdź na  https://jaTestuje.pl/user i edytuj ogłoszenie. \n\nPrzepraszamy za utrudnienia. \n\nPozdrawiamy. \nZespół jaTestuje.pl`)
 
     } catch (err) { throw new functions.https.HttpsError('aborted', err) } // throw error - in front add .catch 
 })
