@@ -122,7 +122,7 @@ const Ad = props => {
                         </div>
 
                         <div className={style.photos__itemDescTopContainer}>
-                            <p className={style.photos__itemTextTitle}>{oneAd.adTitle}</p>
+                            <p className={style.photos__itemTextTitle}>{oneAd.itemDescription.adTitle}</p>
                         </div>
 
                         <div className={style.photos}>

@@ -904,7 +904,7 @@ const User = ({ userAds, setUserAds }) => {
     const sendAddItemToDB = (formObject = getDataFromForm()) => {
 
         //check if data in form is valid
-        //if (!checkFormValidation()) { return }
+        if (!checkFormValidation()) { return }
 
         // get object with all data - usunąć parametr z funkcji i to włączyć
         //const formObject = getDataFromForm()
@@ -1175,9 +1175,11 @@ const User = ({ userAds, setUserAds }) => {
                                 }
                                 <div className={style.user__itemAdSVG} onClick={prepareAddItemFromDB}>
                                     <Ad />
-                                    <button onClick={getFAKEDataFromForm}>Dodaj fejkowe ogłoszenie</button>
                                 </div>
                             </div>
+
+                            {/* <button onClick={getFAKEDataFromForm}>Dodaj fejkowe ogłoszenie</button> */}
+
                         </div>
 
 

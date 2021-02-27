@@ -1,4 +1,8 @@
-import CAR from '../assets/car.jpg'
+import PhotoCar from '../assets/car.jpg'
+import PhotoMotorcycle from '../assets/motorcycle.jpg'
+import PhotoBuild from '../assets/build.jpg'
+import PhotoEx from '../assets/car.jpg'
+
 
 
 // ----------------------- START REGIONS ARRAY --------------------------//
@@ -1834,14 +1838,14 @@ const othersBrands = []
 
 
 
-const cars = { name: "Osobowe", nameDB: "cars", photo: CAR, type: carsType, brand: carBrands }
-const motorcycles = { name: "Motocykle", nameDB: "motorcycles", photo: CAR, type: motorcyclesType, brand: motorcycleBrands }
-const trucks = { name: "Ciężarowe", nameDB: "trucks", photo: CAR, type: trucksType, brand: truckBrands }
-const trailers = { name: "Przyczepy", nameDB: "trailers", photo: CAR, type: trailersType, brand: trailerBrands }
-const build = { name: "Budowlane", nameDB: "build", photo: CAR, type: buildType, brand: buildBrands }
-const agriculture = { name: "Rolnicze", nameDB: "agriculture", photo: CAR, type: agricultureType, brand: agricultureBrands }
-const electronics = { name: "Elektronika", nameDB: "electronics", photo: CAR, type: electronicsType, brand: electronicsBrands }
-const others = { name: "Pozostałe", nameDB: "others", photo: CAR, type: othersType, brand: othersBrands }
+const cars = { name: "Osobowe", nameDB: "cars", photo: PhotoCar, type: carsType, brand: carBrands }
+const motorcycles = { name: "Motocykle", nameDB: "motorcycles", photo: PhotoMotorcycle, type: motorcyclesType, brand: motorcycleBrands }
+const trucks = { name: "Ciężarowe", nameDB: "trucks", photo: PhotoEx, type: trucksType, brand: truckBrands }
+const trailers = { name: "Przyczepy", nameDB: "trailers", photo: PhotoEx, type: trailersType, brand: trailerBrands }
+const build = { name: "Budowlane", nameDB: "build", photo: PhotoBuild, type: buildType, brand: buildBrands }
+const agriculture = { name: "Rolnicze", nameDB: "agriculture", photo: PhotoEx, type: agricultureType, brand: agricultureBrands }
+const electronics = { name: "Elektronika", nameDB: "electronics", photo: PhotoEx, type: electronicsType, brand: electronicsBrands }
+const others = { name: "Pozostałe", nameDB: "others", photo: PhotoEx, type: othersType, brand: othersBrands }
 
 
 const equipment = [
