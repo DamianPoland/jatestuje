@@ -57,6 +57,9 @@ const App = () => {
 
   // ----------------------- START HOME STATES --------------------------//
 
+  // Next Button
+  const [isNextButtonShow, setIsNextButtonShow] = useState(true)
+
   // STATE - set ALL ADS
   const [allAds, setAllAds] = useState([])
 
@@ -101,6 +104,7 @@ const App = () => {
       <Switch>
 
         <Route path='/home' render={props => <Home {...props}
+          isNextButtonShow={isNextButtonShow} setIsNextButtonShow={setIsNextButtonShow}
           allAds={allAds} setAllAds={setAllAds}
           mainCategory={mainCategory} setMainCategory={setMainCategory}
           regionChosen={regionChosen} setRegionChosen={setRegionChosen}

@@ -13,9 +13,7 @@ import Spinner from '../../UI/Spinner/Spinner'
 
 
 
-
-
-const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, setRegionChosen, cityChosen, setCityChosen, carIdChosen, setCarIdChosen, carModelChosen, setCarModelChosen, yearFromChosen, setYearFromChosen, yearToChosen, setYearToChosen, typeChosen, setTypeChosen }) => {
+const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCategory, setMainCategory, regionChosen, setRegionChosen, cityChosen, setCityChosen, carIdChosen, setCarIdChosen, carModelChosen, setCarModelChosen, yearFromChosen, setYearFromChosen, yearToChosen, setYearToChosen, typeChosen, setTypeChosen }) => {
 
 
     // show or hide small alert
@@ -24,8 +22,7 @@ const Home = ({ allAds, setAllAds, mainCategory, setMainCategory, regionChosen, 
     // Spinner
     const [isMainSpinnerShow, setIsMainSpinnerShow] = useState(false)
 
-    // Spinner
-    const [isNextButtonShow, setIsNextButtonShow] = useState(true)
+
 
 
     // ----------------------- START CATEGORIES --------------------------//

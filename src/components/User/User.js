@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react'
 import style from './User.module.css'
 import { Link } from 'react-router-dom'
 
-// geo location
-import * as geofirestore from 'geofirestore'
-import firebase from "firebase/app";
-
 
 // image compression library
 import imageCompression from 'browser-image-compression';
@@ -76,30 +72,6 @@ const User = ({ userAds, setUserAds }) => {
 
     // get user ads when start comopnent
     useEffect(() => {
-
-        // stworzenie geopunktu idodanie do kolekcji
-        const GeoFirestore = geofirestore.initializeApp(firestore) // Tworzy referencję GeoFirestore do bazy danych firestore
-        const geocollection = GeoFirestore.collection('restaurants') // Tworzy referencję GeoFirestore do kolecji w firestore
-        geocollection.add({ // dodaje nowy dokument z moimi danymi i danymi geofire do kolekcji, key dokumenu jest automatyczny
-            name: 'Geofirestore', // jakieś dane moje
-            score: 100, // jakieś dane moje
-            coordinates: new firebase.firestore.GeoPoint(40.7589, 73.9851) // Automatycznie tworzy dane GeoPoint czyli lat, lng i geohash
-        })
-
-        // stworzenie GeoQuery
-        const query = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, 73.9851), radius: 1000 });
-
-
-        // Get query (as Promise)
-        query
-            // .orderBy("score", 'desc')
-            .limit(3)
-            .get().then((value) => {
-                // All GeoDocument returned by GeoQuery, like the GeoDocument added above
-                console.log(value.docs);
-            });
-
-
 
         // start query if userAds is empty
         if (userAds.length === 0) {

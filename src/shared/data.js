@@ -1,7 +1,11 @@
 import PhotoCar from '../assets/car.jpg'
 import PhotoMotorcycle from '../assets/motorcycle.jpg'
+import PhotoTruck from '../assets/truck.jpg'
+import PhotoTrailer from '../assets/trailer.jpg'
 import PhotoBuild from '../assets/build.jpg'
-import PhotoEx from '../assets/car.jpg'
+import PhotoAgriculture from '../assets/agriculture.jpg'
+import PhotoElectronics from '../assets/drone.jpg'
+import PhotoOthers from '../assets/question.jpg'
 
 
 
@@ -1840,12 +1844,12 @@ const othersBrands = []
 
 const cars = { name: "Osobowe", nameDB: "cars", photo: PhotoCar, type: carsType, brand: carBrands }
 const motorcycles = { name: "Motocykle", nameDB: "motorcycles", photo: PhotoMotorcycle, type: motorcyclesType, brand: motorcycleBrands }
-const trucks = { name: "Ciężarowe", nameDB: "trucks", photo: PhotoEx, type: trucksType, brand: truckBrands }
-const trailers = { name: "Przyczepy", nameDB: "trailers", photo: PhotoEx, type: trailersType, brand: trailerBrands }
+const trucks = { name: "Ciężarowe", nameDB: "trucks", photo: PhotoTruck, type: trucksType, brand: truckBrands }
+const trailers = { name: "Przyczepy", nameDB: "trailers", photo: PhotoTrailer, type: trailersType, brand: trailerBrands }
 const build = { name: "Budowlane", nameDB: "build", photo: PhotoBuild, type: buildType, brand: buildBrands }
-const agriculture = { name: "Rolnicze", nameDB: "agriculture", photo: PhotoEx, type: agricultureType, brand: agricultureBrands }
-const electronics = { name: "Elektronika", nameDB: "electronics", photo: PhotoEx, type: electronicsType, brand: electronicsBrands }
-const others = { name: "Pozostałe", nameDB: "others", photo: PhotoEx, type: othersType, brand: othersBrands }
+const agriculture = { name: "Rolnicze", nameDB: "agriculture", photo: PhotoAgriculture, type: agricultureType, brand: agricultureBrands }
+const electronics = { name: "Elektronika", nameDB: "electronics", photo: PhotoElectronics, type: electronicsType, brand: electronicsBrands }
+const others = { name: "Pozostałe", nameDB: "others", photo: PhotoOthers, type: othersType, brand: othersBrands }
 
 
 const equipment = [
