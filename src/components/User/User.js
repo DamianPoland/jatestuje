@@ -655,7 +655,7 @@ const User = ({ userAds, setUserAds }) => {
             allValidations = false
         }
 
-        if (inputDescription.length < 50 || inputDescription.length > 500) {
+        if (inputDescription.length < 50 || inputDescription.length > 1000) {
             allValidations = false
         }
 
@@ -1072,7 +1072,7 @@ const User = ({ userAds, setUserAds }) => {
         localStorage.getItem(UID)
 
             // user Log In
-            ? <section className={style.background}>
+            ? <main className={style.background}>
 
                 {/* AlertSmall */}
                 {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
@@ -1082,9 +1082,9 @@ const User = ({ userAds, setUserAds }) => {
                     {!isAddingItem
 
                         // USER LIST ITEMS
-                        ? <div className={style.user}>
+                        ? <section className={style.user}>
                             <p className={style.user__title}>Witaj {auth.currentUser?.displayName}</p>
-                            <p className={style.user__itemsDesc}>Twoje ogłoszenia:</p>
+                            <h1 className={style.user__itemsDesc}>Twoje ogłoszenia:</h1>
                             <div className={style.user__itemsContainer}>
 
                                 {isMainSpinnerShow && <Spinner />}
@@ -1152,7 +1152,7 @@ const User = ({ userAds, setUserAds }) => {
 
                             {/* <button onClick={getFAKEDataFromForm}>Dodaj fejkowe ogłoszenie</button> */}
 
-                        </div>
+                        </section>
 
 
                         // AD ITEM
@@ -1160,7 +1160,7 @@ const User = ({ userAds, setUserAds }) => {
 
                             {/* main category section */}
                             {isAddingItem === ADD_AD
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
                                     <p className={style.ad__title}>Kategorie:</p>
                                     <div className={style.ad__container}>
                                         {mainCategories.map(item => {
@@ -1174,11 +1174,11 @@ const User = ({ userAds, setUserAds }) => {
                                             )
                                         })}
                                     </div>
-                                </div>}
+                                </section>}
 
                             {/* car section */}
                             {(isAddingItem === ADD_AD || isAddingItem === EDIT_AD)
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
                                     <p className={style.ad__title}>Dane:</p>
 
                                     <div className={style.ad__container}>
@@ -1277,11 +1277,11 @@ const User = ({ userAds, setUserAds }) => {
                                             </fieldset>
                                         </div>
                                     }
-                                </div>}
+                                </section>}
 
                             {/* photo and description section */}
                             {(isAddingItem === ADD_AD || isAddingItem === EDIT_AD)
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
 
                                     <p className={style.ad__title}>Opis:</p>
                                     <div className={style.ad__container}>
@@ -1323,18 +1323,18 @@ const User = ({ userAds, setUserAds }) => {
 
 
                                         <div className={`${style.ad__itemContainer} ${style.ad__itemTextArea}`}>
-                                            <label className={style.ad__itemDesc}>Opis (50-500 znaków):</label>
-                                            <textarea onChange={event => setInputDescriptionHandler(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej przedmiot, chcesz zaprezentować." maxLength="500" />
+                                            <label className={style.ad__itemDesc}>Opis (50-1000 znaków):</label>
+                                            <textarea onChange={event => setInputDescriptionHandler(event.target.value)} value={inputDescription} className={style.ad__itemList} type='textarea' rows='8' placeholder="Opisz szerzej przedmiot, chcesz zaprezentować." maxLength="1000" />
                                             <p className={style.ad__itemDescValidation} style={inputDescriptionValidation >= 50 ? { color: "green" } : null}>{inputDescriptionValidation}</p>
                                         </div>
 
                                     </div>
-                                </div>}
+                                </section>}
 
 
                             {/* meeting data section */}
                             {(isAddingItem === ADD_AD || isAddingItem === EDIT_AD)
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
                                     <p className={style.ad__title}>Informacje o spotkaniu:</p>
                                     <div className={style.ad__container}>
 
@@ -1359,12 +1359,12 @@ const User = ({ userAds, setUserAds }) => {
                                         </div>
 
                                     </div>
-                                </div>}
+                                </section>}
 
 
                             {/* contact data section */}
                             {(isAddingItem === ADD_AD || isAddingItem === EDIT_AD)
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
                                     <p className={style.ad__title}>Twoje dane kontaktowe:</p>
                                     <div className={style.ad__container}>
 
@@ -1401,11 +1401,11 @@ const User = ({ userAds, setUserAds }) => {
                                             <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.ad__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
                                         </div>
                                     </div>
-                                </div>}
+                                </section>}
 
                             {/* contact data section */}
                             {(isAddingItem === ADD_AD || isAddingItem === REFRESH_AD)
-                                && <div className={style.ad__section}>
+                                && <section className={style.ad__section}>
                                     <p className={style.ad__title}>Ogłoszenie:</p>
                                     <div className={style.ad__container}>
 
@@ -1415,16 +1415,16 @@ const User = ({ userAds, setUserAds }) => {
                                             <input checked={1 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="1" onChange={() => setTimeValidationAdDayCount(1)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>1 dzień</label>
 
-                                            <input checked={14 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="14" onChange={() => setTimeValidationAdDayCount(14)} className={style.ad__inputCheckBox} type='radio' />
-                                            <label className={style.ad__labelRadiokBox}>14 dni</label>
-
                                             <input checked={30 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="30" onChange={() => setTimeValidationAdDayCount(30)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>30 dni</label>
+
+                                            <input checked={60 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="60" onChange={() => setTimeValidationAdDayCount(60)} className={style.ad__inputCheckBox} type='radio' />
+                                            <label className={style.ad__labelRadiokBox}>60 dni</label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
                                             <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' checked={isPromoted} />
-                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidationAdDayCount === 30 ? 2 : 1}zł.`}</b></label>
+                                            <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidationAdDayCount === 60 ? 2 : 1}zł.`}</b></label>
                                         </div>
 
                                         <div className={style.ad_checkBoxContainer}>
@@ -1434,7 +1434,7 @@ const User = ({ userAds, setUserAds }) => {
                                         </div>
 
                                     </div>
-                                </div>}
+                                </section>}
 
 
                             <div className={style.btnContainer}>
@@ -1447,7 +1447,7 @@ const User = ({ userAds, setUserAds }) => {
 
 
                 </div>
-            </section >
+            </main >
 
             // user log out
             : <LoginRegisterFirebaseUI />

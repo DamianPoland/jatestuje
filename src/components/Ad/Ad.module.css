@@ -127,6 +127,7 @@
 .photos__itemTextTitle {
     font-size: 2rem;
     padding-right: 1rem;
+    font-weight: 500;
 }
 
 .photos__itemTextPrice {

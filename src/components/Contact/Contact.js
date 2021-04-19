@@ -120,9 +120,9 @@ const Contact = () => {
     }
 
     return (
-        <section className={style.background}>
+        <main className={style.background}>
 
-            <div className={style.section}>
+            <section className={style.section}>
                 <div className={style.head}>
                     <h1 className={style.header}>Skontaktuj się</h1>
                     <p className={style.line}></p>
@@ -191,9 +191,9 @@ const Contact = () => {
                     </div>
 
                 </div>
-            </div>
+            </section>
 
-        </section>
+        </main>
     )
 }
 

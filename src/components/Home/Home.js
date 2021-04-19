@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import style from './Home.module.css'
 import { firestore } from '../../shared/fire'
 
+// constans
+import { ADMIN } from '../../shared/constans'
+
 // data
 import { mainCategories, yearsProdBasic, yearsWithEmptyEl, regions, cities } from '../../shared/data'
 
@@ -120,7 +123,7 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
         // main filters added always
         queryConstructor = queryConstructor.where("itemData.yearChosen", "in", prodYears) // production years array - not more then 10 items
         queryConstructor = queryConstructor.where("adData.isApproved", "==", true) // only approwed ads
-        queryConstructor = queryConstructor.orderBy("adData.createDate", 'desc') // sort in field createDate, 'desc' - get from the newest to oldest
+        queryConstructor = queryConstructor.orderBy("adData.createDate", 'desc') // sort in field createDate (date of create or refresh ad), 'desc' - get from the newest to oldest
         queryConstructor = queryConstructor.startAfter(firstLoad ? (new Date().getTime()) : allAds[allAds.length - 1]?.adData.createDate) // get ads from newest or last displayed
         queryConstructor = queryConstructor.limit(limitLoadAds) // how many items be loaded from DB on one time
 
@@ -136,11 +139,8 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
 
             query.forEach(doc => {
 
-                // show ONLY ads valid, not older than today and tyrn off button
-                if (doc.data().adData.timeValidationDate <= (new Date().getTime())) {
-
-                    // TODO turn off button nastęne
-
+                // show ONLY ads not older than today or YOU are admin then show
+                if (doc.data().adData.timeValidationDate <= (new Date().getTime()) && !localStorage.getItem(ADMIN)) {
                     return
                 }
 
@@ -178,25 +178,25 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
 
 
     return (
-        <section className={style.background}>
+        <main className={style.background}>
 
             {/* AlertSmall */}
             {isAlertSmallShow && <AlertSmall alertIcon={isAlertSmallShow.alertIcon} description={isAlertSmallShow.description} animationTime={isAlertSmallShow.animationTime} borderColor={isAlertSmallShow.borderColor} hide={() => setIsAlertSmallShow(false)} />}
             <div className={style.container}>
 
                 {/* DESCRIPTION */}
-                <div className={style.description}>
+                <section className={style.description}>
 
                     <p className={style.description__title}>O co chodzi ... ?</p>
                     <div className={style.description__textContainer}>
                         <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
                         <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swóją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
                     </div>
-                </div>
+                </section>
 
 
                 {/* MAIN CATEGORY */}
-                <div className={style.categories}>
+                <section className={style.categories}>
                     <p className={style.title}>Kategorie</p>
                     <div className={style.categories__container}>
                         {mainCategories.map(item => {
@@ -210,11 +210,11 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
                             )
                         })}
                     </div>
-                </div>
+                </section>
 
 
                 {/* FILTERS */}
-                <div className={style.filter}>
+                <section className={style.filter}>
                     <p className={style.title}>Filtry</p>
                     <div className={style.filter_container}>
 
@@ -286,11 +286,11 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
                             <button className={style.btn} onClick={() => queryToDB(true)}>Filtruj</button>
                         </div>
                     </div>
-                </div>
+                </section>
 
 
                 {/* ALL ADS */}
-                <div className={style.ads}>
+                <section className={style.ads}>
                     {isMainSpinnerShow && <Spinner />}
                     <p className={style.title}>Ogłoszenia</p>
 
@@ -319,10 +319,10 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
 
                         </div>
                     }
-                </div>
+                </section>
             </div>
 
-        </section >
+        </main >
     )
 }
 

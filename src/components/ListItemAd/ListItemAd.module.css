@@ -1,5 +1,9 @@
 /* ALL ADS */
 
+.color__red {
+    color: red;
+}
+
 .ads {
     padding: 2rem 0.5rem;
     margin: 0 0.5rem;

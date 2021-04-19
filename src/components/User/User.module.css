@@ -30,6 +30,7 @@
 
 .user__itemsDesc {
     font-size: 1.5rem;
+    font-weight: 500;
 }
 
 .user__itemsContainer {}

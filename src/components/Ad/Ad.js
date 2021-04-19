@@ -54,6 +54,7 @@ const Ad = props => {
         firestore.collection(props.match.params.key.split(" ")[0]).doc(props.match.params.key).get()
             .then(resp => {
                 setOneAd(resp.data())
+                console.log("resp.data(): ", resp.data());
 
                 // set first photo as mine
                 setMainPhoto(resp.data().itemDescription.imageURL[0])
@@ -106,7 +107,7 @@ const Ad = props => {
 
 
     return (
-        <section className={style.background}>
+        <main className={style.background}>
             {isMainSpinnerShow && <Spinner />}
 
             {/* AlertSmall */}
@@ -115,14 +116,14 @@ const Ad = props => {
                 <div className={style.container}>
 
                     {/* photos section */}
-                    <div className={style.photos__section}>
+                    <section className={style.photos__section}>
 
                         <div className={style.btnContainer}>
                             <button className={style.btn} onClick={() => window.history.back()}>{"< Wróć"}</button>
                         </div>
 
                         <div className={style.photos__itemDescTopContainer}>
-                            <p className={style.photos__itemTextTitle}>{oneAd.itemDescription.adTitle}</p>
+                            <h1 className={style.photos__itemTextTitle}>{oneAd.itemDescription.adTitle}</h1>
                         </div>
 
                         <div className={style.photos}>
@@ -152,11 +153,11 @@ const Ad = props => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* DESC params section */}
-                    <div className={style.desc}>
+                    <section className={style.desc}>
                         <p className={style.desc__title}>Dane:</p>
                         <div className={style.desc__container}>
                             {oneAd.itemData.carIdChosen && <p className={style.desc__text}>Marka: <b>{mainCategories[0].brand.find(i => i.id === oneAd.itemData.carIdChosen).name}</b></p>}
@@ -188,29 +189,29 @@ const Ad = props => {
                                 </div>
                             }
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* DESC meet section */}
-                    <div className={style.desc}>
+                    <section className={style.desc}>
                         <p className={style.desc__title}>Opis użytkownika:</p>
                         <div className={style.desc__container}>
                             <p className={style.desc__text}>{oneAd.itemDescription.inputDescription}</p>
                         </div>
-                    </div>
+                    </section>
 
                     {/* DESC meet section */}
-                    <div className={style.desc}>
+                    <section className={style.desc}>
                         <p className={style.desc__title}>Spotkanie:</p>
                         <div className={style.desc__container}>
                             <p className={style.desc__text}>Jak użytkownik ocenia swoją więdzę techniczną?: <b>{oneAd.meetingDescription.techKnowledge}</b></p>
                             <p className={style.desc__text}>Zaproponowana przez użytkownika cena za godzinne spotkanie: <b>{oneAd.meetingDescription.priceOfMeeting} zł/h</b></p>
                             <p className={style.desc__text}>Preferowana przez użytkownika pora spotkania: <b>{oneAd.meetingDescription.timeOfDay}</b></p>
                         </div>
-                    </div>
+                    </section>
 
                     {/* DESC meet section */}
-                    <div className={style.desc}>
+                    <section className={style.desc}>
                         <p className={style.desc__title}>Dane kontaktowe:</p>
                         <div className={style.desc__container}>
                             <div className={style.desc__containerUser}>
@@ -220,7 +221,7 @@ const Ad = props => {
                                 <p className={style.desc__textName}>{oneAd.userData.inputName}</p>
                             </div>
 
-                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAd.userData.cityChosen}`} target='blank' >
+                            <a className={style.desc__containerContact} href={`http://maps.google.com/?q=${oneAd.userData.cityChosen}`} target='_blank' rel="noopener noreferrer" >
                                 <div className={style.desc__svg}>
                                     <Location />
                                 </div>
@@ -249,24 +250,26 @@ const Ad = props => {
                                 <p className={style.desc__textContact}>Zobacz inne ogłoszenia uzytkownika</p>
                             </Link>
                         </div>
-                    </div>
+                    </section>
 
                     {/* ADMIN meet section */}
                     {isAdmin
-                        && <div className={style.desc}>
+                        && <section className={style.desc}>
                             <p className={style.desc__title}>Administracja:</p>
                             <div className={style.desc__container}>
 
                                 <div className={style.admin__itemContainer}>
+
+                                    <p className={style.admin__itemDesc}>ad id: {oneAd.adData.id}</p>
+                                    <p className={style.admin__itemDesc}>user id: {oneAd.userData.userId}</p>
+
                                     <label className={style.admin__itemDesc}>Powód usunięcia ogłoszenia:</label>
                                     <input onChange={event => setRemoveAdReason(event.target.value)} value={removeAdReason} className={style.admin__itemList} type='text' />
                                     <button className={style.admin__itemButton} onClick={deleteAd}>usuń</button>
                                 </div>
 
                             </div>
-                        </div>}
-
-
+                        </section>}
 
                 </div>
             }
@@ -274,7 +277,7 @@ const Ad = props => {
 
 
 
-        </section >
+        </main >
     )
 }
 

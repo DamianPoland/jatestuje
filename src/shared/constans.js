@@ -2,6 +2,7 @@ export const PRIVACY_POLICY_PERMISSION = 'PRIVACY_POLICY_PERMISSION'
 
 // authentications
 export const UID = 'uid'
+export const ADMIN = 'admin'
 
 
 // firebase collections

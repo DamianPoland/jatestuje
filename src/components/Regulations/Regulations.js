@@ -3,12 +3,12 @@ import style from './Regulations.module.css'
 
 const Regulations = () => {
     return (
-        <section className={style.background}>
-            <div className={style.container}>
+        <main className={style.background}>
+            <section className={style.container}>
                 Regulamin - NOT ready
 
-            </div>
-        </section>
+            </section>
+        </main>
     )
 }
 

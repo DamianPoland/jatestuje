@@ -13,13 +13,15 @@ const ListItemAd = ({ item }) => {
 
             <div className={style.ads__itemContainer}>
                 <figure className={style.ads__itemFigure}>
-                    <img className={style.ads__itemImg} src={item.itemDescription.smallImageURL || PhotoEmpty} onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} alt="main" />
+                    <img className={style.ads__itemImg} src={item.itemDescription.smallImageURL || PhotoEmpty} onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} alt="main jatestuje.pl" />
                 </figure>
 
                 <div className={style.ads__itemDescContainer}>
                     <div className={style.ads__itemDescTop}>
                         <p className={style.ads__itemText}>{item.itemDescription.adTitle}</p>
                     </div>
+
+                    {item.adData.timeValidationDate <= (new Date().getTime()) && <p className={`${style.ads__itemText} ${style.color__red}`}>archiwalne</p>}
 
                     {item.adData.isPromoted && <p className={style.ads__itemText}>promowane</p>}
 

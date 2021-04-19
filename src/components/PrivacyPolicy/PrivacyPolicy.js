@@ -5,8 +5,8 @@ import privacy from './privacy.jpg'
 
 const PrivacyPolicy = () => {
     return (
-        <section className={style.background}>
-            <div className={style.privacyContainer}>
+        <main className={style.background}>
+            <section className={style.privacyContainer}>
                 <figure>
                     <img src={privacy} alt='privacy' />
                 </figure>
@@ -109,8 +109,8 @@ const PrivacyPolicy = () => {
                         </li>
                     </ol>
                 </div>
-            </div>
-        </section>
+            </section>
+        </main>
     )
 }
 

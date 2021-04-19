@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { auth } from '../../shared/fire'
 
 // constans
-import { UID } from '../../shared/constans'
+import { UID, ADMIN } from '../../shared/constans'
 
 // data
 import { mainCategories } from '../../shared/data'
@@ -47,6 +47,11 @@ const App = () => {
 
       // save in local storage
       user ? localStorage.setItem(UID, user.uid) : localStorage.removeItem(UID)
+
+      // save in local storage isAdmin - ONLY for see archiwum ads in Home and UseAds
+      !user && localStorage.removeItem(ADMIN)
+      user?.getIdTokenResult()
+        .then(token => token.claims.admin ? localStorage.setItem(ADMIN, token.claims.admin) : localStorage.removeItem(ADMIN))
     })
   }, [])
 

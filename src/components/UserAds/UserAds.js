@@ -3,7 +3,7 @@ import style from './UserAds.module.css'
 import { firestore } from '../../shared/fire'
 
 // constans
-import { ADS, USERS } from '../../shared/constans'
+import { ADS, USERS, ADMIN } from '../../shared/constans'
 
 //component
 import ListItemAd from '../ListItemAd/ListItemAd'
@@ -47,7 +47,14 @@ const UserAds = props => {
                     const firebaseGetEveryUserAd = async () => {
                         try {
 
+                            // get one add from collection
                             const firestoreGetUserAds = await firestore.collection(doc.split(" ")[0]).doc(doc).get()
+
+                            // show ONLY ads not older than today or YOU are admin then show
+                            if (firestoreGetUserAds.data().adData.timeValidationDate <= (new Date().getTime()) && !localStorage.getItem(ADMIN)) {
+                                return
+                            }
+
                             // eslint-disable-next-line no-unused-vars
                             const ex = firestoreGetUserAds.data().adData.isApproved === true ? setAllAds(prevState => [...prevState, firestoreGetUserAds.data()]) : null // save only approved ads every ad in State
 
@@ -88,7 +95,7 @@ const UserAds = props => {
 
     return (
 
-        <section className={style.background}>
+        <main className={style.background}>
             {isMainSpinnerShow && <Spinner />}
 
             {/* AlertSmall */}
@@ -98,17 +105,17 @@ const UserAds = props => {
 
 
                 {/* ALL ADS */}
-                <div className={style.ads}>
-                    <p className={style.title}>Wszystkie ogłoszenia użytkownika</p>
+                <section className={style.ads}>
+                    <h1 className={style.title}>Wszystkie ogłoszenia użytkownika</h1>
                     {allAds.map(item => { // show only approved ads
                         return (
                             <ListItemAd key={item.adData.id} item={item} />
                         )
                     })
                     }
-                </div>
+                </section>
             </div>
-        </section>
+        </main>
     )
 }
 
