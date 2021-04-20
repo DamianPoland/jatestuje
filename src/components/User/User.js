@@ -750,6 +750,7 @@ const User = ({ userAds, setUserAds }) => {
 
             userData: { // index excluded in cars collection
                 userPhoto: auth.currentUser.photoURL, // user login photo from login social media
+                userEmail: auth.currentUser.email, // user login/registration email
                 regionChosen: regionChosen,
                 cityChosen: cityChosen,
                 inputName: inputName,
@@ -809,6 +810,7 @@ const User = ({ userAds, setUserAds }) => {
 
             userData: {
                 userPhoto: "https://lh5.googleusercontent.com/-EzRg2MRmQ7U/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclO9YakK8o2F7vB4MTNVchsIiYDxg/s96-c/photo.jpg", // user login photo from login social media  // index excluded in cars collection
+                userEmail: auth.currentUser.email, // user login/registration email
                 regionChosen: "pomorskie",
                 cityChosen: "Gdynia",
                 inputName: "Jan", // index excluded in cars collection
@@ -1040,7 +1042,7 @@ const User = ({ userAds, setUserAds }) => {
             .then(resp => {
 
                 // delete one ad from DB STORAGE with images
-                deleteImagesAndFolderFromDB(item.id)
+                deleteImagesAndFolderFromDB(item.adData.id)
 
                 // update view after refresh ad
                 getUserAds()

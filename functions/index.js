@@ -228,6 +228,47 @@ exports.adminDeleteAd = functions.https.onCall(async (data, context) => {
 })
 
 
+// check all ads and sent email if ad is older than today - only Admin acces, in data{collection: cars}  sendEmail(to, subject, text)
+exports.adminCheckAdsDateValidation = functions.https.onCall(async (data, context) => {
+
+    // check if user is admin
+    if (!context.auth.token.admin) { throw new functions.https.HttpsError('aborted', 'Not Admin!') } // throw error - in front add .catch
+
+    functions.logger.log("start function adminCheckAdsDateValidation")
+
+    try {
+
+        // get all ads from collection
+        const allAds = await admin.firestore().collection(data.collection).get()
+
+        let counterHowManyAdsWasReaded = 0
+        let counterHowManyEmailsTryToSent = 0
+
+        //read every ad
+        allAds.forEach(doc => {
+
+            counterHowManyAdsWasReaded += 1
+
+            // get user Email
+            const userEmail = doc.data().userData.userEmail
+
+            // only ads older than today
+            if (doc.data().adData.timeValidationDate <= (new Date().getTime())) {
+
+                counterHowManyEmailsTryToSent += 1
+
+                //sent email to user
+                sendEmail(userEmail, 'Wiadomość od jaTestuje.pl', `Drogi użytkowniku. \n\nTwoje ogłoszenie "${doc.data().itemDescription.adTitle}" straciło ważność. \n\nProsimy Cię abyś wszedł na  https://jaTestuje.pl/user i przedłużył jego ważność. \n\nPozdrawiamy. \nZespół jaTestuje.pl`)
+                    .then(resp => functions.logger.log("adminCheckAdsDateValidation, email SENT: ", resp, "userEmail: ", userEmail))
+                    .catch(err => functions.logger.log("adminCheckAdsDateValidation, email ERROR: ", err, "userEmail: ", userEmail))
+            }
+        })
+
+        return { counterHowManyAdsWasReaded: counterHowManyAdsWasReaded, counterHowManyEmailsTryToSent: counterHowManyEmailsTryToSent }
+
+    } catch (err) { throw new functions.https.HttpsError('aborted', err) } // throw error - in front add .catch 
+})
+
 
 
 // to add admin, use this function on front. Remember to log out and log in

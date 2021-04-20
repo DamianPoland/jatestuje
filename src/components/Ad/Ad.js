@@ -105,6 +105,24 @@ const Ad = props => {
             })
     }
 
+    // send Emails To All Out Of Date Ads
+    const sendEmailsToAllOutOfDateAds = () => {
+
+        const collection = "" //add collection from DB to send emails: cars agriculture build electronics motorcycles others trailers trucks
+
+        if (!collection) {
+            console.log("collection is empty - return");
+            return
+        }
+
+        // call send Emails to backend, resp is {counterHowManyAdsWasReaded, counterHowManyEmailsTryToSent}, check logs in DB (error or success for sending every mail)!
+        console.log("sendEmailsToAllOutOfDateAds start")
+        const adminCheckAdsDateValidation = functions.httpsCallable('adminCheckAdsDateValidation')
+        adminCheckAdsDateValidation({ collection: collection })
+            .then(resp => console.log(resp))
+            .catch(err => console.log(err))
+    }
+
 
     return (
         <main className={style.background}>
@@ -262,10 +280,13 @@ const Ad = props => {
 
                                     <p className={style.admin__itemDesc}>ad id: {oneAd.adData.id}</p>
                                     <p className={style.admin__itemDesc}>user id: {oneAd.userData.userId}</p>
+                                    <p className={style.admin__itemDesc}>user REGISTER email: {oneAd.userData.userEmail}</p>
+                                    <p className={style.admin__itemDesc}>user INPUT email: {oneAd.userData.inputEmail}</p>
 
-                                    <label className={style.admin__itemDesc}>Powód usunięcia ogłoszenia:</label>
+                                    <label className={style.admin__itemDesc}>Podaj powód usunięcia ogłoszenia:</label>
                                     <input onChange={event => setRemoveAdReason(event.target.value)} value={removeAdReason} className={style.admin__itemList} type='text' />
                                     <button className={style.admin__itemButton} onClick={deleteAd}>usuń</button>
+                                    <button className={style.admin__itemButtonEmail} onClick={sendEmailsToAllOutOfDateAds}>UWAGA - mail do wszystkich</button>
                                 </div>
 
                             </div>
@@ -273,9 +294,6 @@ const Ad = props => {
 
                 </div>
             }
-
-
-
 
         </main >
     )
