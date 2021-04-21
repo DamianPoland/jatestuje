@@ -30,7 +30,7 @@ const Footer = () => {
                     <p className={style.text}>Copyright © jaTestuje.pl 2021</p>
                     <a href='https://studio-www.com' target='_blank' rel="noopener noreferrer" className={`${style.designedBy} ${style.link}`}>
                         <span className={`${style.text} ${style.textLeft}`}>Designed by</span>
-                        <img className={style.logo} src={logo} alt='logo' />
+                        <img className={style.logoStudio} src={logo} alt='logo' />
                         <span className={`${style.text} ${style.textRight}`}>studio-www.com</span>
                     </a>
                 </div>

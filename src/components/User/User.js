@@ -715,7 +715,8 @@ const User = ({ userAds, setUserAds }) => {
             adData: { isApproved, isApprovedReason, createDate, timeValidationDate (number days change from timeValidationAdDayCount)}
             */
 
-            // data for all ads
+
+            // data for all ads (all items are indexing off only group are on in Firebase )
 
             itemData: { // index excluded in cars collection
 

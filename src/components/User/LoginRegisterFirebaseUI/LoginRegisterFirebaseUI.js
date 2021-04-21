@@ -38,7 +38,7 @@ const uiConfig = {
         //     defaultCountry: 'PL', // default country phone
         // }
     ],
-    tosUrl: '/privacy-policy', // przekierowanie do terms of service - można usunąć i nie będzie sie wyświetlał napis
+    tosUrl: '/regulations', // przekierowanie do terms of service - można usunąć i nie będzie sie wyświetlał napis
     privacyPolicyUrl: '/privacy-policy' // przekierowanie do privacy policy - można usunąć i nie będzie sie wyświetlał napis
 };
 

@@ -27,6 +27,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: black;
 }
 
 .text {
@@ -48,12 +49,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: black;
 }
 
 .logo {
     height: 1.25rem;
     width: 1.25rem;
     fill: rgb(var(--accent));
+}
+
+.logoStudio {
+    clip-path: circle(50%);
+    background-color: white;
 }
 
 
