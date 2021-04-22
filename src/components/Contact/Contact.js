@@ -11,7 +11,6 @@ import { ReactComponent as Phone } from '../../assets/phone.svg'
 import { ReactComponent as Email } from '../../assets/email.svg'
 import { ReactComponent as Location } from '../../assets/location.svg'
 import { ReactComponent as Facebook } from '../../assets/facebook.svg'
-import { ReactComponent as YouTube } from '../../assets/youtube.svg'
 import { ReactComponent as Instagram } from '../../assets/instagram.svg'
 import { ReactComponent as ContactUs } from '../../assets/contact_us.svg'
 import { ReactComponent as Envelope } from '../../assets/envelope.svg'
@@ -124,7 +123,7 @@ const Contact = () => {
 
             <section className={style.section}>
                 <div className={style.head}>
-                    <h1 className={style.header}>Skontaktuj się</h1>
+                    <h1 className={style.header}>Skontaktuj się z nami</h1>
                     <p className={style.line}></p>
                 </div>
                 <div className={style.contact}>
@@ -150,10 +149,6 @@ const Contact = () => {
                         <a className={style.contentItem} href='http://jatestuje.pl' target='blank' >
                             <p className={style.contentIcon}><Facebook /></p>
                             <p className={style.contentDesc}>Facebook</p>
-                        </a>
-                        <a className={style.contentItem} href='http://jatestuje.pl' target='blank' >
-                            <p className={style.contentIcon}><YouTube /></p>
-                            <p className={style.contentDesc}>YouTube</p>
                         </a>
                         <a className={style.contentItem} href='http://jatestuje.pl' target='blank' >
                             <p className={style.contentIcon}><Instagram /></p>

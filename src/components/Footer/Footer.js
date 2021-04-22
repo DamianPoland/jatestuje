@@ -3,8 +3,8 @@ import style from './Footer.module.css'
 import logo from '../../assets/logoStudioWWW.png'
 
 //components
+import { ReactComponent as Email } from '../../assets/email.svg'
 import { ReactComponent as Facebook } from '../../assets/facebook.svg'
-import { ReactComponent as YouTube } from '../../assets/youtube.svg'
 import { ReactComponent as Instagram } from '../../assets/instagram.svg'
 
 
@@ -16,8 +16,11 @@ const Footer = () => {
             <div className={style.container}>
 
                 <div className={style.column}>
-                    <a href='https://jatestuje.pl' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><YouTube /></div><p className={style.text}>YouTube</p></a>
+
+                    <a href='mailto:info@jatestuje.pl?subject=Zapytanie dot. jaTestuje.pl' className={style.socialMedia}> <div className={style.logo}><Email /></div><p className={style.text}>E-mail</p></a>
+
                     <a href='https://jatestuje.pl' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Facebook /></div><p className={style.text}>Facebook</p></a>
+
                     <a href='https://jatestuje.pl' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Instagram /></div><p className={style.text}>Instagram</p></a>
                 </div>
                 <div className={style.column}>

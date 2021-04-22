@@ -77,11 +77,11 @@ exports.createAd = functions.https.onCall(async (data, context) => {
 
     try {
 
-        // TODO  do payment => isPromoted 
+        // TODO  do payment => isPromoted changed for always false
         // TODO  do payment => timeValidationAdDayCount
+        const isPromoted = false //data.item.adData.isPromoted // changed for always false
 
 
-        const isPromoted = data.item.adData.isPromoted // check isPromoted
 
         // elements added in backend to object with ad :
         const userId = context.auth.uid // get user ID

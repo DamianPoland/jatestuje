@@ -54,7 +54,6 @@ const Ad = props => {
         firestore.collection(props.match.params.key.split(" ")[0]).doc(props.match.params.key).get()
             .then(resp => {
                 setOneAd(resp.data())
-                console.log("resp.data(): ", resp.data());
 
                 // set first photo as mine
                 setMainPhoto(resp.data().itemDescription.imageURL[0])

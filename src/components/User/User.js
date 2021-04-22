@@ -36,7 +36,7 @@ const deleteImagesAndFolderFromDB = (isAdingItem) => {
                 storage.ref(fileRef.fullPath).getDownloadURL()
                     .then(url => {
                         storage.refFromURL(url).delete()
-                            .then(() => console.log("deleted ad from storage"))
+                            .then()
                             .catch(error => console.log("error deletion, error: ", error))
                     })
             })
@@ -229,7 +229,7 @@ const User = ({ userAds, setUserAds }) => {
     const [inputPhone, setInputPhone] = useState('')
 
     // STATE - input time ad validation
-    const [timeValidationAdDayCount, setTimeValidationAdDayCount] = useState(30)
+    const [timeValidationAdDayCount, setTimeValidationAdDayCount] = useState(60)
 
     // STATE - input isPromoted
     const [isPromoted, setIsPromoted] = useState(false) // input value
@@ -292,7 +292,6 @@ const User = ({ userAds, setUserAds }) => {
     // push or pull equipment item, auto fire when some equipment is add/remove
     const equipmentOnChangeHandler = (item, isChecked) => {
         isChecked ? equipmentChosen.push(item) : equipmentChosen.splice(equipmentChosen.findIndex(i => i === item), 1)
-        console.log("equipmentChosen: ", equipmentChosen);
     }
 
     // input title Handler
@@ -394,8 +393,6 @@ const User = ({ userAds, setUserAds }) => {
             }
         }
 
-        console.log("image.size: ", image.size / 1000 + " kB");
-
         // send photo to DB
         const uploadTask = storage.ref(`images/${localStorage.getItem(UID)}/${id}/${index}`).put(image)
         uploadTask.on('state_changed',
@@ -458,7 +455,6 @@ const User = ({ userAds, setUserAds }) => {
         //generate id: DB name +  data(year-month-day) + data(from1970 in ms) + random string
         const idGenerator = `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`
         setId(idGenerator)
-        console.log("id: ", idGenerator);
     }
 
 
@@ -522,7 +518,7 @@ const User = ({ userAds, setUserAds }) => {
         setInputEmail("")
         setInputEmailValidation("")
         setInputPhone("")
-        setTimeValidationAdDayCount(30)
+        setTimeValidationAdDayCount(60)
         setIsPromoted(false)
         setInputAgreenent(false)
         setAgreenentValidation(false)
@@ -763,75 +759,14 @@ const User = ({ userAds, setUserAds }) => {
                 id: id, // unique ID is always the same as document Key in DB, Contains => 1. collection name, 2. adding date, 3. time 1970 ,4. random string
                 mainCategory: mainCategory, // main category of ad
                 timeValidationAdDayCount: timeValidationAdDayCount,
-                isPromoted: isPromoted, // user set promoted or not
+                isPromoted: isPromoted, // user set promoted or not (TODO disabled line 1365 in Users and in backend in createAd disabled - rest OK)
                 inputAgreenent: inputAgreenent,
             },
 
 
         }
-        console.log(formObject)
         return formObject
     }
-
-
-    // get FAKE data 
-    const getFAKEDataFromForm = () => {
-        const formObject = {
-
-            itemData: {
-
-                // all ads from form
-                typeChosen: "Hatchback",
-                yearChosen: "2020",
-
-                // only car category from form
-                carIdChosen: "bmw",
-                carModelChosen: "Seria 3",
-                fuelChosen: "Diesel", // index excluded in cars collection
-                gearboxChosen: "Manualna", // index excluded in cars collection
-                mileageChosen: "50-100", // index excluded in cars collection
-                capacityChosen: "2700", // index excluded in cars collection
-                powerChosen: "90", // index excluded in cars collection
-                equipmentChosen: ["onBoardComputer"], // index excluded in cars collection
-            },
-
-
-            itemDescription: {
-                adTitle: "OSOBOWE 50 znaków Lorem ipsum dolor sit aec adipis",  // index excluded in cars collection
-                imageURL: ["https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FO3vuzsnjybMrpWQEt5UhiO4uPek1%2Fcars%202021-2-26%201614369647630%20r75kfl9mj%2F0?alt=media&token=c59d35ff-458e-46d1-89b8-343707c6efe2"], // all images URL in array // index excluded
-                smallImageURL: "https://firebasestorage.googleapis.com/v0/b/jatestuje-pl.appspot.com/o/images%2FO3vuzsnjybMrpWQEt5UhiO4uPek1%2Fcars%202021-2-26%201614369647630%20r75kfl9mj%2F-1?alt=media&token=bf31f084-c475-421d-817d-b0a9085ac4ed", // small image to show only in list of ads  // index excluded
-                inputDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta deserunt eveniet sed officiis velit accusantium illo vitae in sunt reiciendis repellendus officia minima itaque, asperiores nobis voluptates odit quae impedit. Maiores unde quis inventore optio officia? Assumenda pariatur est, excepturi provident aliquam recusandae nisi incidunt et praesentium. Obcaecati, porro maxime.", // index excluded in cars collection
-            },
-
-            meetingDescription: {
-                techKnowledge: "Dobra", // index excluded in cars collection
-                priceOfMeeting: "150", // index excluded in cars collection
-                timeOfDay: "zawsze", // index excluded in cars collection
-            },
-
-            userData: {
-                userPhoto: "https://lh5.googleusercontent.com/-EzRg2MRmQ7U/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclO9YakK8o2F7vB4MTNVchsIiYDxg/s96-c/photo.jpg", // user login photo from login social media  // index excluded in cars collection
-                userEmail: auth.currentUser.email, // user login/registration email
-                regionChosen: "pomorskie",
-                cityChosen: "Gdynia",
-                inputName: "Jan", // index excluded in cars collection
-                inputEmail: "jan@jan.com", // index excluded in cars collection
-                inputPhone: "100-220-300", // index excluded in cars collection
-            },
-
-            adData: {
-                id: `${mainCategory} ${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()} ${new Date().getTime()} ${Math.random().toString(36).substr(2)}`,
-                mainCategory: 'cars', // main category of ad
-                timeValidationAdDayCount: 30,
-                isPromoted: false, // user set promoted or not
-                inputAgreenent: true, // index excluded in cars collection
-            },
-        }
-        console.log(formObject)
-
-        sendAddItemToDB(formObject)
-    }
-
 
 
     // call when cancel form
@@ -866,8 +801,6 @@ const User = ({ userAds, setUserAds }) => {
     // prepare form to add ad
     const prepareAddItemFromDB = (e, item) => {
 
-        console.log("item add: ", item);
-
         // auto generate new key
         idGenerator(mainCategory)
 
@@ -893,8 +826,6 @@ const User = ({ userAds, setUserAds }) => {
         // clear all data from form and close
         clearAllDataFromFormAndClose()
 
-        console.log("item: ", formObject)
-
         // create obj in DB - call backend
         const createAd = functions.httpsCallable('createAd')
         createAd({ item: formObject })
@@ -905,7 +836,6 @@ const User = ({ userAds, setUserAds }) => {
 
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie dodane.', animationTime: '2', borderColor: 'green' })
-                console.log("DB response: ", resp.data)
 
             })
             .catch(err => {
@@ -921,8 +851,6 @@ const User = ({ userAds, setUserAds }) => {
 
     // prepare form to edit one
     const prepareEditItemFromDB = (e, item) => {
-
-        console.log("item edit: ", item);
 
         //set ad data to form
         setDataToForm(item)
@@ -959,7 +887,6 @@ const User = ({ userAds, setUserAds }) => {
 
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Ogłoszenie zmienione.', animationTime: '2', borderColor: 'green' })
-                console.log("DB response: ", resp.data)
 
             })
             .catch(err => {
@@ -975,8 +902,6 @@ const User = ({ userAds, setUserAds }) => {
 
     // prepare form to refresh one ad
     const prepareRefreshItemFromDB = (e, item) => {
-
-        console.log("item refresh: ", item);
 
         //set ad data to form
         setDataToForm(item)
@@ -1014,7 +939,6 @@ const User = ({ userAds, setUserAds }) => {
 
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Przedłużono ważność ogłoszenia.', animationTime: '2', borderColor: 'green' })
-                console.log("DB response refresh: ", resp.data)
             })
             .catch(err => {
 
@@ -1050,7 +974,6 @@ const User = ({ userAds, setUserAds }) => {
 
                 // show alert
                 setIsAlertSmallShow({ alertIcon: 'OK', description: 'Usunieto ogłoszenie.', animationTime: '2', borderColor: 'green' })
-                console.log("DB response delete: ", resp.data)
             })
             .catch(err => {
 
@@ -1415,9 +1338,6 @@ const User = ({ userAds, setUserAds }) => {
                                         <div className={style.ad_checkBoxContainer}>
                                             <p className={style.ad__labelCheckBoxLeftPaddingNull}>Ważność ogłoszenia: </p>
 
-                                            <input checked={1 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="1" onChange={() => setTimeValidationAdDayCount(1)} className={style.ad__inputCheckBox} type='radio' />
-                                            <label className={style.ad__labelRadiokBox}>1 dzień</label>
-
                                             <input checked={30 === timeValidationAdDayCount} name="timeValidationAdDayCount" value="30" onChange={() => setTimeValidationAdDayCount(30)} className={style.ad__inputCheckBox} type='radio' />
                                             <label className={style.ad__labelRadiokBox}>30 dni</label>
 
@@ -1425,14 +1345,14 @@ const User = ({ userAds, setUserAds }) => {
                                             <label className={style.ad__labelRadiokBox}>60 dni</label>
                                         </div>
 
-                                        <div className={style.ad_checkBoxContainer}>
+                                        {/* <div className={style.ad_checkBoxContainer}>
                                             <input onChange={event => setIsPromoted(event.target.checked ? true : false)} className={style.ad__inputCheckBox} type='checkbox' checked={isPromoted} />
                                             <label className={style.ad__labelCheckBox}><b>{`Kup promowanie ogłoszenia. Koszt ${timeValidationAdDayCount === 60 ? 2 : 1}zł.`}</b></label>
-                                        </div>
+                                        </div> */}
 
                                         <div className={style.ad_checkBoxContainer}>
                                             <input onChange={event => setInputAgreenent(event.target.checked ? true : false)} className={`${style.ad__inputCheckBox} ${inputAgreenentValidation && style.ad__inputCheckBoxValidation}`} type='checkbox' checked={inputAgreenent} />
-                                            <label className={style.ad__labelCheckBox}>Zapoznałem się i akceptuję <a href="/privacy-policy">regulamin serwisu</a> oraz <a href="/privacy-policy">politykę prywatności</a>.</label>
+                                            <label className={style.ad__labelCheckBox}>Zapoznałem się i akceptuję <a href="/regulations" target='_blank' rel="noopener noreferrer">regulamin serwisu</a> oraz <a href="/privacy-policy" target='_blank' rel="noopener noreferrer">politykę prywatności</a>.</label>
                                             <p className={style.ad__itemDescValidation}>{inputAgreenentValidation}</p>
                                         </div>
 
