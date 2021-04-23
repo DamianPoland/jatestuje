@@ -136,7 +136,7 @@
     transform: rotate(-45deg) translate(35px, 35px);
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .burgerMenu {
         display: flex;
     }

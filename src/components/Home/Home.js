@@ -91,7 +91,7 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
     const queryToDB = async (firstLoad) => {
 
         // limit ads on one load
-        const limitLoadAds = 5
+        const limitLoadAds = 20
 
         // production years - get range of years, can't be more than 10 items in array because firebase can't handle that
         let prodYears = yearsProdBasic
