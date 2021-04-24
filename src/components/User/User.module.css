@@ -28,6 +28,11 @@
     font-weight: bold;
 }
 
+.user__titleEmail {
+    text-align: center;
+    font-size: 1rem;
+}
+
 .user__itemsDesc {
     font-size: 1.5rem;
     font-weight: 500;
@@ -238,7 +243,16 @@
 
 .ad__itemList:disabled {
     background-color: rgb(245, 245, 245);
+}
 
+.ad__itemList::-webkit-outer-spin-button,
+.ad__itemList::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.ad__itemList[type=number] {
+    -moz-appearance: textfield;
 }
 
 .ad__containerEquipment {

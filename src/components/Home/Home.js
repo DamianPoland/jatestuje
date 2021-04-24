@@ -40,8 +40,8 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
         setMainCategory(nameDB)
 
         //clear all filters
-        //setRegionChosen("") // no need to be cleared because in all categories is the same
-        //setCityChosen("") // no need to be cleared because in all categories is the same
+        setRegionChosen("")
+        setCityChosen("")
         setCarIdChosen("")
         setCarModelChosen("")
         setYearFromChosen("")

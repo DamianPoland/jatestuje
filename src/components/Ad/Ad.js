@@ -209,7 +209,7 @@ const Ad = props => {
                     </section>
 
 
-                    {/* DESC meet section */}
+                    {/* DESC user description */}
                     <section className={style.desc}>
                         <p className={style.desc__title}>Opis użytkownika:</p>
                         <div className={style.desc__container}>

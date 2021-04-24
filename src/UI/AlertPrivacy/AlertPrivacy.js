@@ -27,7 +27,7 @@ const AlertPrivacy = () => {
     return (
         <div className={`${style.container} ${alertVisibility}`}>
             <div className={style.content}>
-                <p className={style.text}>Ta strona korzysta z plików cookie oraz Google Analytics, aby dostarczyć nam (w pełni anonimowych) statystyk.<a className={style.anchor} href='/privacy-policy'>Dowiedz się więcej</a> </p>
+                <p className={style.text}>Ta strona korzysta z plików cookie oraz podobnych technologii do ulepszania i dostosowania treści, analizy ruchu oraz dostarczania reklam.Korzystając ze strony wyrażasz zgodę na ich używanie.<a className={style.anchor} href='/privacy-policy'>Dowiedz się więcej</a> </p>
             </div>
             <button onClick={hideAlert} className={style.button}>Rozumiem</button>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import style from './Nav.module.css'
 import logo from '../../assets/logo512.png'
 
@@ -30,10 +30,10 @@ const Nav = ({ isLogin }) => {
     return (
         <header className={style.background}>
             <nav className={style.container}>
-                <div className={style.header}>
+                <Link to='/home' className={style.header}>
                     <img className={style.headerImg} src={logo} alt='logo' />
                     <p className={style.headerDesc}>jaTestuje.pl</p>
-                </div>
+                </Link>
                 <ul onClick={() => setIsOpenMobileMenu(false)} className={`${style.list} ${styleMobileMenu}`}>
                     <li className={style.listItem}><NavLink to='/home' activeClassName={style.activeLink} className={style.listItemAnchor}>Ogłoszenia</NavLink></li>
 

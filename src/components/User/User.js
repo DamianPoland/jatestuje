@@ -624,13 +624,13 @@ const User = ({ userAds, setUserAds }) => {
                 allValidations = false
             } else { setMileageChosenValidation("") }
 
-            if (!capacityChosen || capacityChosen.length > 4) {
-                setCapacityChosenValidation(NIEPOPRAWNA_WARTOSC)
+            if (!capacityChosen || parseInt(capacityChosen) < 100 || parseInt(capacityChosen) > 10000) {
+                setCapacityChosenValidation("Zakres 100-10000")
                 allValidations = false
             } else { setCapacityChosenValidation("") }
 
-            if (!powerChosen || powerChosen.length > 3) {
-                setPowerChosenValidation(NIEPOPRAWNA_WARTOSC)
+            if (!powerChosen || parseInt(powerChosen) < 10 || parseInt(powerChosen) > 1000) {
+                setPowerChosenValidation("Zakres 10-1000")
                 allValidations = false
             } else { setPowerChosenValidation("") }
         }
@@ -660,8 +660,8 @@ const User = ({ userAds, setUserAds }) => {
             allValidations = false
         } else { setTechKnowledgeValidation("") }
 
-        if (!priceOfMeeting || priceOfMeeting.length > 3) {
-            setPriceOfMeetingValidation(NIEPOPRAWNA_WARTOSC)
+        if (!priceOfMeeting || parseInt(priceOfMeeting) > 1000 || parseInt(priceOfMeeting) < 10) {
+            setPriceOfMeetingValidation("Zakres 10-1000")
             allValidations = false
         } else { setPriceOfMeetingValidation("") }
 
@@ -680,7 +680,7 @@ const User = ({ userAds, setUserAds }) => {
             allValidations = false
         } else { setCityChosenValidation("") }
 
-        if (inputName.length < 3) {
+        if (inputName.trim().length < 2) {
             setInputNameValidation(NIEPOPRAWNE_IMIE)
             allValidations = false
         } else { setInputNameValidation("") }
@@ -1010,6 +1010,7 @@ const User = ({ userAds, setUserAds }) => {
                         // USER LIST ITEMS
                         ? <section className={style.user}>
                             <p className={style.user__title}>Witaj {auth.currentUser?.displayName}</p>
+                            <p className={style.user__titleEmail}>{auth.currentUser?.email}</p>
                             <h1 className={style.user__itemsDesc}>Twoje ogłoszenia:</h1>
                             <div className={style.user__itemsContainer}>
 
@@ -1273,7 +1274,7 @@ const User = ({ userAds, setUserAds }) => {
                                         </div>
 
                                         <div className={style.ad__itemContainer}>
-                                            <label className={style.ad__itemDesc}>Jaka jest cena za godzinne spotkanie?</label>
+                                            <label className={style.ad__itemDesc}>Jaka jest cena w zł za godzinne spotkanie?</label>
                                             <input onChange={event => setPriceOfMeeting(event.target.value)} value={priceOfMeeting} className={style.ad__itemList} type='number' placeholder="np. 150" />
                                             <p className={style.ad__itemDescValidation}>{priceOfMeetingValidation}</p>
                                         </div>
