@@ -10,13 +10,13 @@ import PhotoEmpty from '../../assets/photoEmpty.png'
 const ListItemAd = ({ item }) => {
     return (
         <Link to={`/offer/${item.adData.id}`} className={style.ads__item} >
-
             <div className={style.ads__itemContainer}>
                 <figure className={style.ads__itemFigure}>
                     <img className={style.ads__itemImg} src={item.itemDescription.smallImageURL || PhotoEmpty} onError={(e) => { e.target.onerror = null; e.target.src = PhotoEmpty }} alt="main jatestuje.pl" />
                 </figure>
 
                 <div className={style.ads__itemDescContainer}>
+
                     <div className={style.ads__itemDescTop}>
                         <p className={style.ads__itemText}>{item.itemDescription.adTitle}</p>
                     </div>

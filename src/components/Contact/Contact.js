@@ -130,9 +130,9 @@ const Contact = () => {
 
                     {/* contact links  */}
                     <div className={style.content}>
-                        <a className={style.contentItem} href={`http://maps.google.com/?q=Gdynia`} target='blank' >
+                        <a className={style.contentItem} href={`http://maps.google.com/?q=Gdynia Zaruskiego 29`} target='blank' >
                             <p className={style.contentIcon}><Location /></p>
-                            <p className={style.contentDesc}>Poland, Gdynia, ul. ????</p>
+                            <p className={style.contentDesc}>Gdynia, ul. Zaruskiego 29c/5</p>
                         </a>
                         <a className={style.contentItem} href='tel:+48530064809'>
                             <p className={style.contentIcon}><Phone /></p>

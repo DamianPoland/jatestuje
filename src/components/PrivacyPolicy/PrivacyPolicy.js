@@ -26,27 +26,27 @@ const PrivacyPolicy = () => {
                         <li>Serwis zbiera informacje podane dobrowolnie przez użytkownika, w tym dane osobowe, o ile zostaną one podane.</li>
                         <li>Serwis może zapisać informacje o parametrach połączenia (oznaczenie czasu, adres IP).</li>
                         <li>Serwis może zapisać informacje dotyczące Twojego urządzenia.</li>
-                        <li>Serwis może zapisać Twoje dane osobowe pozyskane od różnych osób trzecich (i ze źródeł publicznych) które może łączyć z danymi osobowymi, które zbieramy od Ciebie za pośrednictwem naszych Usług.</li>
-                        <li>Serwis może zapisać informacje dotyczące Twojej aktywności w Serwisie, a wśród nich informacje o stronach, z których trafiasz na nasz Serwis, datę każdej wizyty, wyniki Twoich wyszukiwań, listy produktów oraz banery reklamowe, w które kliknąłeś, Twoje interakcje z takimi reklamami i listami produktowymi, czas trwania Twojej wizyty, a także kolejność, w jakiej odwiedzałeś poszczególne sekcje naszego Serwisu.</li>
+                        <li>Serwis może zapisać Twoje dane osobowe pozyskane od osób trzecich lub z innych źródeł. Może je łączyć z danymi osobowymi, które zbieramy od Ciebie za pośrednictwem naszych Usług.</li>
+                        <li>Serwis może zapisywać i przechowywać informacje dotyczące Twojej aktywności w Serwisie, m.in. informacje o stronach, z których trafiasz na nasz Serwis, wyniki Twoich wyszukiwań, listy produktów oraz kliknięte przez Ciebie banery reklamowe, Twoje interakcje ze wspomnianymi reklamami oraz listami produktowymi, a także kolejność, w jakiej odwiedzałeś poszczególne sekcje naszego Serwisu oraz datę i czas trwania każdej Twojej wizyty.</li>
                         <li>Serwis wykorzystuje dane osobowe w następujących celach:</li>
                         <ul>
-                            <li>Wyświetlanie ogłoszeń użytkowników</li>
-                            <li>Obsługa zapytań przez formularz</li>
-                            <li>Realizacja zamówionych Usług</li>
-                            <li>Prezentacja oferty lub informacji</li>
-                            <li>Przesyłania Ci propozycji naszych Usług</li>
-                            <li>Przetwarzania wszelkich płatności dokonanych w ramach zakupu naszych Usług</li>
-                            <li>Przesyłania Ci inofrmacji dotyczący Twoich Usług</li>
-                            <li>Poprawienia wygody korzystania z Serwisu oraz rozwoju nowych funkcjonalności Serwisu</li>
-                            <li>Zapewnienia bezpieczeństwa Serwisu</li>
+                            <li>wyświetlanie ogłoszeń użytkowników,</li>
+                            <li>obsługa zapytań przez formularz,</li>
+                            <li>realizacja zamówionych Usług,</li>
+                            <li>prezentacja oferty lub informacji,</li>
+                            <li>przesyłania Ci propozycji naszych Usług,</li>
+                            <li>przetwarzania wszelkich płatności dokonanych w ramach zakupu naszych Usług,</li>
+                            <li>przesyłania Ci informacji dotyczących Twoich Usług,</li>
+                            <li>poprawienia wygody korzystania z Serwisu oraz rozwoju nowych funkcjonalności Serwisu,</li>
+                            <li>zapewnienia bezpieczeństwa Serwisu.</li>
                         </ul>
                         <li>Serwis realizuje funkcje pozyskiwania informacji o użytkownikach i ich zachowaniu w następujący sposób:
 	                        <ol>
                                 <li>Podczas rejestracji, w celu korzystania ze świadczonych przez nas Usług.
                                 <ul>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Google: gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego Google</li>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Facebook: gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego na Facebooku.</li>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem Twojego adresu email: gromadzimy imię, nazwisko i adres email.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Google - gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego Google.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Facebook - gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego na Facebooku.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem Twojego adresu email - gromadzimy imię, nazwisko i adres email.</li>
                                     </ul>
 
                                 </li>
@@ -54,18 +54,18 @@ const PrivacyPolicy = () => {
                                 <li>Poprzez zapisywanie w urządzeniach końcowych plików cookie (tzw. „ciasteczka”) oraz danych dotyczących logowania (Local Storage).</li>
                             </ol>
                         </li>
-                        <li>W trakcie korzystania z naszych usług, możesz również dobrowolnie podać następujące dodatkowe dane osobowe::
+                        <li>W trakcie korzystania z naszych usług, możesz również dobrowolnie podać następujące dodatkowe dane osobowe:
 	                        <ol>
-                                <li>Adres zamieszkania.</li>
-                                <li>Imię.</li>
-                                <li>Adres e-mail.</li>
-                                <li>Numer telefonu komórkowego.</li>
-                                <li>Dane karty kredytowej w przypadku, gdy jesteś zainteresowany zakupem naszych płatnych Usług.</li>
+                                <li>adres zamieszkania,</li>
+                                <li>imię,</li>
+                                <li>adres e-mail,</li>
+                                <li>numer telefonu komórkowego,</li>
+                                <li>dane karty kredytowej w przypadku, gdy jesteś zainteresowany zakupem naszych płatnych Usług.</li>
                             </ol>
                         </li>
-                        <li>Jeśli korzystasz z naszych Usług i decydujesz się wystawić określony przedmiot, możesz podjąć decyzję o ujawnieniu pewnych danych osobowych dla pozostałych użytkowników Serwisu. Informacje te mogą obejmować: imię, adres email, lokalizację i numer kontaktowy. Pamiętaj, że każda informacja, którą ujawnisz innym użytkownikom może być przekazana dalej, dlatego powinieneś zachować w tej kwestii szczególną rozwagę.</li>
-                        <li>W przypadku kontaktu telefonicznego lub mailowego zbieramy wszystkie informacje, które zdecydujesz się przekazać podczas rozmowy lub w trakcie korespondencji z naszymi pracownikami lub przedstawicielami. Informujemy, że w przypadku kontaktów telefonicznych wszystkie rozmowy są nagrywane. Jeżeli sprzeciwiasz się nagrywaniu rozmów telefonicznych, rozmowa nie będzie kontynuowana.</li>
-                        <li>Nasze Usługi nie są skierowane do osób poniżej 18 roku życia i świadomie nie pozyskujemy informacji na ich temat. Jeśli stwierdzimy, że osoba poniżej 18 roku życia dostarczyła nam swoje dane osobowe, natychmiast je usuniemy.</li>
+                        <li>Podczas korzystania z naszych Usług i wystawiania określonego przedmiotu, możesz podjąć decyzję o ujawnieniu pewnych danych osobowych dla pozostałych użytkowników Serwisu. Informacje te mogą obejmować: imię, adres email, numer kontaktowy i lokalizację. Zachowaj jednak w tej kwestii szczególną rozwagę, pamiętając, że każda informacja, którą ujawnisz innym użytkownikom, może być przekazana dalej.</li>
+                        <li>W przypadku kontaktu mailowego zbieramy wszystkie informacje zawarte w korespondencji. W przypadku kontaktu telefonicznego zbieramy wszystkie dane, które zdecydujesz się przekazać podczas rozmowy z naszymi pracownikami lub przedstawicielami. Rozmowy te są nagrywane. Jeżeli sprzeciwiasz się nagrywaniu rozmów telefonicznych, rozmowa nie będzie kontynuowana.</li>
+                        <li>Nasze Usługi skierowane są do osób, które ukończyły 18 lat. W związku z tym świadomie nie pozyskujemy ani nie przetwarzamy danych osobowych dzieci. Jeśli stwierdzimy, że osoba poniżej 18 roku życia dostarczyła nam swoje dane osobowe, natychmiast je usuniemy.</li>
 
 
                     </ol>
@@ -74,11 +74,10 @@ const PrivacyPolicy = () => {
 
                     <h2><strong className={style.font}>3. Wybrane metody ochrony danych stosowane przez Operatora</strong></h2>
                     <ol>
-                        <li>Miejsca logowania i wprowadzania danych osobowych są chronione w warstwie transmisji (certyfikat SSL). Dzięki temu dane osobowe i dane logowania, wprowadzone na stronie, zostają zaszyfrowane w komputerze użytkownika i mogą być odczytane jedynie na docelowym serwerze.</li>
+                        <li>Miejsca logowania i wprowadzania danych osobowych są chronione w warstwie transmisji (certyfikat SSL). Dzięki temu dane osobowe i dane logowania wprowadzone na stronie, zostają zaszyfrowane w komputerze użytkownika i mogą być odczytane jedynie na docelowym serwerze.</li>
                         <li>Hasła użytkowników są przechowywane w postaci hashowanej. Funkcja hashująca działa jednokierunkowo - nie jest możliwe odwrócenie jej działania, co stanowi obecnie współczesny standard w zakresie przechowywania haseł użytkowników.</li>
                         <li>Operator okresowo zmienia swoje hasła administracyjne.</li>
                         <li>Wszystkie dane, które otrzymujemy na Twój temat, przechowujemy na odpowiednio zabezpieczonych serwerach. Wdrożyliśmy także niezbędne środki techniczne służące ochronie Twoich danych.</li>
-                        <li>Operator okresowo zmienia swoje hasła administracyjne.</li>
                         <li>W celu ochrony danych Operator regularnie wykonuje kopie bezpieczeństwa.</li>
                         <li>Istotnym elementem ochrony danych jest regularna aktualizacja wszelkiego oprogramowania, wykorzystywanego przez Operatora do przetwarzania danych osobowych, co w szczególności oznacza regularne aktualizacje komponentów programistycznych.</li>
                     </ol>
@@ -88,18 +87,18 @@ const PrivacyPolicy = () => {
 
                     <h2><strong className={style.font}>4. Prawa i dodatkowe informacje o sposobie wykorzystania danych</strong></h2>
                     <ol>
-                        <li>W niektórych sytuacjach Administrator ma prawo przekazywać Twoje dane osobowe innym odbiorcom, jeśli będzie to niezbędne do wykonania zawartej z Tobą umowy, w celu realizacji Usług związanych z działaniem Serwisu lub do zrealizowania obowiązków ciążących na Administratorze:
+                        <li>Administrator ma prawo przekazywać Twoje dane osobowe poniższym odbiorcom, jeśli będzie to niezbędne do wykonania zawartej z Tobą umowy, w celu realizacji Usług związanych z działaniem Serwisu lub do zrealizowania obowiązków ciążących na Administratorze:
                             <ul>
-                                <li>Firma hostingowa na zasadzie powierzenia</li>
-                                <li>Dostawcy usług przechowywania w chmurze.</li>
-                                <li>Operatorzy płatności</li>
-                                <li>Upoważnieni pracownicy i współpracownicy, którzy korzystają z danych w celu realizacji celu działania Usługi</li>
-                                <li>Dostawcy narzędzi do zapewniania bezpieczeństwa i ochrony klientów.</li>
-                                <li>Firmy, świadczące usługi marketingu na rzecz Administratora</li>
-                                <li>Dostawcy narzędzi w zakresie obsługi klienta.</li>
+                                <li>firmie hostingowej na zasadzie powierzenia,</li>
+                                <li>dostawcy usług przechowywania w chmurze,</li>
+                                <li>operatorzy płatności,</li>
+                                <li>upoważnieni pracownicy i współpracownicy, którzy korzystają z danych w celu realizacji celu działania Usługi,</li>
+                                <li>dostawcy narzędzi do zapewniania bezpieczeństwa i ochrony klientów.</li>
+                                <li>firmy, świadczące usługi marketingu na rzecz Administratora</li>
+                                <li>dostawcy narzędzi w zakresie obsługi klienta.</li>
                             </ul>
                         </li>
-                        <li>Twoje dane osobowe przetwarzane przez Administratora nie dłużej, niż jest to konieczne do wykonania związanych z nimi czynności określonych osobnymi przepisami (np. o prowadzeniu rachunkowości). W odniesieniu do danych marketingowych dane nie będą przetwarzane dłużej niż przez 3 lata.</li>
+                        <li>Twoje dane osobowe są przetwarzane przez Administratora nie dłużej, niż jest to konieczne do wykonania związanych z nimi czynności określonych osobnymi przepisami (np. o prowadzeniu rachunkowości). W odniesieniu do danych marketingowych dane nie będą przetwarzane dłużej niż przez 3 lata.</li>
                         <li>Przysługuje Ci prawo żądania od Administratora:
 	                                <ul>
                                 <li>dostępu do danych osobowych Ciebie dotyczących,</li>
@@ -109,7 +108,7 @@ const PrivacyPolicy = () => {
                                 <li>oraz przenoszenia danych.</li>
                             </ul>
                         </li>
-                        <li>Przysługuje Ci prawo do złożenia sprzeciwu w zakresie przetwarzania wskazanego w pkt 3.3 c) wobec przetwarzania danych osobowych w celu wykonania prawnie uzasadnionych interesów realizowanych przez Administratora, w tym profilowania, przy czym prawo sprzeciwu nie będzie mogło być wykonane w przypadku istnienia ważnych prawnie uzasadnionych podstaw do przetwarzania, nadrzędnych wobec Ciebie interesów, praw i wolności, w szczególności ustalenia, dochodzenia lub obrony roszczeń.</li>
+                        <li>Przysługuje Ci prawo do złożenia sprzeciwu w zakresie przetwarzania danych osobowych w celu wykonania prawnie uzasadnionych interesów realizowanych przez Administratora, w tym profilowania, przy czym prawo sprzeciwu nie będzie mogło być wykonane w przypadku istnienia ważnych prawnie uzasadnionych podstaw do przetwarzania, nadrzędnych wobec Ciebie interesów, praw i wolności, w szczególności ustalenia, dochodzenia lub obrony roszczeń.</li>
                         <li>Na działania Administratora przysługuje skarga do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa.</li>
                         <li>Podanie danych osobowych jest dobrowolne, lecz niezbędne do obsługi Serwisu.</li>
                         <li>W stosunku do Ciebie mogą być podejmowane czynności polegające na zautomatyzowanym podejmowaniu decyzji, w tym profilowaniu w celu świadczenia Usług w ramach zawartej umowy oraz w celu prowadzenia przez Administratora marketingu bezpośredniego.</li>
@@ -121,8 +120,8 @@ const PrivacyPolicy = () => {
 
                     <h2><strong className={style.font}>5. Informacje w formularzach</strong></h2>
                     <ol>
-                        <li>Serwis, w niektórych wypadkach, może zapisać informację ułatwiającą powiązanie danych w formularzu z adresem e-mail użytkownika wypełniającego formularz. W takim wypadku adres e-mail użytkownika pojawia się wewnątrz adresu url strony zawierającej formularz.</li>
-                        <li>Dane podane w formularzu są przetwarzane w celu wynikającym z funkcji konkretnego formularza, np. w celu dokonania procesu obsługi zgłoszenia serwisowego lub kontaktu handlowego, rejestracji Usług itp. Każdorazowo kontekst i opis formularza w czytelny sposób informuje, do czego on służy.</li>
+                        <li>Serwis, w niektórych wypadkach, może zapisać informację ułatwiającą powiązanie danych w formularzu z adresem e-mail użytkownika wypełniającego formularz.</li>
+                        <li>Dane podane w formularzu są przetwarzane w celu wynikającym z funkcji konkretnego formularza, np. w celu rejestracji Usługi lub zgłoszenia.</li>
                     </ol>
 
 
@@ -137,7 +136,7 @@ const PrivacyPolicy = () => {
 
 
 
-                    <h2><strong className={style.font}>7. Istotne techniki marketingowe</strong></h2>
+                    <h2><strong className={style.font}>7. Techniki marketingowe</strong></h2>
                     <ol>
                         <li>Operator stosuje analizę statystyczną ruchu na stronie, poprzez Google Analytics (Google Inc. z siedzibą w USA). Operator nie przekazuje do operatora tej usługi danych osobowych, a jedynie zanonimizowane informacje. Usługa bazuje na wykorzystaniu ciasteczek w urządzeniu końcowym użytkownika. W zakresie informacji o preferencjach użytkownika gromadzonych przez sieć reklamową Google użytkownik może przeglądać i edytować informacje wynikające z plików cookies przy pomocy narzędzia: https://www.google.com/ads/preferences/</li>
                         <li>Operator stosuje rozwiązanie automatyzujące działanie Serwisu w odniesieniu do użytkowników.</li>
@@ -156,11 +155,11 @@ const PrivacyPolicy = () => {
                         <li>Pliki cookies wykorzystywane są w następujących celach:
 	                                <ol>
                                 <li>utrzymanie sesji użytkownika Serwisu (po zalogowaniu), dzięki której użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła;</li>
-                                <li>realizacji celów określonych powyżej w części "Istotne techniki marketingowe";</li>
+                                <li>realizacji celów określonych powyżej w części "Techniki marketingowe";</li>
                             </ol>
                         </li>
                         <li>W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies: „sesyjne” (session cookies) oraz „stałe” (persistent cookies). Cookies „sesyjne” są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej). „Stałe” pliki cookies przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.</li>
-                        <li>Oprogramowanie do przeglądania stron internetowych (przeglądarka internetowa) zazwyczaj domyślnie dopuszcza przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać zmiany ustawień w tym zakresie.&nbsp;Przeglądarka internetowa umożliwia usunięcie plików cookies. Możliwe jest także automatyczne blokowanie plików cookies Szczegółowe informacje na ten temat zawiera pomoc lub dokumentacja przeglądarki internetowej.</li>
+                        <li>Oprogramowanie do przeglądania stron internetowych (przeglądarka internetowa) zazwyczaj domyślnie dopuszcza przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać zmiany ustawień w tym zakresie.&nbsp;Przeglądarka internetowa umożliwia usunięcie plików cookies. Możliwe jest także automatyczne blokowanie plików cookies. Szczegółowe informacje na ten temat zawiera pomoc lub dokumentacja przeglądarki internetowej.</li>
                         <li>Ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu.</li>
                         <li>Pliki cookies zamieszczane w urządzeniu końcowym Użytkownika Serwisu wykorzystywane mogą być również przez współpracujące z operatorem Serwisu podmioty, w szczególności dotyczy to firm: Google (Google Inc. z siedzibą w USA), Facebook (Facebook Inc. z siedzibą w USA), Twitter (Twitter Inc. z siedzibą w USA).</li>
                     </ol>

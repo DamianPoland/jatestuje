@@ -227,6 +227,7 @@ const User = ({ userAds, setUserAds }) => {
 
     // STATE - input Phone
     const [inputPhone, setInputPhone] = useState('')
+    const [inputPhoneValidation, setInputPhoneValidation] = useState('')
 
     // STATE - input time ad validation
     const [timeValidationAdDayCount, setTimeValidationAdDayCount] = useState(60)
@@ -518,6 +519,7 @@ const User = ({ userAds, setUserAds }) => {
         setInputEmail("")
         setInputEmailValidation("")
         setInputPhone("")
+        setInputPhoneValidation("")
         setTimeValidationAdDayCount(60)
         setIsPromoted(false)
         setInputAgreenent(false)
@@ -592,7 +594,6 @@ const User = ({ userAds, setUserAds }) => {
         //constans
         const NIE_WYBRANO = "Nie wybrano"
         const NIE_WPROWADZONO = "Brak informacji"
-        const NIEPOPRAWNA_WARTOSC = "Niepoprawna wartość"
         const NIEPOPRAWNE_IMIE = "Niepoprawne imię"
         const NIEPOPRAWNY_ADRES_EMAIL = "Niepoprawny adres e-mail"
 
@@ -690,6 +691,11 @@ const User = ({ userAds, setUserAds }) => {
             setInputEmailValidation(NIEPOPRAWNY_ADRES_EMAIL)
             allValidations = false
         } else { setInputEmailValidation("") }
+
+        if (inputPhone.trim().length > 15) {
+            setInputPhoneValidation("Nr tel. jest za długi")
+            allValidations = false
+        } else { setInputPhoneValidation("") }
 
         if (!inputAgreenent) {
             setAgreenentValidation(true)
@@ -1010,7 +1016,7 @@ const User = ({ userAds, setUserAds }) => {
                         // USER LIST ITEMS
                         ? <section className={style.user}>
                             <p className={style.user__title}>Witaj {auth.currentUser?.displayName}</p>
-                            <p className={style.user__titleEmail}>{auth.currentUser?.email}</p>
+                            <p className={style.user__titleEmail}>(e-mail: {auth.currentUser?.email})</p>
                             <h1 className={style.user__itemsDesc}>Twoje ogłoszenia:</h1>
                             <div className={style.user__itemsContainer}>
 
@@ -1325,7 +1331,9 @@ const User = ({ userAds, setUserAds }) => {
 
                                         <div className={style.ad__itemContainer}>
                                             <label className={style.ad__itemDesc}>Numer telefonu (opcjonalnie):</label>
-                                            <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.ad__itemList} type='phone' placeholder="np. 100-200-300" maxLength="11" />
+                                            <input onChange={event => setInputPhone(event.target.value)} value={inputPhone} className={style.ad__itemList} type='number' placeholder="np. 100-200-300" />
+                                            <p className={style.ad__itemDescValidation}>{inputPhoneValidation}</p>
+
                                         </div>
                                     </div>
                                 </section>}
