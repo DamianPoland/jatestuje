@@ -44,9 +44,9 @@ const PrivacyPolicy = () => {
 	                        <ol>
                                 <li>Podczas rejestracji, w celu korzystania ze świadczonych przez nas Usług.
                                 <ul>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Google - gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego Google.</li>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Facebook - gromadzimy imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego na Facebooku.</li>
-                                        <li>Jeśli rejestrujesz się z wykorzystaniem Twojego adresu email - gromadzimy imię, nazwisko i adres email.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Google - Serwis gromadzi imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego Google.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem konta Facebook - Serwis gromadzi imię, nazwisko i adres email oraz adres URL do Twojego zdjęcia profilowego na Facebooku.</li>
+                                        <li>Jeśli rejestrujesz się z wykorzystaniem Twojego adresu email - Serwis gromadzi imię, nazwisko i adres email.</li>
                                     </ul>
 
                                 </li>
@@ -140,7 +140,8 @@ const PrivacyPolicy = () => {
                     <ol>
                         <li>Operator stosuje analizę statystyczną ruchu na stronie, poprzez Google Analytics (Google Inc. z siedzibą w USA). Operator nie przekazuje do operatora tej usługi danych osobowych, a jedynie zanonimizowane informacje. Usługa bazuje na wykorzystaniu ciasteczek w urządzeniu końcowym użytkownika. W zakresie informacji o preferencjach użytkownika gromadzonych przez sieć reklamową Google użytkownik może przeglądać i edytować informacje wynikające z plików cookies przy pomocy narzędzia: https://www.google.com/ads/preferences/</li>
                         <li>Operator stosuje rozwiązanie automatyzujące działanie Serwisu w odniesieniu do użytkowników.</li>
-                        <li>Administrator będzie kontaktować się z Tobą za pośrednictwem wiadomości email. Komunikacja będzie mieć na celu potwierdzenie Twojej rejestracji, informowanie Cię w sytuacji, gdy Twoje zapytanie lub Oferta staną się aktywne/wygasną oraz w przypadku innych wiadomości transakcyjnych związanych z naszymi Usługami. Ze względu na to, że wysyłanie Ci tego rodzaju komunikatów jest z naszej perspektywy konieczne, możesz nie mieć możliwości rezygnacji z ich otrzymywania.</li>
+                        <li>Administrator będzie kontaktować się z Tobą za pośrednictwem wiadomości email lub telefonicznie. Komunikacja będzie mieć na celu potwierdzenie Twojej rejestracji, informowanie Cię w sytuacji, gdy Twoje zapytanie lub Oferta staną się aktywne/wygasną oraz w przypadku innych wiadomości transakcyjnych związanych z naszymi Usługami. Ze względu na to, że wysyłanie Ci tego rodzaju komunikatów jest z naszej perspektywy konieczne, możesz nie mieć możliwości rezygnacji z ich otrzymywania.</li>
+                        <li>Ogłoszenia które straciły aktywność w Serwisie są widoczne dla Administratora, który podejmie próbkę wznowienia ogłoszenia kontaktując się z Tobą za pośrednictwem wiadomości email lub telefonicznie.</li>
                     </ol>
 
 
