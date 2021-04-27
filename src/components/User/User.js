@@ -649,10 +649,12 @@ const User = ({ userAds, setUserAds }) => {
         } else { setYearChosenValidation("") }
 
         if (adTitle.length < 10 || adTitle.length > 50) {
+            setAdTitleValidation("Minimum 10 znaków")
             allValidations = false
         }
 
         if (inputDescription.length < 50 || inputDescription.length > 1000) {
+            setInputDescriptionValidation("Minimum 50 znaków")
             allValidations = false
         }
 
@@ -701,6 +703,9 @@ const User = ({ userAds, setUserAds }) => {
             setAgreenentValidation(true)
             allValidations = false
         } else { setAgreenentValidation(false) }
+
+        // show alert if not all data in form is correct
+        !allValidations && setIsAlertSmallShow({ alertIcon: 'error', description: 'Niepoprawne dane.', animationTime: '2', borderColor: 'red' })
 
         return allValidations
     }
