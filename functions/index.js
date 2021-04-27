@@ -73,7 +73,7 @@ exports.sendEmail = functions.https.onCall(async (data, context) => {
 exports.createAd = functions.https.onCall(async (data, context) => {
 
     // check if user is logged
-    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not logged!') } // throw error - in front add .catch
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
 
     try {
 
@@ -109,7 +109,7 @@ exports.createAd = functions.https.onCall(async (data, context) => {
 exports.editAd = functions.https.onCall(async (data, context) => {
 
     // check if user is logged
-    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not logged!') } // throw error - in front add .catch
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
 
     try {
 
@@ -145,7 +145,7 @@ exports.editAd = functions.https.onCall(async (data, context) => {
 exports.refreshAd = functions.https.onCall(async (data, context) => {
 
     // check if user is logged
-    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not logged!') } // throw error - in front add .catch
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
 
     try {
 
@@ -178,7 +178,7 @@ exports.refreshAd = functions.https.onCall(async (data, context) => {
 exports.deleteAd = functions.https.onCall(async (data, context) => {
 
     // check if user is logged
-    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not logged!') } // throw error - in front add .catch
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
 
     try {
 
@@ -206,6 +206,7 @@ exports.deleteAd = functions.https.onCall(async (data, context) => {
 exports.adminDeleteAd = functions.https.onCall(async (data, context) => {
 
     // check if user is admin
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
     if (!context.auth.token.admin) { throw new functions.https.HttpsError('aborted', 'Not Admin!') } // throw error - in front add .catch
 
     const isApproved = false // only admin can change
@@ -232,6 +233,7 @@ exports.adminDeleteAd = functions.https.onCall(async (data, context) => {
 exports.adminCheckAdsDateValidation = functions.https.onCall(async (data, context) => {
 
     // check if user is admin
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
     if (!context.auth.token.admin) { throw new functions.https.HttpsError('aborted', 'Not Admin!') } // throw error - in front add .catch
 
     functions.logger.log("start function adminCheckAdsDateValidation")
@@ -280,8 +282,8 @@ exports.adminCheckAdsDateValidation = functions.https.onCall(async (data, contex
 // add admin role => OK
 exports.addAdminRole = functions.https.onCall(async (data, context) => {
 
-
     // check if user is admin
+    if (!context.auth) { throw new functions.https.HttpsError('aborted', 'Not Login!') } // throw error - in front add .catch
     if (!context.auth.token.admin) { throw new functions.https.HttpsError('aborted', 'Not Admin!') } // throw error - in front add .catch
 
     try {
