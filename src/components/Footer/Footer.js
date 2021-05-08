@@ -19,9 +19,9 @@ const Footer = () => {
 
                     <a href='mailto:info@jatestuje.pl?subject=Zapytanie dot. jaTestuje.pl' className={style.socialMedia}> <div className={style.logo}><Email /></div><p className={style.text}>E-mail</p></a>
 
-                    <a href='https://jatestuje.pl' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Facebook /></div><p className={style.text}>Facebook</p></a>
+                    <a href='https://www.facebook.com/Jatestujepl-104252271814173' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Facebook /></div><p className={style.text}>Facebook</p></a>
 
-                    <a href='https://jatestuje.pl' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Instagram /></div><p className={style.text}>Instagram</p></a>
+                    <a href='https://www.instagram.com/jatestujepl/' target='_blank' rel="noopener noreferrer" className={style.socialMedia}> <div className={style.logo}><Instagram /></div><p className={style.text}>Instagram</p></a>
                 </div>
                 <div className={style.column}>
                     <a href='/privacy-policy' className={style.text} target='_blank' rel="noopener noreferrer">Polityka prywatności</a>

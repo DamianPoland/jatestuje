@@ -146,11 +146,11 @@ const Contact = () => {
                             <p className={style.contentIcon}><Email /></p>
                             <p className={style.contentDesc}>info@jaTestuje.pl</p>
                         </a>
-                        <a className={style.contentItem} href='http://jatestuje.pl' target='blank' >
+                        <a className={style.contentItem} href='https://www.facebook.com/Jatestujepl-104252271814173' target='blank' >
                             <p className={style.contentIcon}><Facebook /></p>
                             <p className={style.contentDesc}>Facebook</p>
                         </a>
-                        <a className={style.contentItem} href='http://jatestuje.pl' target='blank' >
+                        <a className={style.contentItem} href='https://www.instagram.com/jatestujepl/' target='blank' >
                             <p className={style.contentIcon}><Instagram /></p>
                             <p className={style.contentDesc}>Instagram</p>
                         </a>
