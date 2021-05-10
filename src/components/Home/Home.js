@@ -190,7 +190,7 @@ const Home = ({ isNextButtonShow, setIsNextButtonShow, allAds, setAllAds, mainCa
                     <p className={style.description__title}>O co chodzi ... ?</p>
                     <div className={style.description__textContainer}>
                         <p className={style.description__text}><strong>Szukasz samochodu, motocykla, maszyny lub urzadzenia elektronicznego</strong> ale nie wiesz jaki model będzie dla Ciebie odpowiedni? <strong>Testuj różne modele</strong>, zasięgnij opinii właścicieli i <strong>dokonaj świadomego wyboru.</strong></p>
-                        <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swóją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
+                        <p className={style.description__text}><strong>Masz już samochód lub jakieś urządzenie elektroniczne?</strong> Pokaż innym i przy okazji <strong>możesz zarobić</strong>. Dodaj go do bazy i czekaj na zgłoszenie. Pokażesz swoją własność, opowiesz o niej i dostaniesz za to wcześniej ustaloną kwotę.</p>
                     </div>
                 </section>
 
